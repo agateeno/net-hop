@@ -782,7 +782,7 @@
     <value>Wi-Fi disconnected</value>
   </data>
   <data name="Uninstall_Question" xml:space="preserve">
-    <value>Also delete the NetHop folder in your user folder?
+    <value>Also delete the "NetHop Profiles" folder in your user folder?
 
 {0}
 

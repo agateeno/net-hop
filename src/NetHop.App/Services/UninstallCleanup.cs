@@ -5,7 +5,7 @@ namespace NetHop.App.Services;
 
 /// <summary>
 /// Run by the MSI during uninstall (<c>NetHop.App.exe --uninstall</c>, as the user, before files are removed).
-/// Always removes the start-with-Windows entry; asks whether to delete %USERPROFILE%\NetHop too.
+/// Always removes the start-with-Windows entry; asks whether to delete %USERPROFILE%\NetHop Profiles too.
 /// </summary>
 public static partial class UninstallCleanup
 {

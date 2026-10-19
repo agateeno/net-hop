@@ -46,7 +46,7 @@
       <ComponentGroupRef Id="PowerShellModuleFiles" />
     </Feature>
 
-    <!-- "Launch NetHop" on the last page: the first launch creates %USERPROFILE%\NetHop and pins it to Quick Access. -->
+    <!-- "Launch NetHop" on the last page: the first launch creates %USERPROFILE%\NetHop Profiles and pins it to Quick Access. -->
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch NetHop" />
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
     <!-- SetProperty, not Property: a Property value is not resolved, so [INSTALLFOLDER] would stay literal. -->
@@ -54,7 +54,7 @@
     <CustomAction Id="LaunchNetHop" BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)" DllEntry="WixShellExec" Impersonate="yes" />
 
     <!-- Uninstall: the app (as the user, before its files are removed) removes its startup entry and asks whether
-         to delete %USERPROFILE%\NetHop. Not on upgrades, and not in silent mode (UILevel 2), where the folder is kept. -->
+         to delete %USERPROFILE%\NetHop Profiles. Not on upgrades, and not in silent mode (UILevel 2), where the folder is kept. -->
     <CustomAction Id="UninstallUserCleanup" Directory="INSTALLFOLDER"
                   ExeCommand="&quot;[INSTALLFOLDER]NetHop.App.exe&quot; --uninstall"
                   Execute="immediate" Impersonate="yes" Return="ignore" />

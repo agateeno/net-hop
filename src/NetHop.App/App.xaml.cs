@@ -19,6 +19,7 @@ public partial class App : Application
     {
         _launchActivation = launchActivation;
         Current = this;
+        UnhandledException += (_, e) => CrashLog.Write("XAML", e.Exception);
         InitializeComponent();
     }
 
@@ -36,7 +37,7 @@ public partial class App : Application
         ProfileFolder.EnsureCreated();
         Connection.PropertyChanged += (_, e) =>
         {
-            // Keep %USERPROFILE%\NetHop in step with the profiles.
+            // Keep %USERPROFILE%\NetHop Profiles in step with the profiles.
             if (e.PropertyName == nameof(ServiceConnection.Profiles) && Connection.IsConnected)
                 _ = ProfileFolder.SyncAsync(Connection.Service, Connection.Profiles);
         };

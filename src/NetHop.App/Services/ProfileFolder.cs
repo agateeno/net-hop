@@ -6,7 +6,7 @@ using NetHop.Ipc;
 namespace NetHop.App.Services;
 
 /// <summary>
-/// %USERPROFILE%\NetHop: a folder with the NetHop icon, pinned to Quick Access, holding a copy of every profile
+/// %USERPROFILE%\NetHop Profiles: a folder with the NetHop icon, pinned to Quick Access, holding a copy of every profile
 /// as a .nethop file. Double-click opens a profile in the editor, "Apply with NetHop" applies it.
 /// The originals stay in the service's protected folder; this copy is rewritten when profiles change.
 /// </summary>
@@ -18,11 +18,16 @@ public static class ProfileFolder
     private static readonly SemaphoreSlim SyncLock = new(1, 1);
 
     public static string Path { get; } =
+        System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "NetHop Profiles");
+
+    /// <summary>Where versions up to 0.1.8 kept the folder.</summary>
+    private static string LegacyPath { get; } =
         System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "NetHop");
 
     /// <summary>Creates the folder with its icon, and pins it to Quick Access the first time.</summary>
     public static void EnsureCreated()
     {
+        MoveLegacyFolder();
         try
         {
             Directory.CreateDirectory(Path);
@@ -94,26 +99,7 @@ public static class ProfileFolder
         if (!Directory.Exists(Path))
             return;
 
-        try
-        {
-            var shellType = Type.GetTypeFromProgID("Shell.Application");
-            if (shellType is not null)
-            {
-                dynamic shell = Activator.CreateInstance(shellType)!;
-                try
-                {
-                    shell.Namespace(Path)?.Self.InvokeVerb("unpinfromhome");
-                }
-                finally
-                {
-                    System.Runtime.InteropServices.Marshal.FinalReleaseComObject(shell);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Unpinning failed: {ex.Message}");
-        }
+        UnpinFromQuickAccess(Path);
 
         // desktop.ini is hidden/system and the folder read-only: clear them, or deleting fails.
         foreach (var entry in new DirectoryInfo(Path).EnumerateFileSystemInfos("*", SearchOption.AllDirectories))
@@ -157,14 +143,58 @@ public static class ProfileFolder
             return;
 
         // "pintohome" is the verb behind Explorer's "Pin to Quick access".
+        if (InvokeShellVerb(Path, "pintohome"))
+            key.SetValue("QuickAccessPinned", 1, RegistryValueKind.DWord);
+    }
+
+    /// <summary>
+    /// Renames %USERPROFILE%\NetHop, used by earlier versions, to the new name. Only a folder NetHop wrote
+    /// (it holds the index file) is moved; the old Quick Access pin is replaced by one to the new folder.
+    /// </summary>
+    private static void MoveLegacyFolder()
+    {
+        if (Directory.Exists(Path) || !File.Exists(System.IO.Path.Combine(LegacyPath, IndexFileName)))
+            return;
+
+        try
+        {
+            UnpinFromQuickAccess(LegacyPath);
+            Directory.Move(LegacyPath, Path);
+            using var key = Registry.CurrentUser.CreateSubKey(SettingsKey);
+            key.DeleteValue("QuickAccessPinned", throwOnMissingValue: false);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Open in Explorer or another program: start with a new folder, the old one stays as it is.
+            System.Diagnostics.Debug.WriteLine($"Could not move the old profile folder: {ex.Message}");
+        }
+    }
+
+    private static void UnpinFromQuickAccess(string folder)
+    {
+        try
+        {
+            InvokeShellVerb(folder, "unpinfromhome");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Unpinning failed: {ex.Message}");
+        }
+    }
+
+    private static bool InvokeShellVerb(string folder, string verb)
+    {
         var shellType = Type.GetTypeFromProgID("Shell.Application");
         if (shellType is null)
-            return;
+            return false;
         dynamic shell = Activator.CreateInstance(shellType)!;
         try
         {
-            shell.Namespace(Path).Self.InvokeVerb("pintohome");
-            key.SetValue("QuickAccessPinned", 1, RegistryValueKind.DWord);
+            var item = shell.Namespace(folder)?.Self;
+            if (item is null)
+                return false;
+            item.InvokeVerb(verb);
+            return true;
         }
         finally
         {

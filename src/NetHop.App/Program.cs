@@ -16,6 +16,7 @@ public static class Program
     private static int Main(string[] args)
     {
         WinRT.ComWrappersSupport.InitializeComWrappers();
+        AppDomain.CurrentDomain.UnhandledException += (_, e) => Services.CrashLog.Write(".NET", e.ExceptionObject);
 
         // Uninstall helper started by the MSI: no window, no single-instance redirect.
         if (args.Contains("--uninstall"))

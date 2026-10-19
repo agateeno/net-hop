@@ -782,7 +782,7 @@
     <value>Wi-Fi disconnesso</value>
   </data>
   <data name="Uninstall_Question" xml:space="preserve">
-    <value>Eliminare anche la cartella NetHop nella tua cartella utente?
+    <value>Eliminare anche la cartella "NetHop Profiles" nella tua cartella utente?
 
 {0}
 

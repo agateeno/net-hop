@@ -17,11 +17,11 @@
 The last page of the installer offers **Launch NetHop** (checked). On its first launch for each user, the app:
 
 - starts with Windows from then on (can be changed in Settings);
-- creates **`%USERPROFILE%\NetHop`** with the NetHop icon, pins it to **Quick Access**, and keeps a copy of every profile there as a `.nethop` file (double-click to edit, right-click › *Apply with NetHop* to apply). The originals stay in `%ProgramData%\NetHop`; files you add to the folder yourself are never overwritten.
+- creates **`%USERPROFILE%\NetHop Profiles`** with the NetHop icon, pins it to **Quick Access**, and keeps a copy of every profile there as a `.nethop` file (double-click to edit, right-click › *Apply with NetHop* to apply). The originals stay in `%ProgramData%\NetHop`; files you add to the folder yourself are never overwritten. A `%USERPROFILE%\NetHop` folder left by version 0.1.8 or earlier is renamed to the new name, and its Quick Access pin moved with it.
 
 These are per-user, so they happen when each user first opens NetHop, not only for the user who installed it.
 
-On **uninstall**, NetHop removes its start-with-Windows entry and asks whether to delete `%USERPROFILE%\NetHop` as well (No is the default). Yes deletes the folder with everything in it, removes it from Quick Access and clears NetHop's per-user settings. Silent uninstalls (`msiexec /qn`, `winget uninstall`) and upgrades never ask and keep the folder. The question is asked to the user running the uninstall; other users' folders stay.
+On **uninstall**, NetHop removes its start-with-Windows entry and asks whether to delete `%USERPROFILE%\NetHop Profiles` as well (No is the default). Yes deletes the folder with everything in it, removes it from Quick Access and clears NetHop's per-user settings. Silent uninstalls (`msiexec /qn`, `winget uninstall`) and upgrades never ask and keep the folder. The question is asked to the user running the uninstall; other users' folders stay.
 
 Profiles and rules live in `%ProgramData%\NetHop` and are **kept** on uninstall and upgrade.
 
@@ -73,3 +73,7 @@ winget install agateeno.NetHop
 ## Windows 11 context menu
 
 **Apply with NetHop** is a classic shell verb, so Windows 11 shows it under *Show more options*. A first-level entry in the new menu needs an `IExplorerCommand` handler declared in a signed sparse package: it will come once releases are signed.
+
+## Troubleshooting
+
+If `NetHop.App.exe` closes right after starting, the reason is written to `%LOCALAPPDATA%\NetHop\crash.log` (Event Viewer only shows `0xc000027b` in `Microsoft.UI.Xaml.dll`). The service logs to the Application event log under the source *NetHop*.
