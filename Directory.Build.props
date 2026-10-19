@@ -10,5 +10,7 @@
     <Copyright>Copyright (c) 2026 agateeno</Copyright>
     <Version>0.1.0</Version>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <!-- NetHop ships English and Italian: skip the other satellite assemblies of third-party packages. -->
+    <SatelliteResourceLanguages>en;it</SatelliteResourceLanguages>
   </PropertyGroup>
 </Project>

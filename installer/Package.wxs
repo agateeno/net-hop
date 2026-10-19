@@ -108,7 +108,8 @@
     <Component Id="StartMenuShortcut" Directory="ProgramMenuFolder">
       <Shortcut Id="NetHopShortcut" Name="NetHop" Description="Network profiles for Windows"
                 Target="[INSTALLFOLDER]NetHop.App.exe" WorkingDirectory="INSTALLFOLDER" Icon="NetHop.ico" />
-      <RegistryValue Root="HKLM" Key="Software\NetHop" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+      <!-- Windows Installer treats the Start menu as part of the user profile (ICE38/ICE43), so the key path is in HKCU. -->
+      <RegistryValue Root="HKCU" Key="Software\NetHop" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
     </Component>
   </Fragment>
 

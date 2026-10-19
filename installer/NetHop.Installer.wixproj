@@ -13,6 +13,8 @@
     <!-- x64 or arm64; publish the binaries for the same architecture. -->
     <InstallerPlatform Condition="'$(InstallerPlatform)' == ''">x64</InstallerPlatform>
     <OutputName>NetHop-$(ProductVersion)-$(InstallerPlatform)</OutputName>
+    <!-- ICE03 rejects the Language value Windows reports for some harvested satellite assemblies; it is informational only. -->
+    <SuppressIces>ICE03</SuppressIces>
     <DefineConstants>ProductVersion=$(ProductVersion);BinDir=$(NetHopBinDir);RepoDir=$(MSBuildThisFileDirectory)..</DefineConstants>
   </PropertyGroup>
 
