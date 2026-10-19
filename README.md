@@ -123,6 +123,10 @@ Every push builds on GitHub Actions and produces **NetHop-msi** (x64 and ARM64 i
 - [x] Modern Windows 11 context menu entry (sparse package; shown on every machine once releases are signed)
 - [ ] Verify everything on real hardware (spikes in docs/architecture.md)
 
+## Acknowledgements
+
+Thanks to [NetSetMan](https://www.netsetman.com/) by Ilja Herlein, which has made switching network settings on Windows easy for many years and inspired NetHop's profile-based approach. NetHop is an independent project: it is not affiliated with or endorsed by NetSetMan, and it shares no code with it. If you need a mature, feature-rich tool, give NetSetMan a try.
+
 ## License
 
 [MIT](LICENSE)
