@@ -23,7 +23,7 @@
     <!-- Program.cs provides Main to enforce a single instance and redirect activations. -->
     <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <!-- UI strings: Strings/en-US (default) and Strings/it-IT. -->
+    <!-- UI strings: Strings/en-US (default), de-DE, es-ES, fr-FR, it-IT and pt-BR. -->
     <DefaultLanguage>en-US</DefaultLanguage>
     <!-- StreamJsonRpc's VS.Threading dependency declares WPF for -windows targets; NetHop never uses it,
          and skipping it keeps ~30 MB of WPF out of the self-contained build. -->

@@ -16,7 +16,7 @@ A network profile switcher for Windows 11 (in the spirit of NetSetMan), with a P
 | `src/NetHop.Ipc` | JSON-RPC contract (`INetHopService`) shared by every client, pipe helpers | net8.0; net10.0 |
 | `src/NetHop.Cli` | `nethop.exe` (scripts, Power Automate). Stable exit codes, `--json` | net10.0 |
 | `src/NetHop.App` | WinUI 3 app (Windows App SDK 2.x, unpackaged, self-contained): pages, tray, notifications | net10.0-windows10.0.22621.0 |
-| `src/NetHop.ShellExtension` | C++ `IExplorerCommand` + sparse package manifest for the Windows 11 context menu | MSBuild/vcxproj, not in the .slnx |
+| `src/NetHop.ShellExtension` | C++ `IExplorerCommand` + sparse package manifest for the Windows 11 context menu (its title has its own language table) | MSBuild/vcxproj, not in the .slnx |
 | `src/NetHop.PowerAutomate` | Power Automate Desktop custom actions (call the CLI) | net472 |
 | `src/NetHop.PowerShell` | PowerShell module (wraps the CLI) | |
 | `src/NetHop.LogiPlugin` | Logi Actions SDK plugin. Needs `PluginApi.dll` from Logi Options+: not in the .slnx or CI | net8.0 |
@@ -50,10 +50,12 @@ dotnet test tests/NetHop.Core.Tests
 ## Conventions
 
 - **C#**: latest language version, nullable enabled, implicit usings, file-scoped namespaces. Match the surrounding code; comments explain *why*, briefly, and only where the code does not say it.
-- **Localization (English + Italian) is required for every user-visible string**:
-  - App: `src/NetHop.App/Strings/en-US/Resources.resw` and `it-IT/Resources.resw`, the same keys in both. XAML uses `x:Uid` (`Key.Property` entries); code uses `Loc.Get("Key")` / `Loc.Format(...)`. Nothing tests the app's two files for parity: add every key to both.
-  - Core messages: `src/NetHop.Core/Strings.resx` and `Strings.it.resx` via `Text.Get`; `LocalizationTests` checks keys and placeholders.
-  - Use the same register as the existing Italian strings (informal "tu").
+- **Every user-visible string exists in all six languages** (English, German, Spanish, French, Italian, Portuguese (Brazil)):
+  - App: `src/NetHop.App/Strings/<culture>/Resources.resw` (`en-US`, `de-DE`, `es-ES`, `fr-FR`, `it-IT`, `pt-BR`). XAML uses `x:Uid` (`Key.Property` entries); code uses `Loc.Get("Key")` / `Loc.Format(...)`.
+  - Core messages: `src/NetHop.Core/Strings.resx` and `Strings.<de|es|fr|it|pt>.resx` via `Text.Get`.
+  - `LocalizationTests` fails when a language misses a key or a placeholder, so add new keys to every file. Translate them properly; do not leave English text in other languages.
+  - Follow Windows' own terminology in each language and the register already used: "tu" in Italian, "vous" in French, "Sie" in German, "tú" in Spanish, "você" in Portuguese.
+  - Adding a language: see the end of the Localization section in `docs/architecture.md`.
 - **Docs**: a user-visible change updates the matching file in `docs/` and, when it changes what NetHop can do, the README feature list or roadmap.
 - **Tests**: Core logic changes come with tests in `tests/NetHop.Core.Tests`.
 - **Commits**: imperative subject line (≤ 72 characters), body explaining what and why.

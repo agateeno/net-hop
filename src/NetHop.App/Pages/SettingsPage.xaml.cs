@@ -20,8 +20,12 @@ public sealed partial class SettingsPage : Page
     private static readonly (string Tag, string Label)[] Languages =
     [
         (AppLanguage.SystemDefault, "Settings_LanguageSystem"),
+        ("de-DE", "Deutsch"),
         ("en-US", "English"),
+        ("es-ES", "Español"),
+        ("fr-FR", "Français"),
         ("it-IT", "Italiano"),
+        ("pt-BR", "Português (Brasil)"),
     ];
 
     private static readonly (ElementTheme Theme, string Label)[] Themes =

@@ -12,7 +12,6 @@
 #include <wrl/implements.h>
 #include <wrl/module.h>
 
-#include <cwchar>
 #include <string>
 
 using Microsoft::WRL::ClassicCom;
@@ -50,15 +49,34 @@ namespace
         return ModuleFolder() + L"\\NetHop.App.exe";
     }
 
-    // Same rule as the app: the language picked in NetHop's settings, otherwise Windows' display language.
-    bool IsItalian()
+    // Same rule as the app: the language picked in NetHop's settings (a tag such as "fr-FR"),
+    // otherwise Windows' display language.
+    WORD PrimaryLanguage()
     {
-        wchar_t language[16] = {};
-        DWORD size = sizeof(language);
-        if (RegGetValueW(HKEY_CURRENT_USER, L"Software\\NetHop", L"Language", RRF_RT_REG_SZ, nullptr, language, &size) == ERROR_SUCCESS
-            && language[0] != L'\0')
-            return _wcsnicmp(language, L"it", 2) == 0;
-        return PRIMARYLANGID(GetUserDefaultUILanguage()) == LANG_ITALIAN;
+        wchar_t tag[LOCALE_NAME_MAX_LENGTH] = {};
+        DWORD size = sizeof(tag);
+        if (RegGetValueW(HKEY_CURRENT_USER, L"Software\\NetHop", L"Language", RRF_RT_REG_SZ, nullptr, tag, &size) == ERROR_SUCCESS
+            && tag[0] != L'\0')
+        {
+            const LCID locale = LocaleNameToLCID(tag, 0);
+            if (locale != 0)
+                return PRIMARYLANGID(LANGIDFROMLCID(locale));
+        }
+        return PRIMARYLANGID(GetUserDefaultUILanguage());
+    }
+
+    // The languages of the app (src/NetHop.App/Strings); English otherwise.
+    const wchar_t* Title()
+    {
+        switch (PrimaryLanguage())
+        {
+        case LANG_GERMAN: return L"Mit NetHop anwenden";
+        case LANG_SPANISH: return L"Aplicar con NetHop";
+        case LANG_FRENCH: return L"Appliquer avec NetHop";
+        case LANG_ITALIAN: return L"Applica con NetHop";
+        case LANG_PORTUGUESE: return L"Aplicar com o NetHop";
+        default: return L"Apply with NetHop";
+        }
     }
 }
 
@@ -68,7 +86,7 @@ class __declspec(uuid("d865f53b-c891-4bc6-86fc-31839648b395")) ApplyCommand fina
 public:
     IFACEMETHODIMP GetTitle(IShellItemArray*, LPWSTR* name) override
     {
-        return SHStrDupW(IsItalian() ? L"Applica con NetHop" : L"Apply with NetHop", name);
+        return SHStrDupW(Title(), name);
     }
 
     IFACEMETHODIMP GetIcon(IShellItemArray*, LPWSTR* icon) override

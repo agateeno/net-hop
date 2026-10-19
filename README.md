@@ -18,7 +18,7 @@
 - **Power Automate**: a *NetHop* group of custom actions in Power Automate Desktop, a PowerShell module, and a CLI with JSON output. NetHop rules can also start flows.
 - **Logitech**: a Logi Actions plugin for the MX Creative Console and the Actions Ring, with keys that show the active profile.
 - **Installer**: per-machine MSIs for x64 and ARM64 with the service, `PATH`, file types, an "Apply with NetHop" context menu entry and a Start menu entry. Tagged releases also produce winget manifests.
-- **English and Italian**: the app follows the Windows display language, or the one picked in Settings.
+- **Six languages**: English, Deutsch, Español, Français, Italiano and Português (Brasil). The app follows the Windows display language, or the one picked in Settings.
 - **Rename adapters** without breaking profiles: profiles find adapters by GUID, then MAC, then name.
 
 ## Architecture
@@ -119,7 +119,7 @@ Every push builds on GitHub Actions and produces **NetHop-msi** (x64 and ARM64 i
 - [x] Power Automate Desktop custom actions and PowerShell module
 - [x] ARM64 MSI, "Apply with NetHop" context menu, GitHub releases and winget manifests
 - [x] Code signing in CI (Azure Trusted Signing, active once the secrets are set)
-- [x] Localization: English and Italian
+- [x] Localization: English, German, Spanish, French, Italian, Portuguese (Brazil)
 - [x] Modern Windows 11 context menu entry (sparse package; shown on every machine once releases are signed)
 - [ ] Verify everything on real hardware (spikes in docs/architecture.md)
 

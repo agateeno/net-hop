@@ -1,0 +1,848 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Action_ApplyProfile" xml:space="preserve">
+    <value>Profil anwenden</value>
+  </data>
+  <data name="Action_Delay" xml:space="preserve">
+    <value>Warten (Sekunden)</value>
+  </data>
+  <data name="Action_DisableAdapter" xml:space="preserve">
+    <value>Adapter deaktivieren</value>
+  </data>
+  <data name="Action_EnableAdapter" xml:space="preserve">
+    <value>Adapter aktivieren</value>
+  </data>
+  <data name="Action_Notify" xml:space="preserve">
+    <value>Benachrichtigung anzeigen</value>
+  </data>
+  <data name="Action_OpenUrl" xml:space="preserve">
+    <value>Link öffnen</value>
+  </data>
+  <data name="Action_RunCommand" xml:space="preserve">
+    <value>Programm ausführen</value>
+  </data>
+  <data name="Action_RunPowerAutomateFlow" xml:space="preserve">
+    <value>Power Automate-Flow ausführen</value>
+  </data>
+  <data name="Adapters_Disabled" xml:space="preserve">
+    <value>Deaktiviert</value>
+  </data>
+  <data name="Adapters_Dns" xml:space="preserve">
+    <value>{0}-DNS</value>
+  </data>
+  <data name="Adapters_DnsStatic" xml:space="preserve">
+    <value>{0}-DNS (statisch)</value>
+  </data>
+  <data name="Adapters_Enabled" xml:space="preserve">
+    <value>Aktiviert</value>
+  </data>
+  <data name="Adapters_FamilyAutomatic" xml:space="preserve">
+    <value>{0} (automatisch)</value>
+  </data>
+  <data name="Adapters_FamilyStatic" xml:space="preserve">
+    <value>{0} (statisch)</value>
+  </data>
+  <data name="Adapters_Gateway" xml:space="preserve">
+    <value>{0}-Gateway</value>
+  </data>
+  <data name="Adapters_Id" xml:space="preserve">
+    <value>Adapter-ID</value>
+  </data>
+  <data name="Adapters_Mac" xml:space="preserve">
+    <value>MAC-Adresse</value>
+  </data>
+  <data name="Adapters_NameDescription" xml:space="preserve">
+    <value>Profile funktionieren nach dem Umbenennen weiter: Sie finden Adapter zuerst über ID und MAC-Adresse.</value>
+  </data>
+  <data name="Adapters_NameHeader" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Adapters_NoAddress" xml:space="preserve">
+    <value>keine Adresse</value>
+  </data>
+  <data name="Adapters_Refresh.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="Adapters_Rename" xml:space="preserve">
+    <value>Umbenennen</value>
+  </data>
+  <data name="Adapters_RenameTitle" xml:space="preserve">
+    <value>Adapter umbenennen</value>
+  </data>
+  <data name="Adapters_ShowVirtual.OffContent" xml:space="preserve">
+    <value>Virtuelle Adapter ausgeblendet</value>
+  </data>
+  <data name="Adapters_ShowVirtual.OnContent" xml:space="preserve">
+    <value>Virtuelle Adapter eingeblendet</value>
+  </data>
+  <data name="Adapters_StateConnected" xml:space="preserve">
+    <value>Verbunden</value>
+  </data>
+  <data name="Adapters_StateDisabled" xml:space="preserve">
+    <value>Deaktiviert</value>
+  </data>
+  <data name="Adapters_StateDisconnected" xml:space="preserve">
+    <value>Getrennt</value>
+  </data>
+  <data name="Adapters_Title.Text" xml:space="preserve">
+    <value>Netzwerkadapter</value>
+  </data>
+  <data name="Adapters_WifiNetwork" xml:space="preserve">
+    <value>WLAN-Netzwerk</value>
+  </data>
+  <data name="Automations_AddRule.Text" xml:space="preserve">
+    <value>Regel hinzufügen</value>
+  </data>
+  <data name="Automations_Check" xml:space="preserve">
+    <value>Regeln prüfen</value>
+  </data>
+  <data name="Automations_FormView.Text" xml:space="preserve">
+    <value>Formular</value>
+  </data>
+  <data name="Automations_NotSaved" xml:space="preserve">
+    <value>Regeln nicht gespeichert</value>
+  </data>
+  <data name="Automations_Run.Description" xml:space="preserve">
+    <value>Die eigene Regel-Engine von NetHop: Power Automate wird nicht benötigt. Regeln können trotzdem Power Automate-Flows starten.</value>
+  </data>
+  <data name="Automations_Run.Header" xml:space="preserve">
+    <value>Automatisierungen ausführen</value>
+  </data>
+  <data name="Automations_Save.Text" xml:space="preserve">
+    <value>Regeln speichern</value>
+  </data>
+  <data name="Automations_Saved" xml:space="preserve">
+    <value>Regeln gespeichert</value>
+  </data>
+  <data name="Automations_Title.Text" xml:space="preserve">
+    <value>Automatisierungen</value>
+  </data>
+  <data name="Automations_YamlView.Text" xml:space="preserve">
+    <value>YAML</value>
+  </data>
+  <data name="Color_Blue" xml:space="preserve">
+    <value>Blau</value>
+  </data>
+  <data name="Color_Gray" xml:space="preserve">
+    <value>Grau</value>
+  </data>
+  <data name="Color_Green" xml:space="preserve">
+    <value>Grün</value>
+  </data>
+  <data name="Color_Choose" xml:space="preserve">
+    <value>Benutzerdefinierte Farbe...</value>
+  </data>
+  <data name="Color_CustomValue" xml:space="preserve">
+    <value>Benutzerdefiniert ({0})</value>
+  </data>
+  <data name="Color_Use" xml:space="preserve">
+    <value>Diese Farbe verwenden</value>
+  </data>
+  <data name="Color_None" xml:space="preserve">
+    <value>Keine Farbe</value>
+  </data>
+  <data name="Color_Orange" xml:space="preserve">
+    <value>Orange</value>
+  </data>
+  <data name="Color_Purple" xml:space="preserve">
+    <value>Lila</value>
+  </data>
+  <data name="Color_Red" xml:space="preserve">
+    <value>Rot</value>
+  </data>
+  <data name="Color_Teal" xml:space="preserve">
+    <value>Petrol</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Common_Connecting" xml:space="preserve">
+    <value>Verbindung wird hergestellt...</value>
+  </data>
+  <data name="Common_ConnectingService" xml:space="preserve">
+    <value>Verbindung mit dem NetHop-Dienst wird hergestellt...</value>
+  </data>
+  <data name="Common_NothingToChange" xml:space="preserve">
+    <value>Es musste nichts geändert werden.</value>
+  </data>
+  <data name="Common_OperationFailed" xml:space="preserve">
+    <value>Der Vorgang ist fehlgeschlagen</value>
+  </data>
+  <data name="Common_PausedUntil" xml:space="preserve">
+    <value>Angehalten bis {0:t}</value>
+  </data>
+  <data name="Common_ProfileApplied" xml:space="preserve">
+    <value>„{0}“ angewendet</value>
+  </data>
+  <data name="Common_ProfileFailed" xml:space="preserve">
+    <value>„{0}“ fehlgeschlagen</value>
+  </data>
+  <data name="Common_RolledBack" xml:space="preserve">
+    <value>Die vorherige Konfiguration wurde wiederhergestellt.</value>
+  </data>
+  <data name="Condition_ActiveProfile" xml:space="preserve">
+    <value>Aktives Profil ist</value>
+  </data>
+  <data name="Condition_AdapterConnected" xml:space="preserve">
+    <value>Adapter ist verbunden</value>
+  </data>
+  <data name="Condition_AdapterDisconnected" xml:space="preserve">
+    <value>Adapter ist getrennt</value>
+  </data>
+  <data name="Condition_DaysOfWeek" xml:space="preserve">
+    <value>Wochentage</value>
+  </data>
+  <data name="Condition_NotActiveProfile" xml:space="preserve">
+    <value>Aktives Profil ist nicht</value>
+  </data>
+  <data name="Condition_OnAcPower" xml:space="preserve">
+    <value>Am Netzstrom</value>
+  </data>
+  <data name="Condition_OnBattery" xml:space="preserve">
+    <value>Im Akkubetrieb</value>
+  </data>
+  <data name="Condition_TimeBetween" xml:space="preserve">
+    <value>Uhrzeit zwischen</value>
+  </data>
+  <data name="Condition_WifiSsid" xml:space="preserve">
+    <value>Mit WLAN verbunden</value>
+  </data>
+  <data name="Dashboard_ActiveBadge.Text" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="Dashboard_Automations.Header" xml:space="preserve">
+    <value>Automatisierungen</value>
+  </data>
+  <data name="Dashboard_AutomationsSwitch.OffContent" xml:space="preserve">
+    <value>Für 1 Stunde angehalten</value>
+  </data>
+  <data name="Dashboard_AutomationsSwitch.OnContent" xml:space="preserve">
+    <value>Ein</value>
+  </data>
+  <data name="Dashboard_ChangesIn" xml:space="preserve">
+    <value>{0} Änderungen in {1:0.0} s</value>
+  </data>
+  <data name="Dashboard_Drifted" xml:space="preserve">
+    <value>Das Netzwerk wurde nach dem letzten angewendeten Profil manuell geändert</value>
+  </data>
+  <data name="Dashboard_LastChange" xml:space="preserve">
+    <value>Letzte Änderung: {0:g}</value>
+  </data>
+  <data name="Dashboard_NoActiveProfile" xml:space="preserve">
+    <value>Kein aktives Profil</value>
+  </data>
+  <data name="Dashboard_NoMatch" xml:space="preserve">
+    <value>Das aktuelle Netzwerk entspricht keinem Profil</value>
+  </data>
+  <data name="Dashboard_NoProfiles.Text" xml:space="preserve">
+    <value>Noch keine Profile. Erstellen Sie eines auf der Seite „Profile“ oder doppelklicken Sie auf eine .nethop-Datei.</value>
+  </data>
+  <data name="Dashboard_NotConnected" xml:space="preserve">
+    <value>Nicht mit dem Dienst verbunden</value>
+  </data>
+  <data name="Dashboard_OpenLocation.Content" xml:space="preserve">
+    <value>Standorteinstellungen öffnen</value>
+  </data>
+  <data name="Dashboard_RulesRun" xml:space="preserve">
+    <value>Regeln werden ausgeführt, wenn sich das Netzwerk ändert</value>
+  </data>
+  <data name="Dashboard_SsidWarning.Message" xml:space="preserve">
+    <value>Windows teilt die SSID des aktuellen Netzwerks nur mit Apps, die Zugriff auf den Standort haben. Regeln, die auf WLAN-Namen basieren, werden erst ausgelöst, wenn er aktiviert ist.</value>
+  </data>
+  <data name="Dashboard_SsidWarning.Title" xml:space="preserve">
+    <value>WLAN-Namen sind nicht verfügbar</value>
+  </data>
+  <data name="Dashboard_SwitchProfile.Text" xml:space="preserve">
+    <value>Profil wechseln</value>
+  </data>
+  <data name="Dashboard_Title.Text" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Dns_Dhcp" xml:space="preserve">
+    <value>Automatisch</value>
+  </data>
+  <data name="Dns_Static" xml:space="preserve">
+    <value>Manuell</value>
+  </data>
+  <data name="Dns_Unchanged" xml:space="preserve">
+    <value>Unverändert lassen</value>
+  </data>
+  <data name="Flyout_ActiveProfile.Text" xml:space="preserve">
+    <value>Aktives Profil</value>
+  </data>
+  <data name="Flyout_None" xml:space="preserve">
+    <value>Keins</value>
+  </data>
+  <data name="Flyout_Open.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>NetHop öffnen</value>
+  </data>
+  <data name="Flyout_Pause.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Automatisierungen für 1 Stunde anhalten</value>
+  </data>
+  <data name="Flyout_PauseText.Text" xml:space="preserve">
+    <value>Automatisierungen anhalten</value>
+  </data>
+  <data name="Folder_InfoTip" xml:space="preserve">
+    <value>NetHop-Netzwerkprofile</value>
+  </data>
+  <data name="Form_Add" xml:space="preserve">
+    <value>Hinzufügen</value>
+  </data>
+  <data name="Form_Remove" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="Icon_Ethernet" xml:space="preserve">
+    <value>Ethernet</value>
+  </data>
+  <data name="Icon_Globe" xml:space="preserve">
+    <value>Internet</value>
+  </data>
+  <data name="Icon_Home" xml:space="preserve">
+    <value>Zuhause</value>
+  </data>
+  <data name="Icon_Lock" xml:space="preserve">
+    <value>Sicher</value>
+  </data>
+  <data name="Icon_Network" xml:space="preserve">
+    <value>Netzwerk</value>
+  </data>
+  <data name="Icon_ChooseImage" xml:space="preserve">
+    <value>Bild auswählen...</value>
+  </data>
+  <data name="Icon_Custom" xml:space="preserve">
+    <value>Benutzerdefiniert</value>
+  </data>
+  <data name="Icon_ImageError" xml:space="preserve">
+    <value>Das Bild kann nicht verwendet werden</value>
+  </data>
+  <data name="Icon_ImageTooLarge" xml:space="preserve">
+    <value>Das Bild ist auch nach dem Verkleinern zu groß.</value>
+  </data>
+  <data name="Icon_Travel" xml:space="preserve">
+    <value>Reise</value>
+  </data>
+  <data name="Icon_WiFi" xml:space="preserve">
+    <value>WLAN</value>
+  </data>
+  <data name="Icon_Work" xml:space="preserve">
+    <value>Arbeit</value>
+  </data>
+  <data name="Integrations_Cli.Description" xml:space="preserve">
+    <value>Verwenden Sie „Anwendung ausführen“ oder „PowerShell-Skript ausführen“ in Power Automate Desktop. Fügen Sie --json für maschinenlesbare Ausgabe hinzu.</value>
+  </data>
+  <data name="Integrations_Cli.Header" xml:space="preserve">
+    <value>Befehlszeile</value>
+  </data>
+  <data name="Integrations_CliApply.Header" xml:space="preserve">
+    <value>Profil anwenden</value>
+  </data>
+  <data name="Integrations_CliStatus.Header" xml:space="preserve">
+    <value>Aktives Profil lesen</value>
+  </data>
+  <data name="Integrations_ExitCodes.Description" xml:space="preserve">
+    <value>0 OK, 1 fehlgeschlagen, 2 Aufruffehler, 3 Dienst läuft nicht, 4 Zugriff verweigert</value>
+  </data>
+  <data name="Integrations_ExitCodes.Header" xml:space="preserve">
+    <value>Exitcodes</value>
+  </data>
+  <data name="Integrations_Files.Description" xml:space="preserve">
+    <value>Doppelklicken Sie auf eine .nethop-Datei, um sie zu importieren. Profile sind einfaches YAML, leicht zu versionieren und zu teilen.</value>
+  </data>
+  <data name="Integrations_Files.Header" xml:space="preserve">
+    <value>Profildateien (.nethop)</value>
+  </data>
+  <data name="Integrations_Flows.Description" xml:space="preserve">
+    <value>Fügen Sie unter „Automatisierungen“ eine Aktion „Power Automate-Flow ausführen“ mit der Ausführungs-URL des Flows hinzu (Power Automate Desktop › Flow › Eigenschaften › Ausführungs-URL).</value>
+  </data>
+  <data name="Integrations_Flows.Header" xml:space="preserve">
+    <value>Flows aus NetHop-Regeln starten</value>
+  </data>
+  <data name="Integrations_LinkApply.Header" xml:space="preserve">
+    <value>Profil anwenden</value>
+  </data>
+  <data name="Integrations_Links.Description" xml:space="preserve">
+    <value>Wenden Sie ein Profil über eine Verknüpfung, ein Browser-Lesezeichen oder jede App an, die URLs öffnet.</value>
+  </data>
+  <data name="Integrations_Links.Header" xml:space="preserve">
+    <value>Links (nethop://)</value>
+  </data>
+  <data name="Integrations_Logi.Description" xml:space="preserve">
+    <value>Installieren Sie NetHop.lplug4 und weisen Sie dann in Logi Options+ „Apply profile“ oder „Pause automations“ Tasten der MX Creative Console oder Plätzen im Actions Ring zu. Die Tasten zeigen die Profilfarbe und das aktive Profil.</value>
+  </data>
+  <data name="Integrations_Logi.Header" xml:space="preserve">
+    <value>Logi Actions-Plug-in</value>
+  </data>
+  <data name="Integrations_Logitech.Text" xml:space="preserve">
+    <value>Logitech</value>
+  </data>
+  <data name="Integrations_Mouse.Description" xml:space="preserve">
+    <value>Jede Maustaste, die eine Datei oder einen Link öffnen kann, funktioniert ebenfalls: Lassen Sie sie auf eine .nethop-Datei oder eine nethop://-Verknüpfung zeigen.</value>
+  </data>
+  <data name="Integrations_Mouse.Header" xml:space="preserve">
+    <value>Maustasten</value>
+  </data>
+  <data name="Integrations_PadActions.Description" xml:space="preserve">
+    <value>Eine Gruppe „NetHop“ im Aktionsbereich: Profil anwenden, Status lesen, „If network profile is active“, Automatisierungen anhalten.</value>
+  </data>
+  <data name="Integrations_PadActions.Header" xml:space="preserve">
+    <value>Power Automate Desktop-Aktionen</value>
+  </data>
+  <data name="Integrations_PadInstall.Description" xml:space="preserve">
+    <value>Signieren Sie NetHop.cab mit dem Codesignaturzertifikat Ihrer Organisation (scripts\Build-PowerAutomateModule.ps1) und laden Sie es dann im Power Automate-Portal unter „Benutzerdefinierte Aktionen“ hoch.</value>
+  </data>
+  <data name="Integrations_PadInstall.Header" xml:space="preserve">
+    <value>Installation</value>
+  </data>
+  <data name="Integrations_PowerAutomate.Text" xml:space="preserve">
+    <value>Power Automate</value>
+  </data>
+  <data name="Integrations_PowerShell.Description" xml:space="preserve">
+    <value>Wird mit NetHop installiert; funktioniert in „PowerShell-Skript ausführen“ und in jedem Terminal.</value>
+  </data>
+  <data name="Integrations_PowerShell.Header" xml:space="preserve">
+    <value>PowerShell</value>
+  </data>
+  <data name="Integrations_PsApply.Header" xml:space="preserve">
+    <value>Profil anwenden</value>
+  </data>
+  <data name="Integrations_PsStatus.Header" xml:space="preserve">
+    <value>Aktives Profil</value>
+  </data>
+  <data name="Integrations_Title.Text" xml:space="preserve">
+    <value>Integrationen</value>
+  </data>
+  <data name="Integrations_Windows.Text" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="Main_AccessDeniedMessage" xml:space="preserve">
+    <value>Nur Mitglieder der Gruppe „Administratoren“ können NetHop verwenden.</value>
+  </data>
+  <data name="Main_AccessDeniedTitle" xml:space="preserve">
+    <value>Administratorkonto erforderlich</value>
+  </data>
+  <data name="Main_ReadOnly.Message" xml:space="preserve">
+    <value>Dieses Konto ist kein Administrator. Solange Sie NetHop nicht als Administrator ausführen, können Sie Profile, Regeln und Adapter ansehen, aber nicht ändern.</value>
+  </data>
+  <data name="Main_ReadOnly.Title" xml:space="preserve">
+    <value>Schreibgeschützt</value>
+  </data>
+  <data name="Main_RestartAsAdmin.Content" xml:space="preserve">
+    <value>Als Administrator neu starten</value>
+  </data>
+  <data name="Main_ServiceStoppedMessage" xml:space="preserve">
+    <value>Profile können nicht angewendet werden. Starten Sie den Dienst in einem Administrator-Terminal: sc start NetHop</value>
+  </data>
+  <data name="Main_ServiceStoppedTitle" xml:space="preserve">
+    <value>Der NetHop-Dienst wird nicht ausgeführt</value>
+  </data>
+  <data name="Mode_Dhcp" xml:space="preserve">
+    <value>Automatisch</value>
+  </data>
+  <data name="Mode_Static" xml:space="preserve">
+    <value>Statisch</value>
+  </data>
+  <data name="Mode_Unchanged" xml:space="preserve">
+    <value>Unverändert lassen</value>
+  </data>
+  <data name="Nav_Adapters.Content" xml:space="preserve">
+    <value>Netzwerkadapter</value>
+  </data>
+  <data name="Nav_Automations.Content" xml:space="preserve">
+    <value>Automatisierungen</value>
+  </data>
+  <data name="Nav_Dashboard.Content" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Nav_Integrations.Content" xml:space="preserve">
+    <value>Integrationen</value>
+  </data>
+  <data name="Nav_Profiles.Content" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="ProfileForm_AdapterFound" xml:space="preserve">
+    <value>Auf diesem PC: {0}</value>
+  </data>
+  <data name="ProfileForm_AdapterMissing" xml:space="preserve">
+    <value>Auf diesem PC nicht gefunden: Er wird hier übersprungen.</value>
+  </data>
+  <data name="ProfileForm_Adapters" xml:space="preserve">
+    <value>Netzwerkadapter</value>
+  </data>
+  <data name="ProfileForm_AddAdapter" xml:space="preserve">
+    <value>Adapter hinzufügen</value>
+  </data>
+  <data name="ProfileForm_AddByName" xml:space="preserve">
+    <value>Anderer Adapter (nach Name)</value>
+  </data>
+  <data name="ProfileForm_Addresses" xml:space="preserve">
+    <value>{0}-Adressen</value>
+  </data>
+  <data name="ProfileForm_AddressesHelp" xml:space="preserve">
+    <value>Adresse/Präfix, z. B. 192.168.1.10/24. Sie können mehrere hinzufügen.</value>
+  </data>
+  <data name="ProfileForm_Appearance" xml:space="preserve">
+    <value>Symbol und Farbe</value>
+  </data>
+  <data name="ProfileForm_Description" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="ProfileForm_DisabledNoIp" xml:space="preserve">
+    <value>Der Adapter wird deaktiviert: keine IP-Einstellungen.</value>
+  </data>
+  <data name="ProfileForm_Dns" xml:space="preserve">
+    <value>{0}-DNS</value>
+  </data>
+  <data name="ProfileForm_DnsHelp" xml:space="preserve">
+    <value>Der erste ist der bevorzugte Server.</value>
+  </data>
+  <data name="ProfileForm_DnsServers" xml:space="preserve">
+    <value>{0}-DNS-Server</value>
+  </data>
+  <data name="ProfileForm_Gateways" xml:space="preserve">
+    <value>{0}-Gateways</value>
+  </data>
+  <data name="ProfileForm_MatchHelp" xml:space="preserve">
+    <value>Wird verwendet, wenn ID und MAC-Adresse des Adapters nicht gefunden werden, z. B. auf einem anderen PC.</value>
+  </data>
+  <data name="ProfileForm_MatchName" xml:space="preserve">
+    <value>Adaptername</value>
+  </data>
+  <data name="ProfileForm_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ProfileForm_NamePlaceholder" xml:space="preserve">
+    <value>z. B. Büro</value>
+  </data>
+  <data name="ProfileForm_NoAdapters" xml:space="preserve">
+    <value>Fügen Sie die Adapter hinzu, die dieses Profil ändert.</value>
+  </data>
+  <data name="ProfileForm_Optional" xml:space="preserve">
+    <value>Optional</value>
+  </data>
+  <data name="Profiles_Apply.Text" xml:space="preserve">
+    <value>Anwenden</value>
+  </data>
+  <data name="Profiles_ApplyFailed" xml:space="preserve">
+    <value>Anwenden fehlgeschlagen</value>
+  </data>
+  <data name="Profiles_CannotRead" xml:space="preserve">
+    <value>Die Datei kann nicht gelesen werden</value>
+  </data>
+  <data name="Profiles_Capture.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Neues Profil aus der aktuellen Konfiguration aller Adapter</value>
+  </data>
+  <data name="Profiles_CaptureText.Text" xml:space="preserve">
+    <value>Aus aktueller</value>
+  </data>
+  <data name="Profiles_CapturedName" xml:space="preserve">
+    <value>Aktuelle Konfiguration</value>
+  </data>
+  <data name="Profiles_Check" xml:space="preserve">
+    <value>Profil prüfen</value>
+  </data>
+  <data name="Profiles_Delete.Text" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Profiles_DeleteConfirm" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Profiles_DeleteMessage" xml:space="preserve">
+    <value>Die Profildatei wird entfernt. Dies kann nicht rückgängig gemacht werden.</value>
+  </data>
+  <data name="Profiles_DeleteTitle" xml:space="preserve">
+    <value>„{0}“ löschen?</value>
+  </data>
+  <data name="Profiles_Empty.Text" xml:space="preserve">
+    <value>Wählen Sie ein Profil aus oder erstellen Sie ein neues.</value>
+  </data>
+  <data name="Profiles_Export.Text" xml:space="preserve">
+    <value>Exportieren</value>
+  </data>
+  <data name="Profiles_FileType" xml:space="preserve">
+    <value>NetHop-Profil</value>
+  </data>
+  <data name="Profiles_FormView.Text" xml:space="preserve">
+    <value>Formular</value>
+  </data>
+  <data name="Profiles_Imported" xml:space="preserve">
+    <value>{0} importiert</value>
+  </data>
+  <data name="Profiles_ImportedHelp" xml:space="preserve">
+    <value>Überprüfen Sie das Profil und klicken Sie dann auf „Speichern“, um es hinzuzufügen.</value>
+  </data>
+  <data name="Profiles_New.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Neues leeres Profil</value>
+  </data>
+  <data name="Profiles_NewName" xml:space="preserve">
+    <value>Neues Profil</value>
+  </data>
+  <data name="Profiles_NewText.Text" xml:space="preserve">
+    <value>Neu</value>
+  </data>
+  <data name="Profiles_NotSaved" xml:space="preserve">
+    <value>Nicht gespeichert</value>
+  </data>
+  <data name="Profiles_Preview.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Anzeigen, was sich ändern würde, ohne etwas zu ändern</value>
+  </data>
+  <data name="Profiles_PreviewText.Text" xml:space="preserve">
+    <value>Vorschau</value>
+  </data>
+  <data name="Profiles_PreviewTitle" xml:space="preserve">
+    <value>Vorschau</value>
+  </data>
+  <data name="Profiles_Save.Text" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="Profiles_Saved" xml:space="preserve">
+    <value>Profil gespeichert</value>
+  </data>
+  <data name="Profiles_Title.Text" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Profiles_YamlError" xml:space="preserve">
+    <value>YAML-Fehler</value>
+  </data>
+  <data name="Profiles_YamlView.Text" xml:space="preserve">
+    <value>YAML</value>
+  </data>
+  <data name="RuleForm_Adapter" xml:space="preserve">
+    <value>Adapter</value>
+  </data>
+  <data name="RuleForm_AddAction" xml:space="preserve">
+    <value>Aktion hinzufügen</value>
+  </data>
+  <data name="RuleForm_AddCondition" xml:space="preserve">
+    <value>Bedingung hinzufügen</value>
+  </data>
+  <data name="RuleForm_AnyAdapter" xml:space="preserve">
+    <value>Beliebiger Adapter</value>
+  </data>
+  <data name="RuleForm_Arguments" xml:space="preserve">
+    <value>Argumente</value>
+  </data>
+  <data name="RuleForm_At" xml:space="preserve">
+    <value>Uhrzeit (HH:mm)</value>
+  </data>
+  <data name="RuleForm_Command" xml:space="preserve">
+    <value>Programm</value>
+  </data>
+  <data name="RuleForm_Cooldown" xml:space="preserve">
+    <value>Sperrzeit (Sekunden)</value>
+  </data>
+  <data name="RuleForm_CooldownHelp" xml:space="preserve">
+    <value>Mindestzeit zwischen zwei Ausführungen dieser Regel.</value>
+  </data>
+  <data name="RuleForm_Days" xml:space="preserve">
+    <value>Tage</value>
+  </data>
+  <data name="RuleForm_DaysHelp" xml:space="preserve">
+    <value>Keine Auswahl bedeutet jeden Tag.</value>
+  </data>
+  <data name="RuleForm_Message" xml:space="preserve">
+    <value>Benachrichtigungstext</value>
+  </data>
+  <data name="RuleForm_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="RuleForm_NamePlaceholder" xml:space="preserve">
+    <value>z. B. Ankunft im Büro</value>
+  </data>
+  <data name="RuleForm_NewRule" xml:space="preserve">
+    <value>Neue Regel</value>
+  </data>
+  <data name="RuleForm_NoRules" xml:space="preserve">
+    <value>Noch keine Regeln. Fügen Sie eine hinzu, zum Beispiel: „Wenn ich mich mit dem Büro-WLAN verbinde, das Profil Büro anwenden“.</value>
+  </data>
+  <data name="RuleForm_Off" xml:space="preserve">
+    <value>Aus</value>
+  </data>
+  <data name="RuleForm_On" xml:space="preserve">
+    <value>Ein</value>
+  </data>
+  <data name="RuleForm_OnlyIf" xml:space="preserve">
+    <value>Nur wenn</value>
+  </data>
+  <data name="RuleForm_Priority" xml:space="preserve">
+    <value>Priorität</value>
+  </data>
+  <data name="RuleForm_PriorityHelp" xml:space="preserve">
+    <value>Wenn mehrere Regeln gleichzeitig ein Profil anwenden, gewinnt die höchste Priorität.</value>
+  </data>
+  <data name="RuleForm_Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="RuleForm_RunCommandHelp" xml:space="preserve">
+    <value>Wird unter Ihrem Konto ausgeführt, nie mit den Administratorrechten des Dienstes.</value>
+  </data>
+  <data name="RuleForm_Ssid" xml:space="preserve">
+    <value>WLAN-Netzwerk (SSID)</value>
+  </data>
+  <data name="RuleForm_SsidHelp" xml:space="preserve">
+    <value>Leer bedeutet jedes Netzwerk. Ein abschließendes * passt auf Namen, die mit dem Text beginnen. Groß-/Kleinschreibung wird beachtet.</value>
+  </data>
+  <data name="RuleForm_SsidPlaceholder" xml:space="preserve">
+    <value>CORP-WiFi oder Zuhause*</value>
+  </data>
+  <data name="RuleForm_Summary" xml:space="preserve">
+    <value>{0} → {1}</value>
+  </data>
+  <data name="RuleForm_Then" xml:space="preserve">
+    <value>Dann</value>
+  </data>
+  <data name="RuleForm_Unnamed" xml:space="preserve">
+    <value>Unbenannte Regel</value>
+  </data>
+  <data name="RuleForm_When" xml:space="preserve">
+    <value>Wenn</value>
+  </data>
+  <data name="Settings_About.Text" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Settings_Folder.Description" xml:space="preserve">
+    <value>Eine Kopie jedes Profils, an den Schnellzugriff angeheftet. Doppelklicken Sie auf eine Datei, um sie zu bearbeiten, Rechtsklick zum Anwenden.</value>
+  </data>
+  <data name="Settings_Folder.Header" xml:space="preserve">
+    <value>Profilordner</value>
+  </data>
+  <data name="Settings_FolderOpen.Content" xml:space="preserve">
+    <value>Ordner öffnen</value>
+  </data>
+  <data name="Settings_Language.Description" xml:space="preserve">
+    <value>Starten Sie NetHop nach dem Ändern neu.</value>
+  </data>
+  <data name="Settings_Language.Header" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Settings_LanguageRestart" xml:space="preserve">
+    <value>Starten Sie NetHop neu, um die neue Sprache zu verwenden.</value>
+  </data>
+  <data name="Settings_LanguageSystem" xml:space="preserve">
+    <value>Windows-Anzeigesprache</value>
+  </data>
+  <data name="Settings_Service.Header" xml:space="preserve">
+    <value>NetHop-Dienst</value>
+  </data>
+  <data name="Settings_ServiceDetails" xml:space="preserve">
+    <value>Wird ausgeführt · Version {0} · Profile in {1}</value>
+  </data>
+  <data name="Settings_ServiceNotAdmin" xml:space="preserve">
+    <value>Wird ausgeführt, aber Ihr Konto ist kein Administrator</value>
+  </data>
+  <data name="Settings_ServiceReadOnly" xml:space="preserve">
+    <value>schreibgeschützt: Ihr Konto ist kein Administrator</value>
+  </data>
+  <data name="Settings_ServiceRunning" xml:space="preserve">
+    <value>Wird ausgeführt</value>
+  </data>
+  <data name="Settings_ServiceStopped" xml:space="preserve">
+    <value>Wird nicht ausgeführt</value>
+  </data>
+  <data name="Settings_Startup.Description" xml:space="preserve">
+    <value>NetHop startet beim Anmelden im Infobereich.</value>
+  </data>
+  <data name="Settings_Startup.Header" xml:space="preserve">
+    <value>Mit Windows starten</value>
+  </data>
+  <data name="Settings_Theme.Description" xml:space="preserve">
+    <value>Hell, dunkel oder wie Windows.</value>
+  </data>
+  <data name="Settings_Theme.Header" xml:space="preserve">
+    <value>App-Design</value>
+  </data>
+  <data name="Settings_ThemeDark" xml:space="preserve">
+    <value>Dunkel</value>
+  </data>
+  <data name="Settings_ThemeLight" xml:space="preserve">
+    <value>Hell</value>
+  </data>
+  <data name="Settings_ThemeSystem" xml:space="preserve">
+    <value>Windows-Einstellung verwenden</value>
+  </data>
+  <data name="Settings_Title.Text" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Settings_Version" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="State_Disabled" xml:space="preserve">
+    <value>Deaktivieren</value>
+  </data>
+  <data name="State_Enabled" xml:space="preserve">
+    <value>Aktivieren</value>
+  </data>
+  <data name="State_Unchanged" xml:space="preserve">
+    <value>Unverändert lassen</value>
+  </data>
+  <data name="Toast_AutomationsPaused" xml:space="preserve">
+    <value>Automatisierungen angehalten</value>
+  </data>
+  <data name="Toast_AutomationsResumed" xml:space="preserve">
+    <value>Automatisierungen fortgesetzt</value>
+  </data>
+  <data name="Toast_Drifted" xml:space="preserve">
+    <value>„{0}“ entspricht nicht mehr dem Netzwerk</value>
+  </data>
+  <data name="Toast_ProfilesChanged" xml:space="preserve">
+    <value>Profile aktualisiert</value>
+  </data>
+  <data name="Toast_Rule" xml:space="preserve">
+    <value>Regel: {0}</value>
+  </data>
+  <data name="Toast_RuleFailed" xml:space="preserve">
+    <value>Regel „{0}“ fehlgeschlagen</value>
+  </data>
+  <data name="Toast_RulesChanged" xml:space="preserve">
+    <value>Automatisierungen aktualisiert</value>
+  </data>
+  <data name="Toast_ServiceBack" xml:space="preserve">
+    <value>Wieder mit dem NetHop-Dienst verbunden</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Beenden</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>NetHop öffnen</value>
+  </data>
+  <data name="Trigger_AdapterConnected" xml:space="preserve">
+    <value>Adapter verbunden</value>
+  </data>
+  <data name="Trigger_AdapterDisconnected" xml:space="preserve">
+    <value>Adapter getrennt</value>
+  </data>
+  <data name="Trigger_Logon" xml:space="preserve">
+    <value>Anmeldung</value>
+  </data>
+  <data name="Trigger_NetworkChanged" xml:space="preserve">
+    <value>Netzwerk geändert</value>
+  </data>
+  <data name="Trigger_Resume" xml:space="preserve">
+    <value>Fortsetzen aus dem Energiesparmodus</value>
+  </data>
+  <data name="Trigger_Schedule" xml:space="preserve">
+    <value>Zu einer Uhrzeit</value>
+  </data>
+  <data name="Trigger_Startup" xml:space="preserve">
+    <value>Windows-Start</value>
+  </data>
+  <data name="Trigger_WifiConnected" xml:space="preserve">
+    <value>WLAN verbunden</value>
+  </data>
+  <data name="Trigger_WifiDisconnected" xml:space="preserve">
+    <value>WLAN getrennt</value>
+  </data>
+  <data name="Uninstall_Question" xml:space="preserve">
+    <value>Auch den Ordner „NetHop Profiles“ in Ihrem Benutzerordner löschen?
+
+{0}
+
+Er enthält die Kopien Ihrer Profile und alle Dateien, die Sie dort gespeichert haben. Sie werden gelöscht, und der Ordner wird aus dem Schnellzugriff entfernt.</value>
+  </data>
+  <data name="Uninstall_Title" xml:space="preserve">
+    <value>NetHop deinstallieren</value>
+  </data>
+</root>

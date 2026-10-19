@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Rules_SchemaUnsupported" xml:space="preserve">
+    <value>Versão de esquema {0} sem suporte.</value>
+  </data>
+  <data name="Rules_NameRequired" xml:space="preserve">
+    <value>A regra precisa de um nome.</value>
+  </data>
+  <data name="Rules_TriggerRequired" xml:space="preserve">
+    <value>A regra precisa de um gatilho.</value>
+  </data>
+  <data name="Rules_TimeFormat" xml:space="preserve">
+    <value>Use o formato HH:mm.</value>
+  </data>
+  <data name="Rules_NoActions" xml:space="preserve">
+    <value>A regra não tem ações.</value>
+  </data>
+  <data name="Rules_ConditionTypeMissing" xml:space="preserve">
+    <value>Tipo de condição ausente.</value>
+  </data>
+  <data name="Rules_FromToFormat" xml:space="preserve">
+    <value>"from" e "to" devem usar o formato HH:mm.</value>
+  </data>
+  <data name="Rules_AdapterRequired" xml:space="preserve">
+    <value>Especifique o adaptador.</value>
+  </data>
+  <data name="Rules_ProfileNameRequired" xml:space="preserve">
+    <value>Especifique o nome do perfil.</value>
+  </data>
+  <data name="Rules_SsidRequired" xml:space="preserve">
+    <value>Especifique o SSID.</value>
+  </data>
+  <data name="Rules_ActionTypeMissing" xml:space="preserve">
+    <value>Tipo de ação ausente.</value>
+  </data>
+  <data name="Rules_ProfileToApplyRequired" xml:space="preserve">
+    <value>Especifique o perfil a aplicar.</value>
+  </data>
+  <data name="Rules_MessageRequired" xml:space="preserve">
+    <value>Especifique o texto da notificação.</value>
+  </data>
+  <data name="Rules_CommandRequired" xml:space="preserve">
+    <value>Especifique o comando a executar.</value>
+  </data>
+  <data name="Rules_UrlRequired" xml:space="preserve">
+    <value>Especifique uma URL absoluta.</value>
+  </data>
+  <data name="Rules_FlowUrlRequired" xml:space="preserve">
+    <value>Cole a URL de execução do fluxo (ela começa com ms-powerautomate:).</value>
+  </data>
+  <data name="Rules_DelayRange" xml:space="preserve">
+    <value>A espera deve estar entre 1 e 600 segundos.</value>
+  </data>
+  <data name="Profile_SchemaUnsupported" xml:space="preserve">
+    <value>Versão de esquema {0} sem suporte (esta versão do NetHop entende até a {1}).</value>
+  </data>
+  <data name="Profile_NameRequired" xml:space="preserve">
+    <value>O perfil precisa de um nome.</value>
+  </data>
+  <data name="Profile_NameTooLong" xml:space="preserve">
+    <value>O nome tem mais de {0} caracteres.</value>
+  </data>
+  <data name="Profile_IdEmpty" xml:space="preserve">
+    <value>O id do perfil não pode estar vazio.</value>
+  </data>
+  <data name="Profile_ColorFormat" xml:space="preserve">
+    <value>Use o formato #RRGGBB.</value>
+  </data>
+  <data name="Profile_IconFormat" xml:space="preserve">
+    <value>Um ícone personalizado deve ser uma imagem PNG de no máximo {0} KB (data:image/png;base64,...).</value>
+  </data>
+  <data name="Profile_NoAdapters" xml:space="preserve">
+    <value>O perfil não configura nenhum adaptador.</value>
+  </data>
+  <data name="Profile_MatchEmpty" xml:space="preserve">
+    <value>Defina pelo menos guid, mac ou name.</value>
+  </data>
+  <data name="Profile_GuidInvalid" xml:space="preserve">
+    <value>"{0}" não é um GUID válido.</value>
+  </data>
+  <data name="Profile_MacInvalid" xml:space="preserve">
+    <value>"{0}" não é um endereço MAC válido.</value>
+  </data>
+  <data name="Profile_AdapterChangesNothing" xml:space="preserve">
+    <value>Esta entrada de adaptador não altera nada.</value>
+  </data>
+  <data name="Profile_DisabledIgnoresIp" xml:space="preserve">
+    <value>O adaptador está desabilitado, portanto suas configurações de IP serão ignoradas.</value>
+  </data>
+  <data name="Profile_CidrInvalid" xml:space="preserve">
+    <value>"{0}" não é um endereço na notação CIDR (por exemplo, {1}).</value>
+  </data>
+  <data name="Profile_WrongFamily" xml:space="preserve">
+    <value>"{0}" não é um endereço {1}.</value>
+  </data>
+  <data name="Profile_NetworkOrBroadcast" xml:space="preserve">
+    <value>"{0}" é o endereço de rede ou de broadcast da sua sub-rede.</value>
+  </data>
+  <data name="Profile_LinkLocal" xml:space="preserve">
+    <value>Endereços de link local são atribuídos automaticamente pelo Windows.</value>
+  </data>
+  <data name="Profile_Duplicate" xml:space="preserve">
+    <value>"{0}" aparece duas vezes.</value>
+  </data>
+  <data name="Profile_StaticNeedsAddress" xml:space="preserve">
+    <value>O modo estático precisa de pelo menos um endereço.</value>
+  </data>
+  <data name="Profile_AddressesOnlyStatic" xml:space="preserve">
+    <value>Endereços e gateways só podem ser definidos no modo estático (o modo é "{0}").</value>
+  </data>
+  <data name="Profile_GatewayOutsideSubnet" xml:space="preserve">
+    <value>O gateway {0} está fora de todas as sub-redes configuradas.</value>
+  </data>
+  <data name="Profile_StaticDnsNeedsServer" xml:space="preserve">
+    <value>O DNS estático precisa de pelo menos um servidor.</value>
+  </data>
+  <data name="Profile_DnsServersOnlyStatic" xml:space="preserve">
+    <value>Servidores DNS só podem ser listados no modo estático.</value>
+  </data>
+  <data name="Profile_StaticIpv4NoDhcpDns" xml:space="preserve">
+    <value>Com um endereço IPv4 estático, o Windows não recebe servidores DNS do DHCP.</value>
+  </data>
+  <data name="Profile_FamilyChangesNothing" xml:space="preserve">
+    <value>Este bloco {0} não altera nada.</value>
+  </data>
+  <data name="Profile_IpInvalid" xml:space="preserve">
+    <value>"{0}" não é um endereço IP válido.</value>
+  </data>
+  <data name="Profile_SameAdapter" xml:space="preserve">
+    <value>Mesmo adaptador que adapters[{0}].</value>
+  </data>
+  <data name="Step_Enable" xml:space="preserve">
+    <value>Habilitar o adaptador "{0}"</value>
+  </data>
+  <data name="Step_Wait" xml:space="preserve">
+    <value>Aguardar o adaptador "{0}" ficar pronto</value>
+  </data>
+  <data name="Step_Disable" xml:space="preserve">
+    <value>Desabilitar o adaptador "{0}"</value>
+  </data>
+  <data name="Step_DhcpOn" xml:space="preserve">
+    <value>Habilitar a configuração {0} automática em "{1}"</value>
+  </data>
+  <data name="Step_DhcpOff" xml:space="preserve">
+    <value>Desabilitar a configuração {0} automática em "{1}"</value>
+  </data>
+  <data name="Step_AddAddress" xml:space="preserve">
+    <value>Adicionar o endereço {0} a "{1}"</value>
+  </data>
+  <data name="Step_RemoveAddress" xml:space="preserve">
+    <value>Remover o endereço {0} de "{1}"</value>
+  </data>
+  <data name="Step_AddGateway" xml:space="preserve">
+    <value>Adicionar o gateway padrão {0} a "{1}"</value>
+  </data>
+  <data name="Step_RemoveGateway" xml:space="preserve">
+    <value>Remover o gateway padrão {0} de "{1}"</value>
+  </data>
+  <data name="Step_DnsAuto" xml:space="preserve">
+    <value>Usar DNS {0} automático em "{1}"</value>
+  </data>
+  <data name="Step_DnsSet" xml:space="preserve">
+    <value>Definir o DNS {0} de "{1}" como {2}</value>
+  </data>
+  <data name="Plan_Skipped" xml:space="preserve">
+    <value>{0} Ignorado.</value>
+  </data>
+  <data name="Plan_AdapterTwice" xml:space="preserve">
+    <value>O adaptador "{0}" está configurado mais de uma vez.</value>
+  </data>
+  <data name="Plan_DisabledSkipsIp" xml:space="preserve">
+    <value>O adaptador "{0}" está desabilitado; configurações de IP ignoradas.</value>
+  </data>
+  <data name="Match_SharedMac" xml:space="preserve">
+    <value>{0} adaptadores compartilham o endereço MAC {1}.</value>
+  </data>
+  <data name="Match_SharedName" xml:space="preserve">
+    <value>{0} adaptadores se chamam "{1}".</value>
+  </data>
+  <data name="Match_NotFound" xml:space="preserve">
+    <value>Nenhum adaptador corresponde a "{0}".</value>
+  </data>
+  <data name="Apply_ProfileHasErrors" xml:space="preserve">
+    <value>O perfil tem erros.</value>
+  </data>
+  <data name="Issue_Error" xml:space="preserve">
+    <value>erro</value>
+  </data>
+  <data name="Issue_Warning" xml:space="preserve">
+    <value>aviso</value>
+  </data>
+</root>

@@ -386,7 +386,7 @@
     <value>Tasti del mouse</value>
   </data>
   <data name="Integrations_PadActions.Description" xml:space="preserve">
-    <value>Un gruppo 'NetHop' nel pannello delle azioni: applicare un profilo o il successivo, leggere lo stato, 'If network profile is active', mettere in pausa le automazioni.</value>
+    <value>Un gruppo 'NetHop' nel pannello delle azioni: applicare un profilo, leggere lo stato, 'If network profile is active', mettere in pausa le automazioni.</value>
   </data>
   <data name="Integrations_PadActions.Header" xml:space="preserve">
     <value>Azioni di Power Automate Desktop</value>
