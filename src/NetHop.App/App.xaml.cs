@@ -52,9 +52,9 @@ public partial class App : Application
 
         switch (activation.Kind)
         {
-            case ExtendedActivationKind.File when activation.Data is IFileActivatedEventArgs file && file.Files.Count > 0:
+            case ExtendedActivationKind.File when activation.Data is IFileActivatedEventArgs fileArgs && fileArgs.Files.Count > 0:
                 ShowMainWindow();
-                _mainWindow!.ImportProfileFile(file.Files[0].Path);
+                _mainWindow!.ImportProfileFile(fileArgs.Files[0].Path);
                 break;
 
             case ExtendedActivationKind.Protocol when activation.Data is IProtocolActivatedEventArgs protocol:

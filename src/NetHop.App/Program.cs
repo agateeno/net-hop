@@ -30,7 +30,8 @@ public static class Program
         mainInstance.Activated += (_, e) => App.Current?.HandleActivation(e, isLaunch: false);
         Services.AppLanguage.Apply();
 
-        Application.Start(_ =>
+        // The parameter must not be named "_": inside the lambda "_ = new App()" would then assign to it.
+        Application.Start(callbackParams =>
         {
             var context = new DispatcherQueueSynchronizationContext(DispatcherQueue.GetForCurrentThread());
             SynchronizationContext.SetSynchronizationContext(context);
