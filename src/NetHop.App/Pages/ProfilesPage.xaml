@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NetHop.App.Pages.ProfilesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ipc="using:NetHop.Ipc"
+    xmlns:app="using:NetHop.App">
+
+    <Grid Margin="{StaticResource PageMargin}" ColumnSpacing="24" RowSpacing="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.ColumnSpan="2" Text="Profiles" Style="{StaticResource PageTitleStyle}" />
+
+        <!-- Profile list -->
+        <Grid Grid.Row="1" RowSpacing="8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Click="OnNewClick" ToolTipService.ToolTip="New empty profile">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xE710;" FontSize="14" />
+                        <TextBlock Text="New" />
+                    </StackPanel>
+                </Button>
+                <Button Click="OnCaptureClick" ToolTipService.ToolTip="New profile from the current configuration of all adapters">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xE722;" FontSize="14" />
+                        <TextBlock Text="From current" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <ListView x:Name="ProfileList" Grid.Row="1" SelectionChanged="OnSelectionChanged">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="ipc:ProfileSummary">
+                        <StackPanel Orientation="Horizontal" Spacing="12" Padding="0,8">
+                            <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="16" />
+                            <TextBlock Text="{x:Bind Name}" />
+                            <FontIcon Glyph="&#xE73E;" FontSize="12" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                      Visibility="{x:Bind IsActive}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
+        <!-- Editor -->
+        <Grid Grid.Row="1" Grid.Column="1" RowSpacing="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button x:Name="SaveButton" Style="{StaticResource AccentButtonStyle}" Click="OnSaveClick">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xE74E;" FontSize="14" />
+                        <TextBlock Text="Save" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="ApplyButton" Click="OnApplyClick">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xE768;" FontSize="14" />
+                        <TextBlock Text="Apply" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="DryRunButton" Click="OnDryRunClick" ToolTipService.ToolTip="Show what would change, without changing anything">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xE7B3;" FontSize="14" />
+                        <TextBlock Text="Preview" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="ExportButton" Click="OnExportClick">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xEDE1;" FontSize="14" />
+                        <TextBlock Text="Export" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="DeleteButton" Click="OnDeleteClick">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xE74D;" FontSize="14" />
+                        <TextBlock Text="Delete" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <TextBox x:Name="Editor" Grid.Row="1" Style="{StaticResource CodeEditorStyle}"
+                     PlaceholderText="Select a profile, or create a new one." TextChanged="OnEditorTextChanged" />
+
+            <InfoBar x:Name="Result" Grid.Row="2" IsClosable="True" />
+        </Grid>
+    </Grid>
+</Page>

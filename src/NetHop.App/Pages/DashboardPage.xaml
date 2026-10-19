@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NetHop.App.Pages.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ipc="using:NetHop.Ipc"
+    xmlns:app="using:NetHop.App">
+
+    <ScrollViewer>
+        <StackPanel Margin="{StaticResource PageMargin}" MaxWidth="{StaticResource PageMaxWidth}" Spacing="{StaticResource SettingsCardSpacing}">
+            <TextBlock Text="Dashboard" Style="{StaticResource PageTitleStyle}" />
+
+            <InfoBar x:Name="SsidWarning" Severity="Warning" IsClosable="False"
+                     Title="Wi-Fi names are not available"
+                     Message="Windows only shares the SSID of the current network with apps that have location access. Rules based on Wi-Fi names will not fire until it is turned on." >
+                <InfoBar.ActionButton>
+                    <HyperlinkButton Content="Open location settings" NavigateUri="ms-settings:privacy-location" />
+                </InfoBar.ActionButton>
+            </InfoBar>
+
+            <InfoBar x:Name="LastResult" IsClosable="True" />
+
+            <toolkit:SettingsCard x:Name="ActiveCard" Header="Active profile" Description="-">
+                <toolkit:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE80F;" />
+                </toolkit:SettingsCard.HeaderIcon>
+                <Button x:Name="NextButton" Content="Apply next profile" Click="OnNextClick" />
+            </toolkit:SettingsCard>
+
+            <toolkit:SettingsCard x:Name="AutomationsCard" Header="Automations" Description="Active">
+                <toolkit:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE945;" />
+                </toolkit:SettingsCard.HeaderIcon>
+                <ToggleSwitch x:Name="AutomationsSwitch" OnContent="On" OffContent="Paused for 1 hour" Toggled="OnAutomationsToggled" />
+            </toolkit:SettingsCard>
+
+            <TextBlock Text="Switch profile" Style="{StaticResource SectionHeaderStyle}" />
+            <GridView x:Name="ProfileGrid" SelectionMode="None" IsItemClickEnabled="True" ItemClick="OnProfileClick">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="ipc:ProfileSummary">
+                        <Grid Width="220" Height="88" Padding="16" CornerRadius="{StaticResource ControlCornerRadius}"
+                              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                              ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="24" VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Text="{x:Bind Name}" Style="{StaticResource BodyStrongTextBlockStyle}" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="Active" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                           Style="{StaticResource CaptionTextBlockStyle}" Visibility="{x:Bind IsActive}" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+            <TextBlock x:Name="NoProfilesText" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="No profiles yet. Create one in the Profiles page, or double-click a .nethop file." TextWrapping="Wrap" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore NetHop.slnx
+
+      - name: Build
+        run: dotnet build NetHop.slnx -c Release --no-restore
+
+      - name: Test
+        run: dotnet test tests/NetHop.Core.Tests -c Release --no-build --logger "trx;LogFileName=results.trx"
+
+      - name: Publish (x64)
+        shell: pwsh
+        run: |
+          dotnet publish src/NetHop.Service -c Release -r win-x64 --self-contained false -o out/NetHop/service
+          dotnet publish src/NetHop.Cli -c Release -r win-x64 --self-contained false -o out/NetHop/cli
+          dotnet publish src/NetHop.App -c Release -r win-x64 -p:Platform=x64 -o out/NetHop/app
+          Copy-Item scripts/*.ps1 out/NetHop/
+          Copy-Item samples out/NetHop/samples -Recurse
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: NetHop-win-x64
+          path: out/NetHop
+          retention-days: 14
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: tests/**/TestResults/*.trx

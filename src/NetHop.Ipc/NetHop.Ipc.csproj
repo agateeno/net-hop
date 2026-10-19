@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- GenerateShape is only needed by the MessagePack formatter; NetHop uses System.Text.Json. -->
+    <NoWarn>$(NoWarn);StreamJsonRpc0008</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="StreamJsonRpc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetHop.Core\NetHop.Core.csproj" />
+  </ItemGroup>
+</Project>

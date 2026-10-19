@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NetHop.App.Pages.IntegrationsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
+
+    <ScrollViewer>
+        <StackPanel Margin="{StaticResource PageMargin}" MaxWidth="{StaticResource PageMaxWidth}" Spacing="{StaticResource SettingsCardSpacing}">
+            <TextBlock Text="Integrations" Style="{StaticResource PageTitleStyle}" />
+
+            <TextBlock Text="Windows" Style="{StaticResource SectionHeaderStyle}" Margin="1,0,0,6" />
+            <toolkit:SettingsCard Header="Profile files (.nethop)"
+                                  Description="Double-click a .nethop file to import it. Profiles are plain YAML, easy to version and share.">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE8A5;" /></toolkit:SettingsCard.HeaderIcon>
+            </toolkit:SettingsCard>
+            <toolkit:SettingsExpander Header="Links (nethop://)" Description="Apply a profile from a shortcut, a browser bookmark or any app that opens URLs.">
+                <toolkit:SettingsExpander.HeaderIcon><FontIcon Glyph="&#xE71B;" /></toolkit:SettingsExpander.HeaderIcon>
+                <toolkit:SettingsExpander.Items>
+                    <toolkit:SettingsCard Header="Apply a profile">
+                        <TextBlock Text="nethop://apply/Office" IsTextSelectionEnabled="True" FontFamily="Cascadia Mono, Consolas" />
+                    </toolkit:SettingsCard>
+                    <toolkit:SettingsCard Header="Apply the next profile">
+                        <TextBlock Text="nethop://next" IsTextSelectionEnabled="True" FontFamily="Cascadia Mono, Consolas" />
+                    </toolkit:SettingsCard>
+                </toolkit:SettingsExpander.Items>
+            </toolkit:SettingsExpander>
+
+            <TextBlock Text="Power Automate" Style="{StaticResource SectionHeaderStyle}" />
+            <toolkit:SettingsExpander Header="Command line"
+                                      Description="Use 'Run application' or 'Run PowerShell script' in Power Automate Desktop. Add --json for machine-readable output.">
+                <toolkit:SettingsExpander.HeaderIcon><FontIcon Glyph="&#xE756;" /></toolkit:SettingsExpander.HeaderIcon>
+                <toolkit:SettingsExpander.Items>
+                    <toolkit:SettingsCard Header="Apply a profile">
+                        <TextBlock Text="nethop apply &quot;Office&quot;" IsTextSelectionEnabled="True" FontFamily="Cascadia Mono, Consolas" />
+                    </toolkit:SettingsCard>
+                    <toolkit:SettingsCard Header="Read the active profile">
+                        <TextBlock Text="nethop status --json" IsTextSelectionEnabled="True" FontFamily="Cascadia Mono, Consolas" />
+                    </toolkit:SettingsCard>
+                    <toolkit:SettingsCard Header="Exit codes" Description="0 ok, 1 failed, 2 usage error, 3 service not running, 4 access denied" />
+                </toolkit:SettingsExpander.Items>
+            </toolkit:SettingsExpander>
+            <toolkit:SettingsCard Header="Start flows from NetHop rules"
+                                  Description="In Automations, add a runPowerAutomateFlow action with the flow's run URL (Power Automate Desktop › flow › Properties › Run URL).">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE945;" /></toolkit:SettingsCard.HeaderIcon>
+            </toolkit:SettingsCard>
+
+            <TextBlock Text="Logitech" Style="{StaticResource SectionHeaderStyle}" />
+            <toolkit:SettingsCard Header="Logi Actions plugin"
+                                  Description="Apply profiles from MX Creative Console keys and the Actions Ring, with live icons for the active profile. The plugin is in development.">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE962;" /></toolkit:SettingsCard.HeaderIcon>
+            </toolkit:SettingsCard>
+            <toolkit:SettingsCard Header="Mouse buttons (any brand)"
+                                  Description="Until the plugin ships: in Logi Options+ choose 'Open application' and pick a .nethop file or a nethop:// shortcut." />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

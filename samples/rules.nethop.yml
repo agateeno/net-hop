@@ -1,0 +1,29 @@
+# NetHop automation rules (internal engine, no Power Automate required).
+schema: 1
+rules:
+  - name: Arrive at the office
+    priority: 10
+    cooldownSeconds: 60
+    trigger:
+      type: wifiConnected
+      ssid: CORP-WiFi
+    conditions:
+      - type: timeBetween
+        from: "07:00"
+        to: "20:00"
+      - type: daysOfWeek
+        days: [monday, tuesday, wednesday, thursday, friday]
+    actions:
+      - type: applyProfile
+        profile: Office
+      - type: notify
+        message: Office profile applied
+  - name: Back home
+    trigger:
+      type: wifiConnected
+      ssid: Casa*
+    actions:
+      - type: applyProfile
+        profile: Home
+      - type: runPowerAutomateFlow
+        url: "ms-powerautomate:/console/flow/run?workflowId=00000000-0000-0000-0000-000000000000"
