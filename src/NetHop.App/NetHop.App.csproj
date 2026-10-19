@@ -17,6 +17,8 @@
     <UseWinUI>true</UseWinUI>
     <!-- Unpackaged for now: the installer (and later an MSIX/sparse package) registers the service. -->
     <WindowsPackageType>None</WindowsPackageType>
+    <!-- Required even unpackaged: it generates the app's .pri (compiled XAML and strings). Without it the app crashes at start. -->
+    <EnableMsixTooling>true</EnableMsixTooling>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <!-- Program.cs provides Main to enforce a single instance and redirect activations. -->
     <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>

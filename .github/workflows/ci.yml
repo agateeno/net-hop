@@ -61,6 +61,16 @@ jobs:
           }
           dotnet build src/NetHop.PowerAutomate -c Release -o out/power-automate/bin
 
+      # Without its .pri (compiled XAML + strings) the app crashes at start with 0xc000027b.
+      - name: Check app resources
+        shell: pwsh
+        run: |
+          foreach ($arch in 'x64', 'arm64') {
+            $pri = Get-ChildItem "out/$arch/NetHop/bin" -Filter *.pri | Where-Object Name -in 'NetHop.App.pri', 'resources.pri'
+            if (-not $pri) { throw "$arch: the app's .pri file is missing from the build" }
+            "{0}: {1} ({2:N0} KB)" -f $arch, $pri.Name, ($pri.Length / 1KB)
+          }
+
       # Runs the real binaries on the runner: installs the service, reads the network through CIM, imports a
       # profile and plans it. Dry run only: the runner's network configuration is never changed.
       - name: Smoke test (service and CLI)

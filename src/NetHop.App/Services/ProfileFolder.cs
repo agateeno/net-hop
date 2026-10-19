@@ -88,6 +88,40 @@ public static class ProfileFolder
         }
     }
 
+    /// <summary>Unpins the folder from Quick Access and deletes it with everything in it (used on uninstall).</summary>
+    public static void Delete()
+    {
+        if (!Directory.Exists(Path))
+            return;
+
+        try
+        {
+            var shellType = Type.GetTypeFromProgID("Shell.Application");
+            if (shellType is not null)
+            {
+                dynamic shell = Activator.CreateInstance(shellType)!;
+                try
+                {
+                    shell.Namespace(Path)?.Self.InvokeVerb("unpinfromhome");
+                }
+                finally
+                {
+                    System.Runtime.InteropServices.Marshal.FinalReleaseComObject(shell);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Unpinning failed: {ex.Message}");
+        }
+
+        // desktop.ini is hidden/system and the folder read-only: clear them, or deleting fails.
+        foreach (var entry in new DirectoryInfo(Path).EnumerateFileSystemInfos("*", SearchOption.AllDirectories))
+            entry.Attributes &= ~(FileAttributes.ReadOnly | FileAttributes.Hidden | FileAttributes.System);
+        new DirectoryInfo(Path).Attributes &= ~FileAttributes.ReadOnly;
+        Directory.Delete(Path, recursive: true);
+    }
+
     public static void Open()
     {
         EnsureCreated();

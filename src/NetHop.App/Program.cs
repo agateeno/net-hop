@@ -17,6 +17,14 @@ public static class Program
     {
         WinRT.ComWrappersSupport.InitializeComWrappers();
 
+        // Uninstall helper started by the MSI: no window, no single-instance redirect.
+        if (args.Contains("--uninstall"))
+        {
+            Services.AppLanguage.Apply();
+            Services.UninstallCleanup.Run();
+            return 0;
+        }
+
         var activation = AppInstance.GetCurrent().GetActivatedEventArgs();
         var mainInstance = AppInstance.FindOrRegisterForKey(InstanceKey);
 

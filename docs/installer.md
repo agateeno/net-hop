@@ -21,6 +21,8 @@ The last page of the installer offers **Launch NetHop** (checked). On its first 
 
 These are per-user, so they happen when each user first opens NetHop, not only for the user who installed it.
 
+On **uninstall**, NetHop removes its start-with-Windows entry and asks whether to delete `%USERPROFILE%\NetHop` as well (No is the default). Yes deletes the folder with everything in it, removes it from Quick Access and clears NetHop's per-user settings. Silent uninstalls (`msiexec /qn`, `winget uninstall`) and upgrades never ask and keep the folder. The question is asked to the user running the uninstall; other users' folders stay.
+
 Profiles and rules live in `%ProgramData%\NetHop` and are **kept** on uninstall and upgrade.
 
 Upgrades: every build has a higher version, and `MajorUpgrade` replaces the previous one. During the upgrade the tray app is closed, and the service is stopped and restarted.

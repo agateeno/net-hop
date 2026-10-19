@@ -781,4 +781,14 @@
   <data name="Trigger_WifiDisconnected" xml:space="preserve">
     <value>Wi-Fi disconnected</value>
   </data>
+  <data name="Uninstall_Question" xml:space="preserve">
+    <value>Also delete the NetHop folder in your user folder?
+
+{0}
+
+It holds the copies of your profiles and any file you saved there. They will be deleted, and the folder removed from Quick Access.</value>
+  </data>
+  <data name="Uninstall_Title" xml:space="preserve">
+    <value>Uninstall NetHop</value>
+  </data>
 </root>

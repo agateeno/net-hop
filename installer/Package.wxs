@@ -53,6 +53,16 @@
     <SetProperty Id="WixShellExecTarget" Value="[INSTALLFOLDER]NetHop.App.exe" After="CostFinalize" Sequence="ui" />
     <CustomAction Id="LaunchNetHop" BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)" DllEntry="WixShellExec" Impersonate="yes" />
 
+    <!-- Uninstall: the app (as the user, before its files are removed) removes its startup entry and asks whether
+         to delete %USERPROFILE%\NetHop. Not on upgrades, and not in silent mode (UILevel 2), where the folder is kept. -->
+    <CustomAction Id="UninstallUserCleanup" Directory="INSTALLFOLDER"
+                  ExeCommand="&quot;[INSTALLFOLDER]NetHop.App.exe&quot; --uninstall"
+                  Execute="immediate" Impersonate="yes" Return="ignore" />
+    <InstallExecuteSequence>
+      <Custom Action="UninstallUserCleanup" Before="InstallInitialize"
+              Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND UILevel &lt;&gt; 2" />
+    </InstallExecuteSequence>
+
     <UI>
       <ui:WixUI Id="WixUI_FeatureTree" />
       <Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="LaunchNetHop"

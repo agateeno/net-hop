@@ -781,4 +781,14 @@
   <data name="Trigger_WifiDisconnected" xml:space="preserve">
     <value>Wi-Fi disconnesso</value>
   </data>
+  <data name="Uninstall_Question" xml:space="preserve">
+    <value>Eliminare anche la cartella NetHop nella tua cartella utente?
+
+{0}
+
+Contiene le copie dei tuoi profili e i file che vi hai salvato. Verranno eliminati, e la cartella sarà tolta dall'Accesso rapido.</value>
+  </data>
+  <data name="Uninstall_Title" xml:space="preserve">
+    <value>Disinstalla NetHop</value>
+  </data>
 </root>
