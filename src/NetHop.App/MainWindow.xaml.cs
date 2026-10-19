@@ -67,7 +67,7 @@ public sealed partial class MainWindow : Window
 
     private void OnConnectionChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(ServiceConnection.State))
+        if (e.PropertyName is nameof(ServiceConnection.State) or nameof(ServiceConnection.IsReadOnly))
             UpdateConnectionInfo();
     }
 
@@ -80,7 +80,10 @@ public sealed partial class MainWindow : Window
             _ => (InfoBarSeverity.Informational, Loc.Get("Common_ConnectingService"), ""),
         };
         ConnectionInfo.IsOpen = _connection.State != ConnectionState.Connected;
+        ReadOnlyInfo.IsOpen = _connection.IsConnected && _connection.IsReadOnly;
     }
+
+    private void OnRestartAsAdminClick(object sender, RoutedEventArgs e) => App.Current?.RestartAsAdministrator();
 
     [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]

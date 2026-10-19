@@ -34,6 +34,11 @@ catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or S
     Console.Error.WriteLine("The NetHop service refused the connection. Only administrator accounts can use NetHop.");
     return AccessDenied;
 }
+catch (StreamJsonRpc.RemoteInvocationException ex) when (NetHop.Ipc.NetHopErrors.IsReadOnly(ex))
+{
+    Console.Error.WriteLine("This account can only read NetHop's settings. Run the command as an administrator to make changes.");
+    return AccessDenied;
+}
 catch (StreamJsonRpc.RemoteInvocationException ex)
 {
     Console.Error.WriteLine(ex.Message);

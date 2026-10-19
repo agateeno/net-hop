@@ -161,6 +161,28 @@ public partial class App : Application
         _mainWindow.ShowAndFocus();
     }
 
+    /// <summary>
+    /// Starts NetHop again through UAC (which asks for an administrator's credentials) and closes this instance.
+    /// The new instance waits for this one to exit before taking over the single-instance key and the tray.
+    /// </summary>
+    public void RestartAsAdministrator()
+    {
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(Environment.ProcessPath!)
+            {
+                UseShellExecute = true,
+                Verb = "runas",
+                Arguments = $"{Program.RestartedFromArgument} {Environment.ProcessId}",
+            });
+        }
+        catch (System.ComponentModel.Win32Exception)
+        {
+            return; // UAC prompt cancelled: keep running read-only
+        }
+        ExitApp();
+    }
+
     private async void ExitApp()
     {
         _exiting = true;

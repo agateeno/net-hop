@@ -7,13 +7,14 @@ using Microsoft.Win32.SafeHandles;
 namespace NetHop.Service;
 
 /// <summary>
-/// Decides whether a pipe client may talk to the service: only members of the Administrators group (and SYSTEM).
+/// Decides how much a pipe client may do: members of the Administrators group (and SYSTEM) get full access,
+/// everyone else a read-only connection.
 /// </summary>
 /// <remarks>
 /// With UAC on, an administrator's normal (non-elevated) token still lists the Administrators group,
 /// but as "deny only". <see cref="WindowsPrincipal.IsInRole(WindowsBuiltInRole)"/> and
 /// <see cref="WindowsIdentity.Groups"/> both ignore deny-only groups, so the token groups are read
-/// directly: this way the tray app works without elevation, yet standard users are refused.
+/// directly: this way the tray app works without elevation, yet standard users only get read access.
 /// </remarks>
 internal static partial class ClientAuthorization
 {

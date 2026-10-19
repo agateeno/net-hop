@@ -87,9 +87,11 @@ internal sealed class ServiceLink : IDisposable
                 this._client = await NetHopClient.ConnectAsync(TimeSpan.FromSeconds(3), stop);
                 this._client.Service.StatusChanged += this.OnStatusChanged;
 
+                // Accounts that are not administrators get a read-only connection: the buttons could not apply anything.
+                var info = await this._client.Service.GetInfoAsync();
                 await this.RefreshAsync();
                 established = true;
-                this.SetState(LinkState.Connected);
+                this.SetState(info.ReadOnly ? LinkState.AccessDenied : LinkState.Connected);
 
                 await this._client.Completion.WaitAsync(stop);
             }
@@ -103,7 +105,7 @@ internal sealed class ServiceLink : IDisposable
             }
             catch (Exception ex)
             {
-                // The service drops connections from non-administrators right after accepting them.
+                // NetHop 0.1.8 and earlier dropped connections from non-administrators right after accepting them.
                 PluginLog.Warning(ex, "NetHop connection lost");
                 this.SetState(established ? LinkState.ServiceNotRunning : LinkState.AccessDenied);
             }

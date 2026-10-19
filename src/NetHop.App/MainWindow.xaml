@@ -51,7 +51,16 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <InfoBar x:Name="ConnectionInfo" Margin="36,12,36,0" IsClosable="False" IsOpen="False" />
+                <StackPanel>
+                    <InfoBar x:Name="ConnectionInfo" Margin="36,12,36,0" IsClosable="False" IsOpen="False" />
+                    <!-- Standard (non-admin) accounts: the service only allows reading. -->
+                    <InfoBar x:Uid="Main_ReadOnly" x:Name="ReadOnlyInfo" Margin="36,12,36,0" Severity="Warning" IsClosable="False" IsOpen="False"
+                             Title="Read-only" Message="This account is not an administrator. Until you run NetHop as administrator you can view profiles, rules and adapters, but not change them.">
+                        <InfoBar.ActionButton>
+                            <Button x:Uid="Main_RestartAsAdmin" Content="Restart as administrator" Click="OnRestartAsAdminClick" />
+                        </InfoBar.ActionButton>
+                    </InfoBar>
+                </StackPanel>
                 <Frame x:Name="ContentFrame" Grid.Row="1" />
             </Grid>
         </NavigationView>

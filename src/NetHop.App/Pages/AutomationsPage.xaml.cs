@@ -71,7 +71,7 @@ public sealed partial class AutomationsPage : Page
     private void UpdateSwitch()
     {
         _updating = true;
-        RunSwitch.IsEnabled = SaveButton.IsEnabled = _connection.IsConnected;
+        RunSwitch.IsEnabled = SaveButton.IsEnabled = _connection.CanEdit;
         RunSwitch.IsOn = _connection.Status?.AutomationsPausedUntil is null;
         RunSwitch.OffContent = _connection.Status?.AutomationsPausedUntil is { } until
             ? Loc.Format("Common_PausedUntil", until.LocalDateTime)
@@ -81,7 +81,7 @@ public sealed partial class AutomationsPage : Page
 
     private async void OnRunToggled(object sender, RoutedEventArgs e)
     {
-        if (!_updating && _connection.IsConnected)
+        if (!_updating && _connection.CanEdit)
             await _connection.Service.PauseAutomationsAsync(RunSwitch.IsOn ? 0 : 60);
     }
 
@@ -196,7 +196,7 @@ public sealed partial class AutomationsPage : Page
     {
         FormScroller.Visibility = _yamlView ? Visibility.Collapsed : Visibility.Visible;
         Editor.Visibility = _yamlView ? Visibility.Visible : Visibility.Collapsed;
-        AddRuleButton.IsEnabled = _connection.IsConnected;
+        AddRuleButton.IsEnabled = _connection.CanEdit;
     }
 
     private void ShowResult(InfoBarSeverity severity, string title, string message)

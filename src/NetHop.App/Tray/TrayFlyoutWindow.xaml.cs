@@ -102,7 +102,7 @@ public sealed partial class TrayFlyoutWindow : Window
         StateText.Visibility = warning is null ? Visibility.Collapsed : Visibility.Visible;
 
         PauseToggle.IsChecked = _connection.Status?.AutomationsPausedUntil is not null;
-        PauseToggle.IsEnabled = ProfileList.IsEnabled = _connection.IsConnected;
+        PauseToggle.IsEnabled = ProfileList.IsEnabled = _connection.CanEdit;
     }
 
     private async void OnProfileClick(object sender, ItemClickEventArgs e)

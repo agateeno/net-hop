@@ -1,6 +1,6 @@
 # Integrations
 
-NetHop can be driven from four places. All of them go through the NetHop service, so the same rule applies everywhere: **only administrator accounts** can switch profiles.
+NetHop can be driven from four places. All of them go through the NetHop service, so the same rule applies everywhere: **only administrator accounts** can switch profiles. Other accounts can only read (`nethop status`, `list`, `apply --dry-run`); changes exit with code 4.
 
 | From | How | Needs |
 |---|---|---|

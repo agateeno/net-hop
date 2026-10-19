@@ -290,8 +290,10 @@ public sealed partial class ProfilesPage : Page
         ViewSelector.Visibility = hasContent ? Visibility.Visible : Visibility.Collapsed;
 
         var connected = _connection.IsConnected;
-        SaveButton.IsEnabled = connected && hasContent;
-        ApplyButton.IsEnabled = DryRunButton.IsEnabled = DeleteButton.IsEnabled = connected && _editingId is not null;
+        var canEdit = _connection.CanEdit;
+        SaveButton.IsEnabled = canEdit && hasContent;
+        ApplyButton.IsEnabled = DeleteButton.IsEnabled = canEdit && _editingId is not null;
+        DryRunButton.IsEnabled = connected && _editingId is not null; // a preview changes nothing: allowed read-only
         ExportButton.IsEnabled = hasContent;
     }
 

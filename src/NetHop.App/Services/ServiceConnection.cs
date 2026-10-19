@@ -41,7 +41,14 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
     [ObservableProperty]
     public partial ProfileSummary[] Profiles { get; private set; }
 
+    /// <summary>Connected, but the account is not an administrator: NetHop can be viewed, not changed.</summary>
+    [ObservableProperty]
+    public partial bool IsReadOnly { get; private set; }
+
     public bool IsConnected => State == ConnectionState.Connected;
+
+    /// <summary>Connected with full access: profiles, rules and adapters can be changed.</summary>
+    public bool CanEdit => IsConnected && !IsReadOnly;
 
     /// <summary>Service events, raised on the UI thread.</summary>
     public event EventHandler<StatusChangedEventArgs>? StatusChanged;
@@ -54,7 +61,13 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
     /// <exception cref="InvalidOperationException">Not connected.</exception>
     public INetHopService Service => _client?.Service ?? throw new InvalidOperationException("NetHop service is not connected.");
 
-    partial void OnStateChanged(ConnectionState value) => OnPropertyChanged(nameof(IsConnected));
+    partial void OnStateChanged(ConnectionState value)
+    {
+        OnPropertyChanged(nameof(IsConnected));
+        OnPropertyChanged(nameof(CanEdit));
+    }
+
+    partial void OnIsReadOnlyChanged(bool value) => OnPropertyChanged(nameof(CanEdit));
 
     public void Start() => _ = RunAsync(_stop.Token);
 
@@ -111,9 +124,14 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
                 _client.Service.StatusChanged += OnStatusChanged;
                 _client.Service.UserActionRequested += OnUserActionRequested;
 
+                var info = await _client.Service.GetInfoAsync();
                 await RefreshAsync();
                 established = true;
-                OnUi(() => State = ConnectionState.Connected);
+                OnUi(() =>
+                {
+                    IsReadOnly = info.ReadOnly;
+                    State = ConnectionState.Connected;
+                });
 
                 await _client.Completion.WaitAsync(stop);
             }
@@ -127,7 +145,7 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or StreamJsonRpc.ConnectionLostException)
             {
-                // The service drops connections from non-administrators right after accepting them.
+                // NetHop 0.1.8 and earlier dropped connections from non-administrators right after accepting them.
                 OnUi(() => State = established ? ConnectionState.ServiceNotRunning : ConnectionState.AccessDenied);
             }
             finally

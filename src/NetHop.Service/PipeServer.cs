@@ -45,30 +45,26 @@ public sealed class PipeServer(NetHopController controller, ILogger<PipeServer> 
         await using (pipe)
         {
             string? user = null;
-            var allowed = false;
+            bool administrator;
             try
             {
                 // Read the client process's token rather than impersonating: ImpersonateNamedPipeClient
                 // fails (ERROR_CANNOT_IMPERSONATE) until data has been read from the pipe.
                 using var identity = ClientAuthorization.GetClientIdentity(pipe);
                 user = identity.Name;
-                allowed = ClientAuthorization.IsAdministratorAccount(identity);
+                administrator = ClientAuthorization.IsAdministratorAccount(identity);
             }
             catch (Exception ex)
             {
-                logger.LogWarning(ex, "Could not identify pipe client");
-            }
-
-            if (!allowed)
-            {
-                logger.LogWarning("Refused connection from {User}: not an administrator", user ?? "unknown user");
+                logger.LogWarning(ex, "Refused a pipe client that could not be identified");
                 return;
             }
 
+            // Accounts that are not administrators may look but not change anything.
             using var rpc = NetHopPipe.CreateRpc(pipe);
-            rpc.AddLocalRpcTarget<INetHopService>(controller, null);
+            rpc.AddLocalRpcTarget<INetHopService>(administrator ? controller : new ReadOnlyService(controller), null);
             rpc.StartListening();
-            logger.LogDebug("Client connected: {User}", user);
+            logger.LogDebug("Client connected: {User} ({Access})", user, administrator ? "full access" : "read-only");
 
             try
             {
@@ -88,8 +84,8 @@ public sealed class PipeServer(NetHopController controller, ILogger<PipeServer> 
             PipeAccessRights.FullControl, AccessControlType.Allow));
         security.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null),
             PipeAccessRights.ReadWrite, AccessControlType.Allow));
-        // Non-elevated admin processes (tray app, Logi plugin) connect as interactive users;
-        // ClientAuthorization then rejects anyone who is not an administrator.
+        // Non-elevated processes (tray app, Logi plugin) connect as interactive users; ClientAuthorization
+        // then gives full access to administrators and a read-only connection to everyone else.
         security.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.InteractiveSid, null),
             PipeAccessRights.ReadWrite, AccessControlType.Allow));
 

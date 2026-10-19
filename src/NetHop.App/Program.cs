@@ -12,6 +12,9 @@ public static class Program
 {
     private const string InstanceKey = "NetHop.Main";
 
+    /// <summary>Passed with the process id by "Restart as administrator": wait for that instance to exit first.</summary>
+    public const string RestartedFromArgument = "--restarted-from";
+
     [STAThread]
     private static int Main(string[] args)
     {
@@ -26,6 +29,7 @@ public static class Program
             return 0;
         }
 
+        WaitForPreviousInstance(args);
         var activation = AppInstance.GetCurrent().GetActivatedEventArgs();
         var mainInstance = AppInstance.FindOrRegisterForKey(InstanceKey);
 
@@ -47,5 +51,21 @@ public static class Program
             _ = new App(activation);
         });
         return 0;
+    }
+
+    private static void WaitForPreviousInstance(string[] args)
+    {
+        var index = Array.IndexOf(args, RestartedFromArgument);
+        if (index < 0 || index + 1 >= args.Length || !int.TryParse(args[index + 1], out var processId))
+            return;
+        try
+        {
+            using var previous = System.Diagnostics.Process.GetProcessById(processId);
+            previous.WaitForExit(TimeSpan.FromSeconds(10));
+        }
+        catch (ArgumentException)
+        {
+            // Already gone.
+        }
     }
 }

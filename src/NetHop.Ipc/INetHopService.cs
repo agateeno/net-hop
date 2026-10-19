@@ -7,7 +7,8 @@ namespace NetHop.Ipc;
 /// <summary>
 /// The API exposed by the NetHop Windows service over a named pipe (JSON-RPC).
 /// Every client uses it: the WinUI app, the CLI, the Logi Actions plugin and the Power Automate actions.
-/// Only members of the Administrators group may connect (checked on each connection).
+/// Members of the Administrators group get full access; other interactive users get a read-only connection
+/// (see <see cref="ServiceInfo.ReadOnly"/>): changes fail with <see cref="NetHopErrors.ReadOnly"/>.
 /// </summary>
 [JsonRpcContract]
 public partial interface INetHopService
@@ -61,7 +62,20 @@ public partial interface INetHopService
     Task PauseAutomationsAsync(int minutes, CancellationToken cancellationToken = default);
 }
 
-public sealed record ServiceInfo(string Version, int ProtocolVersion, string ProfilesFolder);
+public sealed record ServiceInfo(string Version, int ProtocolVersion, string ProfilesFolder)
+{
+    /// <summary>This connection can read but not change anything: the account is not an administrator.</summary>
+    public bool ReadOnly { get; init; }
+}
+
+public static class NetHopErrors
+{
+    /// <summary>JSON-RPC error code of a change refused on a read-only connection.</summary>
+    public const int ReadOnly = -32050;
+
+    public static bool IsReadOnly(Exception exception) =>
+        exception is RemoteInvocationException { ErrorCode: ReadOnly };
+}
 
 public sealed record ServiceStatus
 {

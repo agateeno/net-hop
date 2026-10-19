@@ -71,7 +71,7 @@ public sealed partial class AdaptersPage : Page
     private SettingsExpander CreateExpander(AdapterSnapshot adapter)
     {
         var info = adapter.Info;
-        var toggle = new ToggleSwitch { IsOn = adapter.Enabled, OnContent = Loc.Get("Adapters_Enabled"), OffContent = Loc.Get("Adapters_Disabled") };
+        var toggle = new ToggleSwitch { IsOn = adapter.Enabled, IsEnabled = _connection.CanEdit, OnContent = Loc.Get("Adapters_Enabled"), OffContent = Loc.Get("Adapters_Disabled") };
         toggle.Toggled += async (_, _) => await RunAsync(() => _connection.Service.SetAdapterEnabledAsync(info.Id, toggle.IsOn));
 
         var expander = new SettingsExpander
@@ -89,7 +89,7 @@ public sealed partial class AdaptersPage : Page
         AddFamilyRows(expander, "IPv4", adapter.Ipv4);
         AddFamilyRows(expander, "IPv6", adapter.Ipv6);
 
-        var rename = new Button { Content = Loc.Get("Adapters_Rename") };
+        var rename = new Button { Content = Loc.Get("Adapters_Rename"), IsEnabled = _connection.CanEdit };
         rename.Click += async (_, _) => await RenameAsync(info);
         expander.Items.Add(new SettingsCard
         {

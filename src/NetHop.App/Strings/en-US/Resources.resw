@@ -412,6 +412,15 @@
   <data name="Main_AccessDeniedTitle" xml:space="preserve">
     <value>Administrator account required</value>
   </data>
+  <data name="Main_ReadOnly.Message" xml:space="preserve">
+    <value>This account is not an administrator. Until you run NetHop as administrator you can view profiles, rules and adapters, but not change them.</value>
+  </data>
+  <data name="Main_ReadOnly.Title" xml:space="preserve">
+    <value>Read-only</value>
+  </data>
+  <data name="Main_RestartAsAdmin.Content" xml:space="preserve">
+    <value>Restart as administrator</value>
+  </data>
   <data name="Main_ServiceStoppedMessage" xml:space="preserve">
     <value>Profiles cannot be applied. Start the service from an administrator terminal: sc start NetHop</value>
   </data>
@@ -711,6 +720,9 @@
   </data>
   <data name="Settings_ServiceNotAdmin" xml:space="preserve">
     <value>Running, but your account is not an administrator</value>
+  </data>
+  <data name="Settings_ServiceReadOnly" xml:space="preserve">
+    <value>read-only: your account is not an administrator</value>
   </data>
   <data name="Settings_ServiceRunning" xml:space="preserve">
     <value>Running</value>

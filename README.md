@@ -33,7 +33,7 @@
 └───────────────────────────┘
 ```
 
-Changing IP settings needs administrator rights, so all changes are made by a Windows service and the UI never asks for elevation. Only **administrator accounts** may connect to the service. See [docs/architecture.md](docs/architecture.md).
+Changing IP settings needs administrator rights, so all changes are made by a Windows service and the UI never asks for elevation. Only **administrator accounts** can make changes; other accounts can open NetHop read-only, with a button to restart it as administrator. See [docs/architecture.md](docs/architecture.md).
 
 | Project | Target | Role |
 |---|---|---|
@@ -110,7 +110,7 @@ Every push builds on GitHub Actions and produces **NetHop-msi** (x64 and ARM64 i
 
 - [x] Profile model (IPv4 + IPv6), YAML, validation, diff planner, rollback
 - [x] Rule engine with loop protection; network change detection
-- [x] Windows service, admin-only named pipe, CLI
+- [x] Windows service, named pipe (admins change, others read), CLI
 - [ ] Verify the CIM backend on real hardware (see the spike list in [docs/architecture.md](docs/architecture.md#open-questions-spikes))
 - [x] WinUI scaffold: dashboard, YAML editors, adapters page, tray flyout
 - [x] Form-based profile and rule editors (with a YAML view kept in sync)

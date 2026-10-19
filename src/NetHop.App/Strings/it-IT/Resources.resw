@@ -412,6 +412,15 @@
   <data name="Main_AccessDeniedTitle" xml:space="preserve">
     <value>Serve un account amministratore</value>
   </data>
+  <data name="Main_ReadOnly.Message" xml:space="preserve">
+    <value>Questo account non è amministratore. Finché non esegui NetHop come amministratore puoi vedere profili, regole e schede di rete, ma non modificarli.</value>
+  </data>
+  <data name="Main_ReadOnly.Title" xml:space="preserve">
+    <value>Sola lettura</value>
+  </data>
+  <data name="Main_RestartAsAdmin.Content" xml:space="preserve">
+    <value>Riavvia come amministratore</value>
+  </data>
   <data name="Main_ServiceStoppedMessage" xml:space="preserve">
     <value>Non è possibile applicare profili. Avvia il servizio da un terminale amministratore: sc start NetHop</value>
   </data>
@@ -711,6 +720,9 @@
   </data>
   <data name="Settings_ServiceNotAdmin" xml:space="preserve">
     <value>In esecuzione, ma il tuo account non è amministratore</value>
+  </data>
+  <data name="Settings_ServiceReadOnly" xml:space="preserve">
+    <value>sola lettura: il tuo account non è amministratore</value>
   </data>
   <data name="Settings_ServiceRunning" xml:space="preserve">
     <value>In esecuzione</value>

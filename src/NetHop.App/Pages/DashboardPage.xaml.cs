@@ -48,9 +48,10 @@ public sealed partial class DashboardPage : Page
             { LastAppliedAt: { } at } => Loc.Format("Dashboard_LastChange", at.LocalDateTime),
             _ => Loc.Get("Dashboard_NoMatch"),
         };
-        NextButton.IsEnabled = _connection.IsConnected && _connection.Profiles.Length > 0;
+        ProfileGrid.IsItemClickEnabled = _connection.CanEdit;
+        NextButton.IsEnabled = _connection.CanEdit && _connection.Profiles.Length > 0;
 
-        AutomationsSwitch.IsEnabled = _connection.IsConnected;
+        AutomationsSwitch.IsEnabled = _connection.CanEdit;
         AutomationsSwitch.IsOn = status?.AutomationsPausedUntil is null;
         AutomationsCard.Description = status?.AutomationsPausedUntil is { } until ? Loc.Format("Common_PausedUntil", until.LocalDateTime) : Loc.Get("Dashboard_RulesRun");
 
@@ -78,7 +79,7 @@ public sealed partial class DashboardPage : Page
 
     private async void OnAutomationsToggled(object sender, RoutedEventArgs e)
     {
-        if (!_updating && _connection.IsConnected)
+        if (!_updating && _connection.CanEdit)
             await _connection.Service.PauseAutomationsAsync(AutomationsSwitch.IsOn ? 0 : 60);
     }
 }

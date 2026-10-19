@@ -44,7 +44,8 @@ public sealed partial class SettingsPage : Page
         if (_connection.IsConnected)
         {
             var info = await _connection.Service.GetInfoAsync();
-            ServiceCard.Description = Loc.Format("Settings_ServiceDetails", info.Version, info.ProfilesFolder);
+            ServiceCard.Description = Loc.Format("Settings_ServiceDetails", info.Version, info.ProfilesFolder)
+                + (info.ReadOnly ? " · " + Loc.Get("Settings_ServiceReadOnly") : "");
         }
     }
 
