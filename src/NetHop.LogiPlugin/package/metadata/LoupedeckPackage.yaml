@@ -1,0 +1,29 @@
+# Logi Actions SDK package manifest for NetHop.
+
+type: plugin4
+
+# Unique ID: cannot change after publishing and must not end with "Plugin".
+name: NetHop
+displayName: NetHop
+description: Switch network profiles (adapters, IPv4/IPv6, gateways, DNS) from MX Creative Console keys and the Actions Ring.
+
+pluginFileName: NetHopPlugin.dll
+version: 0.1
+author: agateeno
+copyright: Copyright (c) 2026 agateeno
+
+# NetHop is Windows-only.
+pluginFolderWin: bin
+
+supportedDevices:
+    # Loupedeck CT, Live, Live S, Razer Stream Controller (X).
+    - LoupedeckCtFamily
+    # Logitech MX Creative Console.
+    - LoupedeckExtendedFamily
+
+minimumLoupedeckVersion: 6.0
+
+license: MIT
+licenseUrl: https://opensource.org/licenses/MIT
+homePageUrl: https://github.com/agateeno/net-hop
+supportPageUrl: https://github.com/agateeno/net-hop/issues

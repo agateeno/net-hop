@@ -1,0 +1,34 @@
+<Project>
+  <ItemGroup>
+    <!-- Core / IPC -->
+    <PackageVersion Include="YamlDotNet" Version="18.1.0" />
+    <PackageVersion Include="StreamJsonRpc" Version="2.26.150" />
+    <!-- Engine / Service -->
+    <PackageVersion Include="Microsoft.Management.Infrastructure" Version="3.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.13" />
+    <!-- Power Automate Desktop actions -->
+    <PackageVersion Include="Microsoft.PowerPlatform.PowerAutomate.Desktop.Actions.SDK" Version="1.5.255.25087" />
+    <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
+    <!-- UI -->
+    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="2.5.1" />
+    <!-- Components of the 2.5.1 metapackage that NetHop does not use; the app excludes their assets (see NetHop.App.csproj). -->
+    <PackageVersion Include="Microsoft.WindowsAppSDK.AI" Version="2.5.5" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK.ML" Version="2.1.94" />
+    <PackageVersion Include="Microsoft.Windows.AI.MachineLearning" Version="2.1.74" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK.Search" Version="2.5.5" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK.Widgets" Version="2.0.5" />
+    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2705" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.251219" />
+    <PackageVersion Include="H.NotifyIcon.WinUI" Version="2.4.1" />
+    <!-- Installer (WiX 6, see installer/NetHop.Installer.wixproj) -->
+    <PackageVersion Include="WixToolset.UI.wixext" Version="6.0.2" />
+    <PackageVersion Include="WixToolset.Util.wixext" Version="6.0.2" />
+    <!-- Tests -->
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+</Project>

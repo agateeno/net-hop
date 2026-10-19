@@ -1,0 +1,251 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write # create the GitHub release on v* tags
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+      # Code signing runs only when the Azure Trusted Signing secrets are configured (see docs/installer.md).
+      SIGNING: ${{ secrets.AZURE_SIGNING_ACCOUNT != '' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      # v1.2.3 tags release 1.2.3; other builds are 0.1.<run> so every CI MSI can upgrade the previous one.
+      - name: Version
+        shell: pwsh
+        run: |
+          $version = if ($env:GITHUB_REF -match '^refs/tags/v(\d+\.\d+\.\d+)$') { $Matches[1] } else { "0.1.$env:GITHUB_RUN_NUMBER" }
+          "PRODUCT_VERSION=$version" >> $env:GITHUB_ENV
+          "Version $version"
+
+      - name: Restore
+        run: dotnet restore NetHop.slnx
+
+      - name: Build
+        run: dotnet build NetHop.slnx -c Release --no-restore
+
+      - name: Test
+        run: dotnet test tests/NetHop.Core.Tests -c Release --no-build --logger "trx;LogFileName=results.trx"
+
+      # Service, CLI and app share one folder and one self-contained .NET runtime per architecture.
+      - name: Publish (x64, arm64)
+        shell: pwsh
+        run: |
+          foreach ($arch in 'x64', 'arm64') {
+            $bin = "out/$arch/NetHop/bin"
+            $platform = if ($arch -eq 'arm64') { 'ARM64' } else { 'x64' }
+            dotnet publish src/NetHop.Service -c Release -r win-$arch --self-contained -p:Version=$env:PRODUCT_VERSION -o $bin
+            dotnet publish src/NetHop.Cli -c Release -r win-$arch --self-contained -p:Version=$env:PRODUCT_VERSION -o $bin
+            dotnet publish src/NetHop.App -c Release -r win-$arch -p:Platform=$platform --self-contained -p:Version=$env:PRODUCT_VERSION -o $bin
+            if ($LASTEXITCODE -ne 0) { throw "Publish failed for $arch" }
+            New-Item "out/$arch/NetHop/powershell" -ItemType Directory -Force | Out-Null
+            Copy-Item src/NetHop.PowerShell/* "out/$arch/NetHop/powershell/"
+            Copy-Item scripts/Install-NetHop.ps1, scripts/Uninstall-NetHop.ps1 "out/$arch/NetHop/"
+            Copy-Item samples "out/$arch/NetHop/samples" -Recurse
+            "{0}: {1:N0} MB" -f $arch, ((Get-ChildItem $bin -Recurse | Measure-Object Length -Sum).Sum / 1MB)
+          }
+          dotnet build src/NetHop.PowerAutomate -c Release -o out/power-automate/bin
+
+      # Without its .pri (compiled XAML + strings) the app crashes at start with 0xc000027b.
+      - name: Check app resources
+        shell: pwsh
+        run: |
+          foreach ($arch in 'x64', 'arm64') {
+            $pri = Get-ChildItem "out/$arch/NetHop/bin" -Filter *.pri | Where-Object Name -in 'NetHop.App.pri', 'resources.pri' | Select-Object -First 1
+            if (-not $pri) { throw "${arch}: the app's .pri file is missing from the build" }
+            "{0}: {1} ({2:N0} KB)" -f $arch, $pri.Name, ($pri.Length / 1KB)
+          }
+
+      # Runs the real binaries on the runner: installs the service, reads the network through CIM, imports a
+      # profile and plans it. Dry run only: the runner's network configuration is never changed.
+      - name: Smoke test (service and CLI)
+        shell: pwsh
+        run: |
+          $root = "out/x64/NetHop"
+          $target = Join-Path $env:RUNNER_TEMP 'NetHop'
+          $cli = Join-Path $target 'nethop.exe'
+          function Check($what) { if ($LASTEXITCODE -ne 0) { throw "$what failed with exit code $LASTEXITCODE" } }
+
+          try {
+            & "$root/bin/nethop.exe" validate samples/Office.nethop; Check 'validate'
+            & "$root/Install-NetHop.ps1" -Source $root -Destination $target
+            Start-Sleep -Seconds 3
+            & $cli status; Check 'status'
+            & $cli adapters; Check 'adapters'
+            & $cli import samples/Home.nethop; Check 'import'
+            & $cli list; Check 'list'
+            & $cli apply Home --dry-run; Check 'dry run'
+            Get-Service NetHop | Format-List Name, Status
+          } catch {
+            # The service logs to the Application event log: show why it refused or failed.
+            Get-WinEvent -LogName Application -MaxEvents 200 -ErrorAction SilentlyContinue |
+              Where-Object ProviderName -like '*NetHop*' | Select-Object -First 15 |
+              Format-List TimeCreated, LevelDisplayName, Message
+            throw
+          }
+
+      - name: Smoke test (app starts)
+        continue-on-error: true # the runner may have no interactive desktop for the tray icon
+        shell: pwsh
+        run: |
+          $app = Start-Process (Join-Path $env:RUNNER_TEMP 'NetHop\NetHop.App.exe') -ArgumentList '--tray' -PassThru
+          Start-Sleep -Seconds 15
+          if ($app.HasExited) {
+            Get-WinEvent -FilterHashtable @{ LogName = 'Application'; Level = 2; StartTime = (Get-Date).AddMinutes(-2) } -ErrorAction SilentlyContinue |
+              Select-Object -First 5 | Format-List TimeCreated, ProviderName, Message
+            throw "NetHop.App.exe exited after start with code $($app.ExitCode)"
+          }
+          "NetHop.App.exe is running (pid $($app.Id))"
+          Stop-Process $app -Force
+
+      - name: Remove smoke test install
+        if: always()
+        shell: pwsh
+        run: |
+          $target = Join-Path $env:RUNNER_TEMP 'NetHop'
+          if (Get-Service NetHop -ErrorAction SilentlyContinue) { & out/x64/NetHop/Uninstall-NetHop.ps1 -Destination $target -RemoveData }
+
+      # Only NetHop's own binaries are signed; the .NET and Windows App SDK files are already signed by Microsoft.
+      # They are staged in one folder for the signing action, then copied back.
+      - name: Stage binaries for signing
+        if: env.SIGNING == 'true'
+        shell: pwsh
+        run: |
+          $files = Get-ChildItem out -Recurse -Include NetHop*.exe, NetHop*.dll, nethop.exe, nethop.dll, Modules.NetHop.dll
+          $map = @{}
+          $i = 0
+          New-Item out/sign -ItemType Directory -Force | Out-Null
+          foreach ($file in $files) {
+            $staged = "out/sign/{0:D3}_{1}" -f $i++, $file.Name
+            Copy-Item $file.FullName $staged
+            $map[(Resolve-Path $staged).Path] = $file.FullName
+          }
+          $map | ConvertTo-Json | Set-Content out/sign-map.json
+
+      - name: Sign binaries
+        if: env.SIGNING == 'true'
+        uses: azure/trusted-signing-action@v0
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: ${{ secrets.AZURE_SIGNING_ENDPOINT }}
+          trusted-signing-account-name: ${{ secrets.AZURE_SIGNING_ACCOUNT }}
+          certificate-profile-name: ${{ secrets.AZURE_SIGNING_PROFILE }}
+          files-folder: ${{ github.workspace }}\out\sign
+          files-folder-filter: exe,dll
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+
+      - name: Put signed binaries back
+        if: env.SIGNING == 'true'
+        shell: pwsh
+        run: |
+          $map = Get-Content out/sign-map.json | ConvertFrom-Json
+          foreach ($entry in $map.PSObject.Properties) { Copy-Item $entry.Name $entry.Value -Force }
+          Remove-Item out/sign, out/sign-map.json -Recurse
+
+      - name: Build MSIs
+        shell: pwsh
+        run: |
+          foreach ($arch in 'x64', 'arm64') {
+            dotnet build installer/NetHop.Installer.wixproj -c Release `
+              -p:NetHopBinDir="$PWD/out/$arch/NetHop/bin" -p:ProductVersion=$env:PRODUCT_VERSION -p:InstallerPlatform=$arch -o out/msi
+            if ($LASTEXITCODE -ne 0) { throw "MSI failed for $arch" }
+          }
+
+      # Signed in the next step when signing is configured; Power Automate refuses unsigned modules.
+      - name: Pack Power Automate actions
+        shell: pwsh
+        run: ./scripts/Build-PowerAutomateModule.ps1 -SkipBuild -SkipSigning -OutputDirectory "$PWD/out/power-automate"
+
+      - name: Sign MSIs and Power Automate module
+        if: env.SIGNING == 'true'
+        uses: azure/trusted-signing-action@v0
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: ${{ secrets.AZURE_SIGNING_ENDPOINT }}
+          trusted-signing-account-name: ${{ secrets.AZURE_SIGNING_ACCOUNT }}
+          certificate-profile-name: ${{ secrets.AZURE_SIGNING_PROFILE }}
+          files-folder: ${{ github.workspace }}\out
+          files-folder-filter: msi,cab
+          files-folder-recurse: true
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+
+      - name: Upload MSIs
+        uses: actions/upload-artifact@v4
+        with:
+          name: NetHop-msi
+          path: out/msi/*.msi
+          retention-days: 14
+
+      - name: Upload build folder (x64)
+        uses: actions/upload-artifact@v4
+        with:
+          name: NetHop-win-x64
+          path: out/x64/NetHop
+          retention-days: 14
+
+      - name: Upload build folder (arm64)
+        uses: actions/upload-artifact@v4
+        with:
+          name: NetHop-win-arm64
+          path: out/arm64/NetHop
+          retention-days: 14
+
+      - name: Upload Power Automate actions
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.SIGNING == 'true' && 'NetHop-PowerAutomate' || 'NetHop-PowerAutomate-unsigned' }}
+          path: out/power-automate/NetHop.cab
+          retention-days: 14
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: tests/**/TestResults/*.trx
+
+      - name: GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            out/msi/*.msi
+            out/power-automate/NetHop.cab
+          generate_release_notes: true
+
+      - name: Winget manifests
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        run: |
+          ./scripts/New-WingetManifest.ps1 -Version $env:PRODUCT_VERSION -Msi (Get-ChildItem out/msi/*.msi).FullName `
+            -ReleaseUrl "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}" -OutputDirectory out/winget
+
+      - name: Upload winget manifests
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v4
+        with:
+          name: winget-manifests
+          path: out/winget

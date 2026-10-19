@@ -1,0 +1,19 @@
+# NetHop profile: everything automatic.
+schema: 1
+id: 9c41d7a2-5e3b-4f18-b6c0-7d2e9a8f3b21
+name: Home
+icon: ""
+color: "#107C10"
+adapters:
+  - match:
+      name: Ethernet
+    state: enabled
+    ipv4:
+      mode: dhcp
+    ipv6:
+      mode: dhcp
+  - match:
+      name: Wi-Fi
+    state: enabled
+    ipv4:
+      mode: dhcp

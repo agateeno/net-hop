@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NetHop.App.Pages.IntegrationsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
+
+    <ScrollViewer>
+        <StackPanel Margin="{StaticResource PageMargin}" MaxWidth="{StaticResource PageMaxWidth}" Spacing="{StaticResource SettingsCardSpacing}">
+            <TextBlock x:Uid="Integrations_Title" Text="Integrations" Style="{StaticResource PageTitleStyle}" />
+
+            <TextBlock x:Uid="Integrations_Windows" Text="Windows" Style="{StaticResource SectionHeaderStyle}" Margin="1,0,0,6" />
+            <toolkit:SettingsCard x:Uid="Integrations_Files" Header="Profile files (.nethop)"
+                                  Description="Double-click a .nethop file to import it. Profiles are plain YAML, easy to version and share.">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE8A5;" /></toolkit:SettingsCard.HeaderIcon>
+            </toolkit:SettingsCard>
+            <toolkit:SettingsExpander x:Uid="Integrations_Links" Header="Links (nethop://)" Description="Apply a profile from a shortcut, a browser bookmark or any app that opens URLs.">
+                <toolkit:SettingsExpander.HeaderIcon><FontIcon Glyph="&#xE71B;" /></toolkit:SettingsExpander.HeaderIcon>
+                <toolkit:SettingsExpander.Items>
+                    <toolkit:SettingsCard x:Uid="Integrations_LinkApply" Header="Apply a profile">
+                        <TextBlock Text="nethop://apply/Office" IsTextSelectionEnabled="True" FontFamily="Cascadia Mono, Consolas" />
+                    </toolkit:SettingsCard>
+                </toolkit:SettingsExpander.Items>
+            </toolkit:SettingsExpander>
+
+            <TextBlock x:Uid="Integrations_PowerAutomate" Text="Power Automate" Style="{StaticResource SectionHeaderStyle}" />
+            <toolkit:SettingsExpander x:Uid="Integrations_Cli" Header="Command line"
+                                      Description="Use 'Run application' or 'Run PowerShell script' in Power Automate Desktop. Add --json for machine-readable output.">
+                <toolkit:SettingsExpander.HeaderIcon><FontIcon Glyph="&#xE756;" /></toolkit:SettingsExpander.HeaderIcon>
+                <toolkit:SettingsExpander.Items>
+                    <toolkit:SettingsCard x:Uid="Integrations_CliApply" Header="Apply a profile">
+                        <TextBlock Text="nethop apply &quot;Office&quot;" IsTextSelectionEnabled="True" FontFamily="Cascadia Mono, Consolas" />
+                    </toolkit:SettingsCard>
+                    <toolkit:SettingsCard x:Uid="Integrations_CliStatus" Header="Read the active profile">
+                        <TextBlock Text="nethop status --json" IsTextSelectionEnabled="True" FontFamily="Cascadia Mono, Consolas" />
+                    </toolkit:SettingsCard>
+                    <toolkit:SettingsCard x:Uid="Integrations_ExitCodes" Header="Exit codes" Description="0 ok, 1 failed, 2 usage error, 3 service not running, 4 access denied" />
+                </toolkit:SettingsExpander.Items>
+            </toolkit:SettingsExpander>
+            <toolkit:SettingsExpander x:Uid="Integrations_PadActions" Header="Power Automate Desktop actions"
+                                      Description="A 'NetHop' group in the actions pane: apply a profile, apply the next one, read the status, 'If network profile is active', pause automations.">
+                <toolkit:SettingsExpander.HeaderIcon><FontIcon Glyph="&#xE8F1;" /></toolkit:SettingsExpander.HeaderIcon>
+                <toolkit:SettingsExpander.Items>
+                    <toolkit:SettingsCard x:Uid="Integrations_PadInstall" Header="Install"
+                                          Description="Sign NetHop.cab with your organization's code-signing certificate (scripts\Build-PowerAutomateModule.ps1), then upload it in the Power Automate portal under Custom actions." />
+                </toolkit:SettingsExpander.Items>
+            </toolkit:SettingsExpander>
+            <toolkit:SettingsExpander x:Uid="Integrations_PowerShell" Header="PowerShell" Description="Installed with NetHop; works in 'Run PowerShell script' and in any terminal.">
+                <toolkit:SettingsExpander.HeaderIcon><FontIcon Glyph="&#xE756;" /></toolkit:SettingsExpander.HeaderIcon>
+                <toolkit:SettingsExpander.Items>
+                    <toolkit:SettingsCard x:Uid="Integrations_PsApply" Header="Apply a profile">
+                        <TextBlock Text="Set-NetHopProfile Office" IsTextSelectionEnabled="True" FontFamily="Cascadia Mono, Consolas" />
+                    </toolkit:SettingsCard>
+                    <toolkit:SettingsCard x:Uid="Integrations_PsStatus" Header="Active profile">
+                        <TextBlock Text="(Get-NetHopStatus).activeProfileName" IsTextSelectionEnabled="True" FontFamily="Cascadia Mono, Consolas" />
+                    </toolkit:SettingsCard>
+                </toolkit:SettingsExpander.Items>
+            </toolkit:SettingsExpander>
+            <toolkit:SettingsCard x:Uid="Integrations_Flows" Header="Start flows from NetHop rules"
+                                  Description="In Automations, add a 'Run Power Automate flow' action with the flow's run URL (Power Automate Desktop › flow › Properties › Run URL).">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE945;" /></toolkit:SettingsCard.HeaderIcon>
+            </toolkit:SettingsCard>
+
+            <TextBlock x:Uid="Integrations_Logitech" Text="Logitech" Style="{StaticResource SectionHeaderStyle}" />
+            <toolkit:SettingsCard x:Uid="Integrations_Logi" Header="Logi Actions plugin"
+                                  Description="Install NetHop.lplug4, then in Logi Options+ assign 'Apply profile' or 'Pause automations' to MX Creative Console keys or Actions Ring slots. Keys show the profile color and which profile is active.">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE962;" /></toolkit:SettingsCard.HeaderIcon>
+            </toolkit:SettingsCard>
+            <toolkit:SettingsCard x:Uid="Integrations_Mouse" Header="Mouse buttons"
+                                  Description="Any mouse button that can open a file or a link works too: point it at a .nethop file or a nethop:// shortcut." />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

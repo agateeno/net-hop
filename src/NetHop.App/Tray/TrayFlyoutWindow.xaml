@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="NetHop.App.Tray.TrayFlyoutWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ipc="using:NetHop.Ipc"
+    xmlns:app="using:NetHop.App"
+    Title="NetHop">
+
+    <Grid x:Name="Root" RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header: active profile -->
+        <StackPanel Grid.Row="0" Padding="16,14,16,10" Spacing="2">
+            <TextBlock x:Uid="Flyout_ActiveProfile" Text="Active profile" Style="{StaticResource CaptionTextBlockStyle}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            <TextBlock x:Name="ActiveProfileText" Text="-" Style="{StaticResource SubtitleTextBlockStyle}"
+                       TextTrimming="CharacterEllipsis" />
+            <TextBlock x:Name="StateText" Style="{StaticResource CaptionTextBlockStyle}"
+                       Foreground="{ThemeResource SystemFillColorCautionBrush}" Visibility="Collapsed" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <!-- Profiles: click to apply -->
+        <ListView x:Name="ProfileList" Grid.Row="1" Padding="4,0,4,4" SelectionMode="None"
+                  IsItemClickEnabled="True" ItemClick="OnProfileClick">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="ipc:ProfileSummary">
+                    <Grid Padding="4,8" ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Width="28" Height="28" CornerRadius="6" VerticalAlignment="Center"
+                              Background="{x:Bind app:XamlHelpers.ProfileBrush(Color)}">
+                            <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="14" Visibility="{x:Bind app:XamlHelpers.PlainGlyphVisibility(Icon, Color)}" />
+                            <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="14" Foreground="White" Visibility="{x:Bind app:XamlHelpers.WhiteGlyphVisibility(Icon, Color)}" />
+                            <Image Source="{x:Bind app:XamlHelpers.ProfileImage(Icon)}" Margin="3" Visibility="{x:Bind app:XamlHelpers.ImageVisibility(Icon)}" />
+                        </Grid>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{x:Bind Description}" Style="{StaticResource CaptionTextBlockStyle}"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                        <FontIcon Grid.Column="2" Glyph="&#xE73E;" FontSize="14"
+                                  Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                  Visibility="{x:Bind IsActive}" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <ProgressBar x:Name="Busy" Grid.Row="1" VerticalAlignment="Top" IsIndeterminate="True" Visibility="Collapsed" />
+
+        <!-- Footer -->
+        <Grid Grid.Row="2" Padding="12,8" ColumnSpacing="8"
+              Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}"
+              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ToggleButton x:Uid="Flyout_Pause" x:Name="PauseToggle" Click="OnPauseClick" ToolTipService.ToolTip="Pause automations for 1 hour">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <FontIcon Glyph="&#xE769;" FontSize="14" />
+                    <TextBlock x:Uid="Flyout_PauseText" Text="Pause automations" />
+                </StackPanel>
+            </ToggleButton>
+            <Button x:Uid="Flyout_Open" Grid.Column="1" Click="OnSettingsClick" ToolTipService.ToolTip="Open NetHop">
+                <FontIcon Glyph="&#xE713;" FontSize="14" />
+            </Button>
+        </Grid>
+    </Grid>
+</Window>

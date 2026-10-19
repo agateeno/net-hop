@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NetHop.App.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
+
+    <ScrollViewer>
+        <StackPanel Margin="{StaticResource PageMargin}" MaxWidth="{StaticResource PageMaxWidth}" Spacing="{StaticResource SettingsCardSpacing}">
+            <TextBlock x:Uid="Settings_Title" Text="Settings" Style="{StaticResource PageTitleStyle}" />
+
+            <toolkit:SettingsCard x:Uid="Settings_Startup" Header="Start with Windows" Description="NetHop starts in the notification area when you sign in.">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE7E8;" /></toolkit:SettingsCard.HeaderIcon>
+                <ToggleSwitch x:Name="StartupSwitch" Toggled="OnStartupToggled" />
+            </toolkit:SettingsCard>
+
+            <toolkit:SettingsCard x:Uid="Settings_Language" Header="Language" Description="Restart NetHop after changing it.">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xF2B7;" /></toolkit:SettingsCard.HeaderIcon>
+                <ComboBox x:Name="LanguageBox" MinWidth="200" SelectionChanged="OnLanguageChanged" />
+            </toolkit:SettingsCard>
+
+            <toolkit:SettingsCard x:Uid="Settings_Theme" Header="App theme" Description="Light, dark, or the same as Windows.">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE790;" /></toolkit:SettingsCard.HeaderIcon>
+                <ComboBox x:Name="ThemeBox" MinWidth="200" SelectionChanged="OnThemeChanged" />
+            </toolkit:SettingsCard>
+
+            <toolkit:SettingsCard x:Uid="Settings_Folder" x:Name="FolderCard" Header="Profiles folder"
+                                  Description="A copy of every profile, pinned to Quick Access. Double-click a file to edit it, right-click to apply it.">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE8B7;" /></toolkit:SettingsCard.HeaderIcon>
+                <Button x:Uid="Settings_FolderOpen" Content="Open folder" Click="OnOpenFolderClick" />
+            </toolkit:SettingsCard>
+
+            <toolkit:SettingsCard x:Uid="Settings_Service" x:Name="ServiceCard" Header="NetHop service" Description="-">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE912;" /></toolkit:SettingsCard.HeaderIcon>
+            </toolkit:SettingsCard>
+
+            <TextBlock x:Uid="Settings_About" Text="About" Style="{StaticResource SectionHeaderStyle}" />
+            <toolkit:SettingsCard x:Name="AboutCard" Header="NetHop" Description="Network profiles for Windows">
+                <toolkit:SettingsCard.HeaderIcon>
+                    <ImageIcon Source="ms-appx:///Assets/NetHop.png" />
+                </toolkit:SettingsCard.HeaderIcon>
+                <HyperlinkButton Content="GitHub" NavigateUri="https://github.com/agateeno/net-hop" />
+            </toolkit:SettingsCard>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

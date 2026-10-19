@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.22621.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <RootNamespace>NetHop.App</RootNamespace>
+    <!-- Not "NetHop": it would clash with nethop.exe (the CLI) in the same folder on a case-insensitive file system. -->
+    <AssemblyName>NetHop.App</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\NetHop.ico</ApplicationIcon>
+    <Platforms>x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <!-- Lets 'dotnet build NetHop.slnx' (Any CPU) work: the self-contained Windows App SDK needs a concrete RID. -->
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' and '$(Platform)' == 'ARM64'">win-arm64</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x64</RuntimeIdentifier>
+    <UseWinUI>true</UseWinUI>
+    <!-- Unpackaged for now: the installer (and later an MSIX/sparse package) registers the service. -->
+    <WindowsPackageType>None</WindowsPackageType>
+    <!-- Required even unpackaged: it generates the app's .pri (compiled XAML and strings). Without it the app crashes at start. -->
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <!-- Program.cs provides Main to enforce a single instance and redirect activations. -->
+    <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- UI strings: Strings/en-US (default) and Strings/it-IT. -->
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <!-- StreamJsonRpc's VS.Threading dependency declares WPF for -windows targets; NetHop never uses it,
+         and skipping it keeps ~30 MB of WPF out of the self-contained build. -->
+    <DisableTransitiveFrameworkReferences>true</DisableTransitiveFrameworkReferences>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\NetHop.ico" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\NetHop.png" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\NetHop-32.png" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\NetHopFile.ico" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" />
+    <!-- Keep these metapackage components out of the build: ONNX Runtime, DirectML, semantic search and
+         widgets add ~50 MB and NetHop uses none of them. Referencing them directly lets ExcludeAssets apply. -->
+    <PackageReference Include="Microsoft.WindowsAppSDK.AI" ExcludeAssets="all" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.ML" ExcludeAssets="all" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Windows.AI.MachineLearning" ExcludeAssets="all" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Search" ExcludeAssets="all" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Widgets" ExcludeAssets="all" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" />
+    <PackageReference Include="H.NotifyIcon.WinUI" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NetHop.Ipc\NetHop.Ipc.csproj" />
+  </ItemGroup>
+</Project>

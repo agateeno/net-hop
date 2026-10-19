@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Power Automate Desktop custom actions. PAD loads .NET Framework 4.7.2 class libraries whose
+    file name matches "Modules.*.dll"; the actions call nethop.exe so this assembly has no
+    dependencies besides the SDK (every DLL in the .cab must be signed).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <AssemblyName>Modules.NetHop</AssemblyName>
+    <AssemblyTitle>NetHop</AssemblyTitle>
+    <RootNamespace>Modules.NetHop</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- Keep the .cab small: the SDK's satellite resource folders are not needed. -->
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.PowerPlatform.PowerAutomate.Desktop.Actions.SDK" />
+    <!-- Builds net472 without the .NET Framework developer pack, also on macOS/Linux. -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+</Project>
