@@ -71,15 +71,23 @@ jobs:
           $cli = Join-Path $target 'nethop.exe'
           function Check($what) { if ($LASTEXITCODE -ne 0) { throw "$what failed with exit code $LASTEXITCODE" } }
 
-          & "$root/bin/nethop.exe" validate samples/Office.nethop; Check 'validate'
-          & "$root/Install-NetHop.ps1" -Source $root -Destination $target
-          Start-Sleep -Seconds 3
-          & $cli status; Check 'status'
-          & $cli adapters; Check 'adapters'
-          & $cli import samples/Home.nethop; Check 'import'
-          & $cli list; Check 'list'
-          & $cli apply Home --dry-run; Check 'dry run'
-          Get-Service NetHop | Format-List Name, Status
+          try {
+            & "$root/bin/nethop.exe" validate samples/Office.nethop; Check 'validate'
+            & "$root/Install-NetHop.ps1" -Source $root -Destination $target
+            Start-Sleep -Seconds 3
+            & $cli status; Check 'status'
+            & $cli adapters; Check 'adapters'
+            & $cli import samples/Home.nethop; Check 'import'
+            & $cli list; Check 'list'
+            & $cli apply Home --dry-run; Check 'dry run'
+            Get-Service NetHop | Format-List Name, Status
+          } catch {
+            # The service logs to the Application event log: show why it refused or failed.
+            Get-WinEvent -LogName Application -MaxEvents 200 -ErrorAction SilentlyContinue |
+              Where-Object ProviderName -like '*NetHop*' | Select-Object -First 15 |
+              Format-List TimeCreated, LevelDisplayName, Message
+            throw
+          }
 
       - name: Smoke test (app starts)
         continue-on-error: true # the runner may have no interactive desktop for the tray icon

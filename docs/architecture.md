@@ -14,7 +14,7 @@ All clients talk to the service through the `NetHop.Service.v1` named pipe using
 
 ## Security model
 
-- **Only administrator accounts.** The pipe ACL lets SYSTEM, Administrators and interactive users open the pipe. For each connection, the service impersonates the client (identification level only) and checks its token groups. Under UAC an administrator's normal token lists *Administrators* as a deny-only group; `WindowsPrincipal.IsInRole` ignores such groups, so the token is read directly. As a result the tray app works **without elevation**, while standard users are refused.
+- **Only administrator accounts.** The pipe ACL lets SYSTEM, Administrators and interactive users open the pipe. For each connection, the service finds the client process (`GetNamedPipeClientProcessId`) and reads its token groups. It does not impersonate: `ImpersonateNamedPipeClient` fails until data has been read from the pipe. Under UAC an administrator's normal token lists *Administrators* as a deny-only group; `WindowsPrincipal.IsInRole` ignores such groups, so the token is read directly. As a result the tray app works **without elevation**, while standard users are refused.
 - **Pipe squatting.** The server creates the first instance with `FirstPipeInstance` and stops if the name is already taken. *TODO:* clients should also verify that the server process is the NetHop service (`GetNamedPipeServerProcessId`).
 - **No code runs as SYSTEM on a rule's behalf.** `runCommand`, `openUrl`, `runPowerAutomateFlow` and `notify` are forwarded to the user's app through `UserActionRequested`.
 - **Storage.** `%ProgramData%\NetHop` is created with an explicit ACL: SYSTEM and Administrators get full control, nobody else has access.

@@ -48,12 +48,11 @@ public sealed class PipeServer(NetHopController controller, ILogger<PipeServer> 
             var allowed = false;
             try
             {
-                pipe.RunAsClient(() =>
-                {
-                    using var identity = WindowsIdentity.GetCurrent(ifImpersonating: true);
-                    user = identity?.Name;
-                    allowed = identity is not null && ClientAuthorization.IsAdministratorAccount(identity);
-                });
+                // Read the client process's token rather than impersonating: ImpersonateNamedPipeClient
+                // fails (ERROR_CANNOT_IMPERSONATE) until data has been read from the pipe.
+                using var identity = ClientAuthorization.GetClientIdentity(pipe);
+                user = identity.Name;
+                allowed = ClientAuthorization.IsAdministratorAccount(identity);
             }
             catch (Exception ex)
             {
