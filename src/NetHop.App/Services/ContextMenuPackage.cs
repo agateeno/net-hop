@@ -39,9 +39,18 @@ public static class ContextMenuPackage
             // accepts it only where unsigned packages are allowed; a signed package ignores the option.
             typeof(AddPackageOptions).GetProperty("AllowUnsigned")?.SetValue(options, true);
 
-            var result = await manager.AddPackageByUriAsync(new Uri(PackagePath), options);
-            if (result.ExtendedErrorCode is { } error)
-                CrashLog.Write("Context menu package", $"{result.ErrorText} (0x{error.HResult:X8})");
+            try
+            {
+                await manager.AddPackageByUriAsync(new Uri(PackagePath), options);
+            }
+            catch (Exception ex) when (installed is not null)
+            {
+                // Windows refuses an update whose external location differs (NetHop was installed to another
+                // folder, error 0x80073D0B): start over from a clean registration.
+                CrashLog.Write("Context menu package", $"Update failed, registering again: {ex.Message}");
+                await manager.RemovePackageAsync(installed.Id.FullName);
+                await manager.AddPackageByUriAsync(new Uri(PackagePath), options);
+            }
         }
         catch (Exception ex)
         {

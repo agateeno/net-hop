@@ -42,6 +42,8 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
+      <!-- C4324 comes from WRL's own headers (module.h), not from NetHop's code. -->
+      <DisableSpecificWarnings>4324;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ConformanceMode>true</ConformanceMode>
       <Optimization>MaxSpeed</Optimization>
       <!-- Static CRT: nothing to install next to Explorer. -->

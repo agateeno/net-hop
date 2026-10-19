@@ -119,16 +119,20 @@ jobs:
           "NetHop.App.exe is running (pid $($app.Id))"
           Stop-Process $app -Force
 
-      # Registers the context menu package the way the app does (the runner allows unsigned packages only in
-      # some images, so this step informs rather than gates): it checks that Windows accepts the manifest.
+      # The app registered the context menu package when it started (previous step). Informational, like that step:
+      # it shows whether Windows accepted the manifest and the unsigned package on this image.
       - name: Smoke test (context menu package)
         continue-on-error: true
         shell: powershell # the Appx module is Windows PowerShell's
         run: |
-          $target = Join-Path $env:RUNNER_TEMP 'NetHop'
-          Add-AppxPackage -Path (Join-Path $target 'NetHop.ContextMenu.msix') -ExternalLocation $target -AllowUnsigned
-          Get-AppxPackage NetHop.ContextMenu | Format-List Name, Version, Publisher, InstallLocation
-          Get-AppxPackage NetHop.ContextMenu | Remove-AppxPackage
+          $package = Get-AppxPackage NetHop.ContextMenu
+          if (-not $package) {
+            Get-Content (Join-Path $env:LOCALAPPDATA 'NetHop\crash.log') -ErrorAction SilentlyContinue
+            throw 'The app did not register NetHop.ContextMenu.'
+          }
+          $package | Format-List Name, Version, Publisher, InstallLocation
+          if ($package.Version -ne "$env:PRODUCT_VERSION.0") { throw "Registered version $($package.Version), expected $env:PRODUCT_VERSION.0" }
+          $package | Remove-AppxPackage
 
       - name: Remove smoke test install
         if: always()
