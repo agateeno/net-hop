@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <!-- .nethop file icon, 16px only: hand-placed on whole pixels. -->
+  <g shape-rendering="crispEdges">
+    <!-- Sheet outline and folded corner -->
+    <path fill="#FFFFFF" d="M3 1 H10 L13 4 V15 H3 Z" />
+    <path fill="#8A94A3" d="M3 1 H10 V2 H4 V14 H12 V4 H13 V15 H3 Z" />
+    <path fill="#8A94A3" d="M10 1 H11 V2 H12 V3 H13 V4 H10 Z" />
+    <path fill="#D5DCE6" d="M10 2 H11 V3 H12 V4 H10 Z" />
+
+    <g fill="#0F6CBD">
+      <!-- Wi-Fi: .####. / #.##.# / .#..#. / ..##.. on columns 5-10, rows 4-7 -->
+      <rect x="6" y="4" width="4" height="1" />
+      <rect x="5" y="5" width="1" height="1" />
+      <rect x="7" y="5" width="2" height="1" />
+      <rect x="10" y="5" width="1" height="1" />
+      <rect x="6" y="6" width="1" height="1" />
+      <rect x="9" y="6" width="1" height="1" />
+      <rect x="7" y="7" width="2" height="1" />
+      <!-- Ethernet jack: hollow body and latch on rows 9-12 -->
+      <rect x="6" y="9" width="4" height="1" />
+      <rect x="6" y="10" width="1" height="1" />
+      <rect x="9" y="10" width="1" height="1" />
+      <rect x="6" y="11" width="4" height="1" />
+      <rect x="7" y="12" width="2" height="1" />
+    </g>
+  </g>
+</svg>

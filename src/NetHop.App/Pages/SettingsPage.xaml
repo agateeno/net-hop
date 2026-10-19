@@ -19,6 +19,12 @@
                 <ComboBox x:Name="LanguageBox" MinWidth="200" SelectionChanged="OnLanguageChanged" />
             </toolkit:SettingsCard>
 
+            <toolkit:SettingsCard x:Uid="Settings_Folder" x:Name="FolderCard" Header="Profiles folder"
+                                  Description="A copy of every profile, pinned to Quick Access. Double-click a file to edit it, right-click to apply it.">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE8B7;" /></toolkit:SettingsCard.HeaderIcon>
+                <Button x:Uid="Settings_FolderOpen" Content="Open folder" Click="OnOpenFolderClick" />
+            </toolkit:SettingsCard>
+
             <toolkit:SettingsCard x:Uid="Settings_Service" x:Name="ServiceCard" Header="NetHop service" Description="-">
                 <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE912;" /></toolkit:SettingsCard.HeaderIcon>
             </toolkit:SettingsCard>

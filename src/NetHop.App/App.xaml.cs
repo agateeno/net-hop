@@ -33,6 +33,13 @@ public partial class App : Application
     {
         ShellIntegration.Register();
         ShellIntegration.ApplyFirstRunDefaults();
+        ProfileFolder.EnsureCreated();
+        Connection.PropertyChanged += (_, e) =>
+        {
+            // Keep %USERPROFILE%\NetHop in step with the profiles.
+            if (e.PropertyName == nameof(ServiceConnection.Profiles) && Connection.IsConnected)
+                _ = ProfileFolder.SyncAsync(Connection.Service, Connection.Profiles);
+        };
         UserActionRunner.Initialize(Connection);
         Connection.Start();
 

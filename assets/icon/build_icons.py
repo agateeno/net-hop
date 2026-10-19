@@ -10,6 +10,7 @@ Each size is rendered from the source drawn for it, as Fluent icons do:
   16px       NetHop-16.svg     pixel-aligned, for the notification area at 100%
   20-32px    NetHop-small.svg  simplified shapes
   40-256px   NetHop.svg        full detail
+The .nethop file icon follows the same scheme with NetHopFile*.svg.
 """
 
 import shutil
@@ -22,6 +23,11 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ASSETS = HERE.parent.parent / "src" / "NetHop.App" / "Assets"
 LOGI_METADATA = HERE.parent.parent / "src" / "NetHop.LogiPlugin" / "package" / "metadata"
+
+def sources(prefix):
+    return [(16, f"{prefix}-16.svg")] + [(s, f"{prefix}-small.svg") for s in (20, 24, 32)] + \
+           [(s, f"{prefix}.svg") for s in (40, 48, 64, 96, 128, 256)]
+
 
 SOURCES = [
     (16, "NetHop-16.svg"),
@@ -63,6 +69,10 @@ def main() -> int:
     ASSETS.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         images = [(size, render(HERE / name, size, Path(tmp) / f"{size}.png")) for size, name in SOURCES]
+        file_images = [(size, render(HERE / name, size, Path(tmp) / f"file{size}.png")) for size, name in sources("NetHopFile")]
+
+    # Icon of .nethop files in Explorer.
+    write_ico(ASSETS / "NetHopFile.ico", file_images)
 
     write_ico(ASSETS / "NetHop.ico", images)
     (ASSETS / "NetHop.png").write_bytes(dict(images)[256])
@@ -71,6 +81,7 @@ def main() -> int:
     (LOGI_METADATA / "Icon256x256.png").write_bytes(dict(images)[256])
     print(f"Wrote NetHop.ico ({len(images)} sizes), NetHop.png and NetHop-32.png to {ASSETS}")
     print(f"Wrote Icon256x256.png to {LOGI_METADATA}")
+    print(f"Wrote NetHopFile.ico ({len(file_images)} sizes) to {ASSETS}")
     return 0
 
 

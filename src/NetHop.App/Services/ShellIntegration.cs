@@ -16,7 +16,9 @@ public static class ShellIntegration
 
     private static string ExePath => Environment.ProcessPath ?? throw new InvalidOperationException("Unknown executable path.");
 
-    private static string IconPath => Path.Combine(AppContext.BaseDirectory, "Assets", "NetHop.ico");
+    public static string IconPath => Path.Combine(AppContext.BaseDirectory, "Assets", "NetHop.ico");
+
+    private static string FileIconPath => Path.Combine(AppContext.BaseDirectory, "Assets", "NetHopFile.ico");
 
     public static void Register()
     {
@@ -28,7 +30,7 @@ public static class ShellIntegration
         {
             // Unpackaged apps register through the Windows App SDK; activations then arrive as File/Protocol kinds.
             ActivationRegistrationManager.RegisterForFileTypeActivation(
-                [NetHopConstants.ProfileExtension], IconPath, "NetHop profile", ["open"], ExePath);
+                [NetHopConstants.ProfileExtension], FileIconPath, "NetHop profile", ["open"], ExePath);
             ActivationRegistrationManager.RegisterForProtocolActivation(
                 NetHopConstants.UriScheme, IconPath, "NetHop", ExePath);
         }

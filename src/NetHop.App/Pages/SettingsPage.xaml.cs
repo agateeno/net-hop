@@ -56,6 +56,8 @@ public sealed partial class SettingsPage : Page
         Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(LanguageBox, Loc.Get("Settings_LanguageRestart"));
     }
 
+    private void OnOpenFolderClick(object sender, RoutedEventArgs e) => ProfileFolder.Open();
+
     private void OnStartupToggled(object sender, RoutedEventArgs e)
     {
         if (!_loading)

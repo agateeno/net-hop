@@ -283,6 +283,9 @@
   <data name="Flyout_PauseText.Text" xml:space="preserve">
     <value>Pause automations</value>
   </data>
+  <data name="Folder_InfoTip" xml:space="preserve">
+    <value>NetHop network profiles</value>
+  </data>
   <data name="Form_Add" xml:space="preserve">
     <value>Add</value>
   </data>
@@ -678,6 +681,15 @@
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
     <value>About</value>
+  </data>
+  <data name="Settings_Folder.Description" xml:space="preserve">
+    <value>A copy of every profile, pinned to Quick Access. Double-click a file to edit it, right-click to apply it.</value>
+  </data>
+  <data name="Settings_Folder.Header" xml:space="preserve">
+    <value>Profiles folder</value>
+  </data>
+  <data name="Settings_FolderOpen.Content" xml:space="preserve">
+    <value>Open folder</value>
   </data>
   <data name="Settings_Language.Description" xml:space="preserve">
     <value>Restart NetHop after changing it.</value>

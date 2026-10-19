@@ -1,8 +1,12 @@
-# NetHop
+<p align="center">
+  <img src="assets/icon/NetHop.svg" width="128" height="128" alt="NetHop icon">
+</p>
+
+<h1 align="center">NetHop</h1>
 
 **Hop between network configurations in one click.** NetHop is an open-source network profile switcher for Windows 11, in the spirit of NetSetMan, with a PowerToys-style Fluent UI.
 
-> Status: early development (v0.1). The core engine and the CLI are in place; the UI is a first scaffold.
+> Status: early development (v0.1). Not tested on real hardware yet.
 
 ## Features
 
@@ -47,6 +51,10 @@ Changing IP settings needs administrator rights, so all changes are made by a Wi
 Integrations: [docs/integrations.md](docs/integrations.md). Installer: [docs/installer.md](docs/installer.md).
 
 ## Profile format
+
+<img src="assets/icon/NetHopFile.svg" width="64" height="64" align="right" alt=".nethop file icon">
+
+Profiles are `.nethop` files. Double-click one to open it in NetHop, or right-click it and choose **Apply with NetHop**.
 
 ```yaml
 schema: 1

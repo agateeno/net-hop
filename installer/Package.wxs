@@ -46,7 +46,17 @@
       <ComponentGroupRef Id="PowerShellModuleFiles" />
     </Feature>
 
-    <ui:WixUI Id="WixUI_FeatureTree" />
+    <!-- "Launch NetHop" on the last page: the first launch creates %USERPROFILE%\NetHop and pins it to Quick Access. -->
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch NetHop" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+    <Property Id="WixShellExecTarget" Value="[INSTALLFOLDER]NetHop.App.exe" />
+    <CustomAction Id="LaunchNetHop" BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)" DllEntry="WixShellExec" Impersonate="yes" />
+
+    <UI>
+      <ui:WixUI Id="WixUI_FeatureTree" />
+      <Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="LaunchNetHop"
+               Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed" />
+    </UI>
     <WixVariable Id="WixUILicenseRtf" Value="$(RepoDir)\installer\License.rtf" />
   </Package>
 
@@ -92,7 +102,7 @@
       <RegistryValue Root="HKLM" Key="Software\Classes\.nethop" Name="Content Type" Value="application/x-yaml" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile" Value="NetHop profile" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell" Value="open" Type="string" />
-      <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\DefaultIcon" Value="[INSTALLFOLDER]NetHop.App.exe,0" Type="string" />
+      <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\DefaultIcon" Value="[INSTALLFOLDER]Assets\NetHopFile.ico,0" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell\open\command" Value="&quot;[INSTALLFOLDER]NetHop.App.exe&quot; &quot;%1&quot;" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell\edit\command" Value="notepad.exe &quot;%1&quot;" Type="string" />
       <!-- "Apply with NetHop": in Windows 11 it appears under "Show more options" (the modern menu needs a signed package). -->

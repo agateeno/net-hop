@@ -283,6 +283,9 @@
   <data name="Flyout_PauseText.Text" xml:space="preserve">
     <value>Pausa automazioni</value>
   </data>
+  <data name="Folder_InfoTip" xml:space="preserve">
+    <value>Profili di rete NetHop</value>
+  </data>
   <data name="Form_Add" xml:space="preserve">
     <value>Aggiungi</value>
   </data>
@@ -678,6 +681,15 @@
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
     <value>Informazioni</value>
+  </data>
+  <data name="Settings_Folder.Description" xml:space="preserve">
+    <value>Una copia di ogni profilo, aggiunta all'Accesso rapido. Doppio clic su un file per modificarlo, clic destro per applicarlo.</value>
+  </data>
+  <data name="Settings_Folder.Header" xml:space="preserve">
+    <value>Cartella dei profili</value>
+  </data>
+  <data name="Settings_FolderOpen.Content" xml:space="preserve">
+    <value>Apri cartella</value>
   </data>
   <data name="Settings_Language.Description" xml:space="preserve">
     <value>Riavvia NetHop dopo averla cambiata.</value>

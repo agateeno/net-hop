@@ -9,12 +9,17 @@
 | App, service, CLI and a self-contained .NET runtime | `%ProgramFiles%\NetHop` (one folder, one runtime) |
 | NetHop Windows service | Runs as LocalSystem, starts automatically, restarts after a crash (5 s) |
 | `nethop.exe` on the system `PATH` | `%ProgramFiles%\NetHop` |
-| `.nethop` file type and `nethop://` protocol | `HKLM\Software\Classes`, opened by `NetHop.App.exe` |
+| `.nethop` file type (with its own icon) and `nethop://` protocol | `HKLM\Software\Classes`, opened by `NetHop.App.exe` |
 | **Apply with NetHop** on `.nethop` files | Explorer context menu (Windows 11: under *Show more options*) |
 | Start menu shortcut | All users |
 | PowerShell module (optional feature) | `%ProgramFiles%\WindowsPowerShell\Modules\NetHop` |
 
-The app starts with Windows from the first time a user opens it (a per-user setting, which can be changed in Settings).
+The last page of the installer offers **Launch NetHop** (checked). On its first launch for each user, the app:
+
+- starts with Windows from then on (can be changed in Settings);
+- creates **`%USERPROFILE%\NetHop`** with the NetHop icon, pins it to **Quick Access**, and keeps a copy of every profile there as a `.nethop` file (double-click to edit, right-click › *Apply with NetHop* to apply). The originals stay in `%ProgramData%\NetHop`; files you add to the folder yourself are never overwritten.
+
+These are per-user, so they happen when each user first opens NetHop, not only for the user who installed it.
 
 Profiles and rules live in `%ProgramData%\NetHop` and are **kept** on uninstall and upgrade.
 
