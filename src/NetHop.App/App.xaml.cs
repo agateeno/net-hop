@@ -33,6 +33,7 @@ public partial class App : Application
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         ShellIntegration.Register();
+        _ = ContextMenuPackage.EnsureRegisteredAsync();
         ShellIntegration.ApplyFirstRunDefaults();
         ProfileFolder.EnsureCreated();
         Connection.PropertyChanged += (_, e) =>

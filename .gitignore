@@ -483,3 +483,7 @@ $RECYCLE.BIN/
 
 # The macOS "Icon" rule above also matches this folder on case-insensitive file systems.
 !assets/icon/
+
+# NetHop.ShellExtension (C++) build output
+src/NetHop.ShellExtension/bin/
+src/NetHop.ShellExtension/obj/

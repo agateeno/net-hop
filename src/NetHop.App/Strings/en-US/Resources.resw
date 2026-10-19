@@ -386,7 +386,7 @@
     <value>Mouse buttons</value>
   </data>
   <data name="Integrations_PadActions.Description" xml:space="preserve">
-    <value>A 'NetHop' group in the actions pane: apply a profile, apply the next one, read the status, 'If network profile is active', pause automations.</value>
+    <value>A 'NetHop' group in the actions pane: apply a profile, read the status, 'If network profile is active', pause automations.</value>
   </data>
   <data name="Integrations_PadActions.Header" xml:space="preserve">
     <value>Power Automate Desktop actions</value>

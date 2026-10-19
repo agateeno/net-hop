@@ -46,7 +46,7 @@ public static class AppLanguage
 {
     public const string SystemDefault = "";
 
-    public static readonly string[] Supported = ["en-US", "it-IT"];
+    public static readonly string[] Supported = ["de-DE", "en-US", "es-ES", "fr-FR", "it-IT", "pt-BR"];
 
     private const string SettingsKey = @"Software\NetHop";
     private const string ValueName = "Language";

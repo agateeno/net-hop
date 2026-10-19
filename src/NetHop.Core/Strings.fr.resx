@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Rules_SchemaUnsupported" xml:space="preserve">
+    <value>Version de schéma {0} non prise en charge.</value>
+  </data>
+  <data name="Rules_NameRequired" xml:space="preserve">
+    <value>La règle doit avoir un nom.</value>
+  </data>
+  <data name="Rules_TriggerRequired" xml:space="preserve">
+    <value>La règle doit avoir un déclencheur.</value>
+  </data>
+  <data name="Rules_TimeFormat" xml:space="preserve">
+    <value>Utilisez le format HH:mm.</value>
+  </data>
+  <data name="Rules_NoActions" xml:space="preserve">
+    <value>La règle n'a aucune action.</value>
+  </data>
+  <data name="Rules_ConditionTypeMissing" xml:space="preserve">
+    <value>Type de condition manquant.</value>
+  </data>
+  <data name="Rules_FromToFormat" xml:space="preserve">
+    <value>« from » et « to » doivent utiliser le format HH:mm.</value>
+  </data>
+  <data name="Rules_AdapterRequired" xml:space="preserve">
+    <value>Indiquez la carte.</value>
+  </data>
+  <data name="Rules_ProfileNameRequired" xml:space="preserve">
+    <value>Indiquez le nom du profil.</value>
+  </data>
+  <data name="Rules_SsidRequired" xml:space="preserve">
+    <value>Indiquez le SSID.</value>
+  </data>
+  <data name="Rules_ActionTypeMissing" xml:space="preserve">
+    <value>Type d'action manquant.</value>
+  </data>
+  <data name="Rules_ProfileToApplyRequired" xml:space="preserve">
+    <value>Indiquez le profil à appliquer.</value>
+  </data>
+  <data name="Rules_MessageRequired" xml:space="preserve">
+    <value>Indiquez le texte de la notification.</value>
+  </data>
+  <data name="Rules_CommandRequired" xml:space="preserve">
+    <value>Indiquez la commande à exécuter.</value>
+  </data>
+  <data name="Rules_UrlRequired" xml:space="preserve">
+    <value>Indiquez une URL absolue.</value>
+  </data>
+  <data name="Rules_FlowUrlRequired" xml:space="preserve">
+    <value>Collez l'URL d'exécution du flux (elle commence par ms-powerautomate:).</value>
+  </data>
+  <data name="Rules_DelayRange" xml:space="preserve">
+    <value>Le délai doit être compris entre 1 et 600 secondes.</value>
+  </data>
+  <data name="Profile_SchemaUnsupported" xml:space="preserve">
+    <value>Version de schéma {0} non prise en charge (cette version de NetHop gère jusqu'à la {1}).</value>
+  </data>
+  <data name="Profile_NameRequired" xml:space="preserve">
+    <value>Le profil doit avoir un nom.</value>
+  </data>
+  <data name="Profile_NameTooLong" xml:space="preserve">
+    <value>Le nom dépasse {0} caractères.</value>
+  </data>
+  <data name="Profile_IdEmpty" xml:space="preserve">
+    <value>L'id du profil ne doit pas être vide.</value>
+  </data>
+  <data name="Profile_ColorFormat" xml:space="preserve">
+    <value>Utilisez le format #RRGGBB.</value>
+  </data>
+  <data name="Profile_IconFormat" xml:space="preserve">
+    <value>Une icône personnalisée doit être une image PNG de {0} Ko au maximum (data:image/png;base64,...).</value>
+  </data>
+  <data name="Profile_NoAdapters" xml:space="preserve">
+    <value>Le profil ne configure aucune carte.</value>
+  </data>
+  <data name="Profile_MatchEmpty" xml:space="preserve">
+    <value>Indiquez au moins guid, mac ou name.</value>
+  </data>
+  <data name="Profile_GuidInvalid" xml:space="preserve">
+    <value>« {0} » n'est pas un GUID valide.</value>
+  </data>
+  <data name="Profile_MacInvalid" xml:space="preserve">
+    <value>« {0} » n'est pas une adresse MAC valide.</value>
+  </data>
+  <data name="Profile_AdapterChangesNothing" xml:space="preserve">
+    <value>Cette entrée de carte ne modifie rien.</value>
+  </data>
+  <data name="Profile_DisabledIgnoresIp" xml:space="preserve">
+    <value>La carte est désactivée, ses paramètres IP seront donc ignorés.</value>
+  </data>
+  <data name="Profile_CidrInvalid" xml:space="preserve">
+    <value>« {0} » n'est pas une adresse en notation CIDR (par ex. {1}).</value>
+  </data>
+  <data name="Profile_WrongFamily" xml:space="preserve">
+    <value>« {0} » n'est pas une adresse {1}.</value>
+  </data>
+  <data name="Profile_NetworkOrBroadcast" xml:space="preserve">
+    <value>« {0} » est l'adresse de réseau ou de diffusion de son sous-réseau.</value>
+  </data>
+  <data name="Profile_LinkLocal" xml:space="preserve">
+    <value>Les adresses lien-local sont attribuées automatiquement par Windows.</value>
+  </data>
+  <data name="Profile_Duplicate" xml:space="preserve">
+    <value>« {0} » figure deux fois.</value>
+  </data>
+  <data name="Profile_StaticNeedsAddress" xml:space="preserve">
+    <value>Le mode statique nécessite au moins une adresse.</value>
+  </data>
+  <data name="Profile_AddressesOnlyStatic" xml:space="preserve">
+    <value>Les adresses et passerelles ne peuvent être définies qu'en mode statique (le mode est « {0} »).</value>
+  </data>
+  <data name="Profile_GatewayOutsideSubnet" xml:space="preserve">
+    <value>La passerelle {0} est en dehors de tous les sous-réseaux configurés.</value>
+  </data>
+  <data name="Profile_StaticDnsNeedsServer" xml:space="preserve">
+    <value>Le DNS statique nécessite au moins un serveur.</value>
+  </data>
+  <data name="Profile_DnsServersOnlyStatic" xml:space="preserve">
+    <value>Les serveurs DNS ne peuvent être indiqués qu'en mode statique.</value>
+  </data>
+  <data name="Profile_StaticIpv4NoDhcpDns" xml:space="preserve">
+    <value>Avec une adresse IPv4 statique, Windows ne reçoit aucun serveur DNS du DHCP.</value>
+  </data>
+  <data name="Profile_FamilyChangesNothing" xml:space="preserve">
+    <value>Ce bloc {0} ne modifie rien.</value>
+  </data>
+  <data name="Profile_IpInvalid" xml:space="preserve">
+    <value>« {0} » n'est pas une adresse IP valide.</value>
+  </data>
+  <data name="Profile_SameAdapter" xml:space="preserve">
+    <value>Même carte que adapters[{0}].</value>
+  </data>
+  <data name="Step_Enable" xml:space="preserve">
+    <value>Activer la carte « {0} »</value>
+  </data>
+  <data name="Step_Wait" xml:space="preserve">
+    <value>Attendre que la carte « {0} » soit opérationnelle</value>
+  </data>
+  <data name="Step_Disable" xml:space="preserve">
+    <value>Désactiver la carte « {0} »</value>
+  </data>
+  <data name="Step_DhcpOn" xml:space="preserve">
+    <value>Activer la configuration {0} automatique sur « {1} »</value>
+  </data>
+  <data name="Step_DhcpOff" xml:space="preserve">
+    <value>Désactiver la configuration {0} automatique sur « {1} »</value>
+  </data>
+  <data name="Step_AddAddress" xml:space="preserve">
+    <value>Ajouter l'adresse {0} à « {1} »</value>
+  </data>
+  <data name="Step_RemoveAddress" xml:space="preserve">
+    <value>Supprimer l'adresse {0} de « {1} »</value>
+  </data>
+  <data name="Step_AddGateway" xml:space="preserve">
+    <value>Ajouter la passerelle par défaut {0} à « {1} »</value>
+  </data>
+  <data name="Step_RemoveGateway" xml:space="preserve">
+    <value>Supprimer la passerelle par défaut {0} de « {1} »</value>
+  </data>
+  <data name="Step_DnsAuto" xml:space="preserve">
+    <value>Utiliser le DNS {0} automatique sur « {1} »</value>
+  </data>
+  <data name="Step_DnsSet" xml:space="preserve">
+    <value>Définir le DNS {0} de « {1} » sur {2}</value>
+  </data>
+  <data name="Plan_Skipped" xml:space="preserve">
+    <value>{0} Ignoré.</value>
+  </data>
+  <data name="Plan_AdapterTwice" xml:space="preserve">
+    <value>La carte « {0} » est configurée plusieurs fois.</value>
+  </data>
+  <data name="Plan_DisabledSkipsIp" xml:space="preserve">
+    <value>La carte « {0} » est désactivée, paramètres IP ignorés.</value>
+  </data>
+  <data name="Match_SharedMac" xml:space="preserve">
+    <value>{0} cartes partagent l'adresse MAC {1}.</value>
+  </data>
+  <data name="Match_SharedName" xml:space="preserve">
+    <value>{0} cartes s'appellent « {1} ».</value>
+  </data>
+  <data name="Match_NotFound" xml:space="preserve">
+    <value>Aucune carte ne correspond à « {0} ».</value>
+  </data>
+  <data name="Apply_ProfileHasErrors" xml:space="preserve">
+    <value>Le profil contient des erreurs.</value>
+  </data>
+  <data name="Issue_Error" xml:space="preserve">
+    <value>erreur</value>
+  </data>
+  <data name="Issue_Warning" xml:space="preserve">
+    <value>avertissement</value>
+  </data>
+</root>

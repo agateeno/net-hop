@@ -10,7 +10,7 @@
 | NetHop Windows service | Runs as LocalSystem, starts automatically, restarts after a crash (5 s) |
 | `nethop.exe` on the system `PATH` | `%ProgramFiles%\NetHop` |
 | `.nethop` file type (with its own icon) and `nethop://` protocol | `HKLM\Software\Classes`, opened by `NetHop.App.exe` |
-| **Apply with NetHop** on `.nethop` files | Explorer context menu (Windows 11: under *Show more options*) |
+| **Apply with NetHop** on `.nethop` files | Explorer context menu: first level on Windows 11 (see below), and under *Show more options* |
 | Start menu shortcut | All users |
 | PowerShell module (optional feature) | `%ProgramFiles%\WindowsPowerShell\Modules\NetHop` |
 
@@ -72,7 +72,16 @@ winget install agateeno.NetHop
 
 ## Windows 11 context menu
 
-**Apply with NetHop** is a classic shell verb, so Windows 11 shows it under *Show more options*. A first-level entry in the new menu needs an `IExplorerCommand` handler declared in a signed sparse package: it will come once releases are signed.
+Windows 11 shows first-level context menu entries only for handlers declared by a package. NetHop ships:
+
+- `NetHop.ShellExtension.dll`, a small native `IExplorerCommand` handler (`src/NetHop.ShellExtension`). Explorer loads it in-process; it shows **Apply with NetHop** (*Applica con NetHop* in Italian) when one `.nethop` file is selected and starts `NetHop.App.exe --apply <file>`.
+- `NetHop.ContextMenu.msix`, a sparse package (manifest and logos only) whose content is the install folder. It declares the handler for `.nethop` files.
+
+Packages are registered per user, so NetHop registers it for the current user when it starts, and again after an upgrade (the package version is the product version). Uninstalling removes it for the user running the uninstall. Failures are written to `%LOCALAPPDATA%\NetHop\crash.log`. The classic verb stays under *Show more options* and works everywhere.
+
+**Signing.** Windows installs the package only if it is signed by a certificate the machine trusts **and** its Publisher equals the certificate's subject. Set the repository variable `PACKAGE_PUBLISHER` (*Settings › Secrets and variables › Actions › Variables*) to the exact subject of the Trusted Signing certificate, for example `CN=Jane Doe, O=Jane Doe, L=Rome, S=Lazio, C=IT`; CI then builds and signs the package with it. Without it (or without signing), the package uses Windows' unsigned-package publisher (`OID.2.25.311729368913984317654407730594956997722=1`) and NetHop registers it with *AllowUnsigned*, which Windows accepts only where unsigned packages are allowed; elsewhere only the classic entry appears.
+
+Build it locally with `scripts\Build-ContextMenuPackage.ps1` (needs Visual Studio with the C++ tools and the Windows SDK).
 
 ## Troubleshooting
 

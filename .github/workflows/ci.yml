@@ -17,6 +17,9 @@ jobs:
       DOTNET_CLI_TELEMETRY_OPTOUT: true
       # Code signing runs only when the Azure Trusted Signing secrets are configured (see docs/installer.md).
       SIGNING: ${{ secrets.AZURE_SIGNING_ACCOUNT != '' }}
+      # Subject of the signing certificate (repository variable). The Windows 11 context menu package must declare it
+      # as its Publisher to be signed; without it the package is built unsigned (see docs/installer.md).
+      PACKAGE_PUBLISHER: ${{ vars.PACKAGE_PUBLISHER }}
 
     steps:
       - uses: actions/checkout@v4
@@ -57,6 +60,9 @@ jobs:
             Copy-Item src/NetHop.PowerShell/* "out/$arch/NetHop/powershell/"
             Copy-Item scripts/Install-NetHop.ps1, scripts/Uninstall-NetHop.ps1 "out/$arch/NetHop/"
             Copy-Item samples "out/$arch/NetHop/samples" -Recurse
+            # Windows 11 context menu: the C++ handler and the sparse package that declares it.
+            $publisher = if ($env:SIGNING -eq 'true') { $env:PACKAGE_PUBLISHER } else { '' }
+            ./scripts/Build-ContextMenuPackage.ps1 -BinDirectory $bin -Architecture $arch -Version $env:PRODUCT_VERSION -Publisher $publisher
             "{0}: {1:N0} MB" -f $arch, ((Get-ChildItem $bin -Recurse | Measure-Object Length -Sum).Sum / 1MB)
           }
           dotnet build src/NetHop.PowerAutomate -c Release -o out/power-automate/bin
@@ -113,6 +119,21 @@ jobs:
           "NetHop.App.exe is running (pid $($app.Id))"
           Stop-Process $app -Force
 
+      # The app registered the context menu package when it started (previous step). Informational, like that step:
+      # it shows whether Windows accepted the manifest and the unsigned package on this image.
+      - name: Smoke test (context menu package)
+        continue-on-error: true
+        shell: powershell # the Appx module is Windows PowerShell's
+        run: |
+          $package = Get-AppxPackage NetHop.ContextMenu
+          if (-not $package) {
+            Get-Content (Join-Path $env:LOCALAPPDATA 'NetHop\crash.log') -ErrorAction SilentlyContinue
+            throw 'The app did not register NetHop.ContextMenu.'
+          }
+          $package | Format-List Name, Version, Publisher, InstallLocation
+          if ($package.Version -ne "$env:PRODUCT_VERSION.0") { throw "Registered version $($package.Version), expected $env:PRODUCT_VERSION.0" }
+          $package | Remove-AppxPackage
+
       - name: Remove smoke test install
         if: always()
         shell: pwsh
@@ -126,7 +147,10 @@ jobs:
         if: env.SIGNING == 'true'
         shell: pwsh
         run: |
-          $files = Get-ChildItem out -Recurse -Include NetHop*.exe, NetHop*.dll, nethop.exe, nethop.dll, Modules.NetHop.dll
+          $include = 'NetHop*.exe', 'NetHop*.dll', 'nethop.exe', 'nethop.dll', 'Modules.NetHop.dll'
+          # The context menu package can only be signed when its Publisher is the certificate's subject.
+          if ($env:PACKAGE_PUBLISHER) { $include += 'NetHop.ContextMenu.msix' }
+          $files = Get-ChildItem out -Recurse -Include $include
           $map = @{}
           $i = 0
           New-Item out/sign -ItemType Directory -Force | Out-Null
@@ -148,7 +172,7 @@ jobs:
           trusted-signing-account-name: ${{ secrets.AZURE_SIGNING_ACCOUNT }}
           certificate-profile-name: ${{ secrets.AZURE_SIGNING_PROFILE }}
           files-folder: ${{ github.workspace }}\out\sign
-          files-folder-filter: exe,dll
+          files-folder-filter: exe,dll,msix
           file-digest: SHA256
           timestamp-rfc3161: http://timestamp.acs.microsoft.com
           timestamp-digest: SHA256

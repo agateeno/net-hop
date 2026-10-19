@@ -41,13 +41,17 @@ Everything except step 1 and the execution of individual steps is pure code in `
 
 ## Localization
 
-- **App**: `Strings/en-US/Resources.resw` (default) and `Strings/it-IT/Resources.resw`. XAML uses `x:Uid`, so the English text in the XAML is also the fallback. Code uses `Loc.Get("Key")`.
-- **Core messages** (validation, plan steps): `Strings.resx` and `Strings.it.resx` in NetHop.Core, picked by the current UI culture. A unit test checks that every key exists in both languages with the same placeholders.
-- **Language choice**: Windows' display language by default; Settings can force English or Italian (`HKCU\Software\NetHop\Language`). It is applied at startup through `ApplicationLanguages.PrimaryLanguageOverride` and the .NET UI culture.
+Languages: English (default), German, Spanish, French, Italian and Portuguese (Brazil).
+
+- **App**: `Strings/<culture>/Resources.resw` (`en-US`, `de-DE`, `es-ES`, `fr-FR`, `it-IT`, `pt-BR`). XAML uses `x:Uid`, so the English text in the XAML is also the fallback. Code uses `Loc.Get("Key")`.
+- **Core messages** (validation, plan steps): `Strings.resx` (English) and `Strings.<language>.resx` (`de`, `es`, `fr`, `it`, `pt`) in NetHop.Core, picked by the current UI culture. Neutral languages, so `fr-CA` or `pt-PT` users get French or Portuguese too.
+- **Tests** (`LocalizationTests`) check that every language has every key of the English files, with the same placeholders, for both the app and Core.
+- **Windows 11 context menu**: the C++ handler has its own short table (`Title()` in `ApplyCommand.cpp`).
+- **Language choice**: Windows' display language by default; Settings can force one of the languages above (`HKCU\Software\NetHop\Language`). It is applied at startup through `ApplicationLanguages.PrimaryLanguageOverride` and the .NET UI culture.
 - **Theme**: light or dark like Windows' app mode by default; Settings can force Light or Dark (`HKCU\Software\NetHop\Theme`). `AppTheme` applies it live to every window: the root element's `RequestedTheme` (the Mica/acrylic backdrop follows it) and the title bar's `PreferredTheme`.
 - Messages created by the service (apply steps, errors) use the system language, because the service runs as SYSTEM. The CLI stays in English so scripts can rely on it.
 
-To add a language, copy both `en-US` files to the new culture, translate them, and add the tag to `AppLanguage.Supported`.
+To add a language: copy `Strings/en-US/Resources.resw` and `Strings.resx` to the new culture and translate them, add the tag to `AppLanguage.Supported` and the Settings language list, add the context menu title to `ApplyCommand.cpp`, the culture to `SatelliteResourceLanguages` in `Directory.Build.props`, and a line to each test in `LocalizationTests`.
 
 ## Decisions
 
@@ -60,6 +64,7 @@ To add a language, copy both `en-US` files to the new culture, translate them, a
 | Plain `net10.0` for Engine/Service/CLI | The `-windows` TFM makes StreamJsonRpc's VS.Threading dependency pull in WPF. The assemblies are marked `[SupportedOSPlatform("windows")]` instead |
 | Windows App SDK 2.5 | Every API NetHop uses exists unchanged in 2.x (checked against the 2.x metadata). CommunityToolkit and H.NotifyIcon restore fine on it. 2.x brings `SystemBackdropElement`, `ApplicationData.GetForUnpackaged()` and the new storage pickers, and it is the line that gets new features |
 | Unpackaged app + `ActivationRegistrationManager` | Registers `.nethop` and `nethop://` per user without MSIX; an installer can switch to a sparse package for the Windows 11 context menu |
+| Windows 11 context menu from a sparse package, registered by the app | Only packaged `IExplorerCommand` handlers reach the first level of the menu. The package carries no app code (its content is the install folder), so the app stays unpackaged; packages are per user, so the app registers it at startup instead of the per-machine MSI |
 | YAML profiles | Readable, diff-friendly, easy to share; strict parsing catches typos |
 
 ## Open questions (spikes)

@@ -25,7 +25,7 @@ public static class Program
         if (args.Contains("--uninstall"))
         {
             Services.AppLanguage.Apply();
-            Services.UninstallCleanup.Run();
+            Services.UninstallCleanup.Run(quiet: args.Contains("--quiet"));
             return 0;
         }
 

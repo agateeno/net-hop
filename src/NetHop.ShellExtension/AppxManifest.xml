@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Sparse package ("package with external location") for the Windows 11 context menu. It contains only this
+  manifest and the logos; its content is NetHop's install folder, passed as the external location when the
+  app registers it for the current user (Services/ContextMenuPackage.cs).
+  scripts/Build-ContextMenuPackage.ps1 fills in $(Publisher), $(Version) and $(Architecture).
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
+  xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
+  IgnorableNamespaces="uap uap10 rescap com desktop4 desktop5">
+
+  <Identity Name="NetHop.ContextMenu" Publisher="$(Publisher)" Version="$(Version)" ProcessorArchitecture="$(Architecture)" />
+
+  <Properties>
+    <DisplayName>NetHop</DisplayName>
+    <PublisherDisplayName>NetHop</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.22000.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="unvirtualizedResources" />
+  </Capabilities>
+
+  <Applications>
+    <Application Id="NetHop" Executable="NetHop.App.exe" uap10:TrustLevel="mediumIL" uap10:RuntimeBehavior="win32App">
+      <!-- Not listed in Start: the MSI installs NetHop's own shortcut. -->
+      <uap:VisualElements DisplayName="NetHop" Description="Network profiles for Windows" BackgroundColor="transparent"
+                          Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png"
+                          AppListEntry="none" />
+      <Extensions>
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:SurrogateServer DisplayName="NetHop context menu">
+              <com:Class Id="d865f53b-c891-4bc6-86fc-31839648b395" Path="NetHop.ShellExtension.dll" ThreadingModel="STA" />
+            </com:SurrogateServer>
+          </com:ComServer>
+        </com:Extension>
+        <desktop4:Extension Category="windows.fileExplorerContextMenus">
+          <desktop4:FileExplorerContextMenus>
+            <desktop5:ItemType Type=".nethop">
+              <desktop5:Verb Id="ApplyWithNetHop" Clsid="d865f53b-c891-4bc6-86fc-31839648b395" />
+            </desktop5:ItemType>
+          </desktop4:FileExplorerContextMenus>
+        </desktop4:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+</Package>

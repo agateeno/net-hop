@@ -5,7 +5,8 @@ namespace NetHop.App.Services;
 
 /// <summary>
 /// Run by the MSI during uninstall (<c>NetHop.App.exe --uninstall</c>, as the user, before files are removed).
-/// Always removes the start-with-Windows entry; asks whether to delete %USERPROFILE%\NetHop Profiles too.
+/// Always removes the start-with-Windows entry and the Windows 11 context menu package; asks whether to delete
+/// %USERPROFILE%\NetHop Profiles too, except with <c>--quiet</c> (silent uninstall), where the folder is kept.
 /// </summary>
 public static partial class UninstallCleanup
 {
@@ -19,8 +20,11 @@ public static partial class UninstallCleanup
     [LibraryImport("user32.dll", EntryPoint = "MessageBoxW", StringMarshalling = StringMarshalling.Utf16)]
     private static partial int MessageBox(IntPtr owner, string text, string caption, uint type);
 
-    public static void Run()
+    public static void Run(bool quiet)
     {
+        // Registered per user with the install folder as its content: it would point at deleted files.
+        ContextMenuPackage.Remove();
+
         try
         {
             // The app is going away: a Run entry would point at a missing file.
@@ -31,7 +35,7 @@ public static partial class UninstallCleanup
             System.Diagnostics.Debug.WriteLine($"Could not remove the startup entry: {ex.Message}");
         }
 
-        if (!Directory.Exists(ProfileFolder.Path))
+        if (quiet || !Directory.Exists(ProfileFolder.Path))
             return;
 
         // "No" is the default button: deleting files must be a deliberate choice.
