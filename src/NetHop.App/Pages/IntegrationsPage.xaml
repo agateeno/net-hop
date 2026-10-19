@@ -40,6 +40,25 @@
                     <toolkit:SettingsCard Header="Exit codes" Description="0 ok, 1 failed, 2 usage error, 3 service not running, 4 access denied" />
                 </toolkit:SettingsExpander.Items>
             </toolkit:SettingsExpander>
+            <toolkit:SettingsExpander Header="Power Automate Desktop actions"
+                                      Description="A 'NetHop' group in the actions pane: apply a profile, apply the next one, read the status, 'If network profile is active', pause automations.">
+                <toolkit:SettingsExpander.HeaderIcon><FontIcon Glyph="&#xE8F1;" /></toolkit:SettingsExpander.HeaderIcon>
+                <toolkit:SettingsExpander.Items>
+                    <toolkit:SettingsCard Header="Install"
+                                          Description="Sign NetHop.cab with your organization's code-signing certificate (scripts\Build-PowerAutomateModule.ps1), then upload it in the Power Automate portal under Custom actions." />
+                </toolkit:SettingsExpander.Items>
+            </toolkit:SettingsExpander>
+            <toolkit:SettingsExpander Header="PowerShell" Description="Installed with NetHop; works in 'Run PowerShell script' and in any terminal.">
+                <toolkit:SettingsExpander.HeaderIcon><FontIcon Glyph="&#xE756;" /></toolkit:SettingsExpander.HeaderIcon>
+                <toolkit:SettingsExpander.Items>
+                    <toolkit:SettingsCard Header="Apply a profile">
+                        <TextBlock Text="Set-NetHopProfile Office" IsTextSelectionEnabled="True" FontFamily="Cascadia Mono, Consolas" />
+                    </toolkit:SettingsCard>
+                    <toolkit:SettingsCard Header="Active profile">
+                        <TextBlock Text="(Get-NetHopStatus).activeProfileName" IsTextSelectionEnabled="True" FontFamily="Cascadia Mono, Consolas" />
+                    </toolkit:SettingsCard>
+                </toolkit:SettingsExpander.Items>
+            </toolkit:SettingsExpander>
             <toolkit:SettingsCard Header="Start flows from NetHop rules"
                                   Description="In Automations, add a runPowerAutomateFlow action with the flow's run URL (Power Automate Desktop › flow › Properties › Run URL).">
                 <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE945;" /></toolkit:SettingsCard.HeaderIcon>
@@ -47,11 +66,11 @@
 
             <TextBlock Text="Logitech" Style="{StaticResource SectionHeaderStyle}" />
             <toolkit:SettingsCard Header="Logi Actions plugin"
-                                  Description="Apply profiles from MX Creative Console keys and the Actions Ring, with live icons for the active profile. The plugin is in development.">
+                                  Description="Install NetHop.lplug4, then in Logi Options+ assign 'Apply profile', 'Next profile' or 'Pause automations' to MX Creative Console keys or Actions Ring slots. Keys show the profile color and which profile is active.">
                 <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE962;" /></toolkit:SettingsCard.HeaderIcon>
             </toolkit:SettingsCard>
-            <toolkit:SettingsCard Header="Mouse buttons (any brand)"
-                                  Description="Until the plugin ships: in Logi Options+ choose 'Open application' and pick a .nethop file or a nethop:// shortcut." />
+            <toolkit:SettingsCard Header="Mouse buttons"
+                                  Description="Any mouse button that can open a file or a link works too: point it at a .nethop file or a nethop:// shortcut." />
         </StackPanel>
     </ScrollViewer>
 </Page>

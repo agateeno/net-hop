@@ -32,6 +32,7 @@ public partial class App : Application
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         ShellIntegration.Register();
+        ShellIntegration.ApplyFirstRunDefaults();
         UserActionRunner.Initialize(Connection);
         Connection.Start();
 

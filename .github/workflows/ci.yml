@@ -15,6 +15,8 @@ jobs:
     env:
       DOTNET_NOLOGO: true
       DOTNET_CLI_TELEMETRY_OPTOUT: true
+      # MSI versions are major.minor.build; the run number keeps every CI build upgradable.
+      PRODUCT_VERSION: 0.1.${{ github.run_number }}
 
     steps:
       - uses: actions/checkout@v4
@@ -32,20 +34,52 @@ jobs:
       - name: Test
         run: dotnet test tests/NetHop.Core.Tests -c Release --no-build --logger "trx;LogFileName=results.trx"
 
+      # Service, CLI and app share one folder and one self-contained .NET runtime,
+      # so the target PC needs nothing preinstalled.
       - name: Publish (x64)
         shell: pwsh
         run: |
-          dotnet publish src/NetHop.Service -c Release -r win-x64 --self-contained false -o out/NetHop/service
-          dotnet publish src/NetHop.Cli -c Release -r win-x64 --self-contained false -o out/NetHop/cli
-          dotnet publish src/NetHop.App -c Release -r win-x64 -p:Platform=x64 -o out/NetHop/app
-          Copy-Item scripts/*.ps1 out/NetHop/
+          $bin = 'out/NetHop/bin'
+          dotnet publish src/NetHop.Service -c Release -r win-x64 --self-contained -p:Version=$env:PRODUCT_VERSION -o $bin
+          dotnet publish src/NetHop.Cli -c Release -r win-x64 --self-contained -p:Version=$env:PRODUCT_VERSION -o $bin
+          dotnet publish src/NetHop.App -c Release -r win-x64 -p:Platform=x64 --self-contained -p:Version=$env:PRODUCT_VERSION -o $bin
+          New-Item out/NetHop/powershell -ItemType Directory -Force | Out-Null
+          Copy-Item src/NetHop.PowerShell/* out/NetHop/powershell/
+          Copy-Item scripts/Install-NetHop.ps1, scripts/Uninstall-NetHop.ps1 out/NetHop/
           Copy-Item samples out/NetHop/samples -Recurse
+          "{0:N0} MB published" -f ((Get-ChildItem $bin -Recurse | Measure-Object Length -Sum).Sum / 1MB)
 
-      - name: Upload build
+      - name: Build MSI
+        shell: pwsh
+        run: |
+          dotnet build installer/NetHop.Installer.wixproj -c Release `
+            -p:NetHopBinDir="$PWD/out/NetHop/bin" -p:ProductVersion=$env:PRODUCT_VERSION -o out/msi
+
+      # Unsigned: Power Automate only accepts it after signing with your own certificate
+      # (scripts/Build-PowerAutomateModule.ps1 -CertificatePath ...).
+      - name: Pack Power Automate actions (unsigned)
+        shell: pwsh
+        run: ./scripts/Build-PowerAutomateModule.ps1 -SkipSigning -OutputDirectory "$PWD/out/power-automate"
+
+      - name: Upload MSI
+        uses: actions/upload-artifact@v4
+        with:
+          name: NetHop-msi
+          path: out/msi/*.msi
+          retention-days: 14
+
+      - name: Upload build folder
         uses: actions/upload-artifact@v4
         with:
           name: NetHop-win-x64
           path: out/NetHop
+          retention-days: 14
+
+      - name: Upload Power Automate actions
+        uses: actions/upload-artifact@v4
+        with:
+          name: NetHop-PowerAutomate-unsigned
+          path: out/power-automate/NetHop.cab
           retention-days: 14
 
       - name: Upload test results

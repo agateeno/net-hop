@@ -1,11 +1,12 @@
 #Requires -RunAsAdministrator
 <#
 .SYNOPSIS
-    Development install of NetHop from a CI build folder (until a real installer exists).
+    Quick development install of NetHop from a CI build folder, without the MSI.
 
 .DESCRIPTION
     Copies the build to %ProgramFiles%\NetHop, registers and starts the NetHop Windows service,
-    and adds the CLI folder to the machine PATH. Run it from the extracted NetHop-win-x64 artifact.
+    and adds the folder to the machine PATH. Run it from the extracted NetHop-win-x64 artifact.
+    For a normal install use the MSI from the same artifact.
 
 .EXAMPLE
     .\Install-NetHop.ps1
@@ -26,14 +27,13 @@ if (Get-Service $serviceName -ErrorAction SilentlyContinue) {
     Start-Sleep -Seconds 2
 }
 
-Write-Host "Copying files to $Destination..."
-foreach ($part in 'service', 'cli', 'app') {
-    $target = Join-Path $Destination $part
-    New-Item $target -ItemType Directory -Force | Out-Null
-    Copy-Item (Join-Path $Source "$part\*") $target -Recurse -Force
-}
+Get-Process NetHop.App -ErrorAction SilentlyContinue | Stop-Process -Force
 
-$serviceExe = Join-Path $Destination 'service\NetHop.Service.exe'
+Write-Host "Copying files to $Destination..."
+New-Item $Destination -ItemType Directory -Force | Out-Null
+Copy-Item (Join-Path $Source 'bin\*') $Destination -Recurse -Force
+
+$serviceExe = Join-Path $Destination 'NetHop.Service.exe'
 if (-not (Get-Service $serviceName -ErrorAction SilentlyContinue)) {
     Write-Host 'Registering the NetHop service...'
     New-Service -Name $serviceName -BinaryPathName "`"$serviceExe`"" -DisplayName 'NetHop' `
@@ -45,13 +45,21 @@ if (-not (Get-Service $serviceName -ErrorAction SilentlyContinue)) {
 Start-Service $serviceName
 Write-Host 'Service started.'
 
-$cliPath = Join-Path $Destination 'cli'
+$cliPath = $Destination
 $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
 if (($machinePath -split ';') -notcontains $cliPath) {
     [Environment]::SetEnvironmentVariable('Path', "$machinePath;$cliPath", 'Machine')
     Write-Host "Added $cliPath to PATH (open a new terminal to use 'nethop')."
 }
 
+$moduleSource = Join-Path $Source 'powershell'
+if (Test-Path $moduleSource) {
+    $moduleTarget = Join-Path $env:ProgramFiles 'WindowsPowerShell\Modules\NetHop'
+    New-Item $moduleTarget -ItemType Directory -Force | Out-Null
+    Copy-Item (Join-Path $moduleSource '*') $moduleTarget -Force
+    Write-Host 'Installed the NetHop PowerShell module.'
+}
+
 Write-Host ''
-Write-Host "Done. Start the app with: & '$(Join-Path $Destination 'app\NetHop.exe')'"
+Write-Host "Done. Start the app with: & '$(Join-Path $Destination 'NetHop.App.exe')'"
 Write-Host "Try the CLI with:         nethop adapters"

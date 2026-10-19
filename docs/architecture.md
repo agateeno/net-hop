@@ -7,7 +7,8 @@
 | `NetHop.Service.exe` | LocalSystem | Owns profiles and rules, reads and changes the network, watches for changes, runs rules |
 | `NetHop.exe` (WinUI) | signed-in user | Settings window, tray icon and flyout, toasts, runs user-session rule actions |
 | `nethop.exe` (CLI) | caller | Scripting and Power Automate |
-| Logi Actions plugin (planned) | signed-in user | MX Creative Console / Actions Ring buttons |
+| Logi Actions plugin | signed-in user, inside Logi Plugin Service | MX Creative Console / Actions Ring buttons |
+| Power Automate Desktop actions | signed-in user, inside PAD | Call `nethop.exe --json` |
 
 All clients talk to the service through the `NetHop.Service.v1` named pipe using JSON-RPC ([StreamJsonRpc](https://github.com/microsoft/vs-streamjsonrpc), System.Text.Json formatter). The contract is `NetHop.Ipc.INetHopService`. It includes two events, `StatusChanged` and `UserActionRequested`, that the service pushes to every connected client.
 
@@ -44,6 +45,8 @@ Everything except step 1 and the execution of individual steps is pure code in `
 |---|---|
 | CIM (`root\StandardCimv2`) instead of `netsh` | Locale-independent, structured errors, same classes as the PowerShell NetTCPIP module |
 | `SetInterfaceDnsSettings` for DNS | Clean "back to DHCP" (empty list) and IPv6 support without registry tweaks |
+| Core and Ipc target net8.0 and net10.0 | Logi Plugin Service loads plugins on .NET 8, and the plugin reuses the same pipe client |
+| PAD actions call the CLI instead of the pipe | PAD loads .NET Framework 4.7.2 modules, and every DLL shipped with them must be signed: calling `nethop.exe` keeps the module to a single DLL |
 | Plain `net10.0` for Engine/Service/CLI | The `-windows` TFM makes StreamJsonRpc's VS.Threading dependency pull in WPF. The assemblies are marked `[SupportedOSPlatform("windows")]` instead |
 | Windows App SDK 2.5 | Every API NetHop uses exists unchanged in 2.x (checked against the 2.x metadata). CommunityToolkit and H.NotifyIcon restore fine on it. 2.x brings `SystemBackdropElement`, `ApplicationData.GetForUnpackaged()` and the new storage pickers, and it is the line that gets new features |
 | Unpackaged app + `ActivationRegistrationManager` | Registers `.nethop` and `nethop://` per user without MSIX; an installer can switch to a sparse package for the Windows 11 context menu |

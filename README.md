@@ -11,8 +11,9 @@
 - **Plain files**: profiles are YAML documents with the `.nethop` extension. Double-click one to import it.
 - **Tray flyout**: left-click the notification-area icon to see the active profile and switch with one click.
 - **Built-in automations**: rules such as "when I join the Wi-Fi `CORP-WiFi` on a weekday, apply *Office*", with no extra software. Loop protection, cooldowns and a pause switch are included.
-- **Power Automate**: drive NetHop from flows through the CLI (`nethop apply Office --json`), or start flows from NetHop rules.
-- **Logitech**: a Logi Actions SDK plugin (planned); meanwhile any mouse button can open a `.nethop` file or a `nethop://` link.
+- **Power Automate**: a *NetHop* group of custom actions in Power Automate Desktop, a PowerShell module, and a CLI with JSON output. NetHop rules can also start flows.
+- **Logitech**: a Logi Actions plugin for the MX Creative Console and the Actions Ring, with keys that show the active profile.
+- **Installer**: a per-machine MSI with the service, `PATH`, file types and Start menu entry.
 - **Rename adapters** without breaking profiles: profiles find adapters by GUID, then MAC, then name.
 
 ## Architecture
@@ -37,6 +38,12 @@ Changing IP settings needs administrator rights, so all changes are made by a Wi
 | `NetHop.Service` | net10.0, Windows | Windows service hosting everything above |
 | `NetHop.Cli` | net10.0 | `nethop.exe` |
 | `NetHop.App` | net10.0-windows10.0.22621 | WinUI 3 app (Windows App SDK 2.5) |
+| `NetHop.PowerAutomate` | net472 | Power Automate Desktop custom actions (`Modules.NetHop.dll`) |
+| `NetHop.PowerShell` | PowerShell 5.1+ | `NetHop` module |
+| `NetHop.LogiPlugin` | net8.0 | Logi Actions plugin. Builds only where Logi Options+ is installed |
+| `installer/` | WiX 6 | MSI |
+
+Integrations: [docs/integrations.md](docs/integrations.md). Installer: [docs/installer.md](docs/installer.md).
 
 ## Profile format
 
@@ -83,7 +90,7 @@ dotnet test tests/NetHop.Core.Tests
 
 The app icon is drawn in SVG under [assets/icon](assets/icon): `NetHop.svg` (large sizes), `NetHop-small.svg` (20–32 px) and `NetHop-16.svg` (16 px). After editing one, run `python assets/icon/build_icons.py` (needs [resvg](https://github.com/linebender/resvg)) to regenerate the `.ico` and `.png` files.
 
-Every push builds on GitHub Actions; the **NetHop-win-x64** artifact contains the service, CLI and app. To try it on a Windows machine, extract the artifact and run from an elevated PowerShell:
+Every push builds on GitHub Actions and produces three artifacts: **NetHop-msi** (the installer), **NetHop-win-x64** (the same binaries as a folder) and **NetHop-PowerAutomate-unsigned**. Install the MSI, or, for a quick test without it, extract the folder and run from an elevated PowerShell:
 
 ```powershell
 .\Install-NetHop.ps1      # copies to Program Files, registers and starts the service
@@ -98,9 +105,10 @@ Every push builds on GitHub Actions; the **NetHop-win-x64** artifact contains th
 - [ ] Verify the CIM backend on real hardware (see the spike list in [docs/architecture.md](docs/architecture.md#open-questions-spikes))
 - [x] WinUI scaffold: dashboard, YAML editors, adapters page, tray flyout
 - [ ] Form-based profile and rule editors
-- [ ] Installer (WiX) with service registration and Windows 11 context menu
-- [ ] Logi Actions SDK plugin
-- [ ] Power Automate Desktop custom actions
+- [x] Installer (WiX) with service, PATH, file types and Start menu
+- [x] Logi Actions SDK plugin (to verify with real hardware)
+- [x] Power Automate Desktop custom actions and PowerShell module
+- [ ] Code signing, Windows 11 context menu, ARM64 MSI, winget
 - [ ] Localization (Italian, English)
 
 ## License

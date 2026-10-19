@@ -5,6 +5,7 @@
     <Project Path="src/NetHop.Core/NetHop.Core.csproj" />
     <Project Path="src/NetHop.Engine/NetHop.Engine.csproj" />
     <Project Path="src/NetHop.Ipc/NetHop.Ipc.csproj" />
+    <Project Path="src/NetHop.PowerAutomate/NetHop.PowerAutomate.csproj" />
     <Project Path="src/NetHop.Service/NetHop.Service.csproj" />
   </Folder>
   <Folder Name="/tests/">

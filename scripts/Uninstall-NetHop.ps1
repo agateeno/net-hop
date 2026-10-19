@@ -15,7 +15,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $serviceName = 'NetHop'
 
-Get-Process NetHop -ErrorAction SilentlyContinue | Stop-Process -Force
+Get-Process NetHop.App -ErrorAction SilentlyContinue | Stop-Process -Force
 
 if (Get-Service $serviceName -ErrorAction SilentlyContinue) {
     Stop-Service $serviceName -Force -ErrorAction SilentlyContinue
@@ -23,10 +23,13 @@ if (Get-Service $serviceName -ErrorAction SilentlyContinue) {
     Write-Host 'Service removed.'
 }
 
-$cliPath = Join-Path $Destination 'cli'
+$cliPath = $Destination
 $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
 $newPath = ($machinePath -split ';' | Where-Object { $_ -and $_ -ne $cliPath }) -join ';'
 [Environment]::SetEnvironmentVariable('Path', $newPath, 'Machine')
+
+$module = Join-Path $env:ProgramFiles 'WindowsPowerShell\Modules\NetHop'
+if (Test-Path $module) { Remove-Item $module -Recurse -Force }
 
 if (Test-Path $Destination) {
     Remove-Item $Destination -Recurse -Force

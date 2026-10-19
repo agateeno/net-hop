@@ -21,6 +21,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ASSETS = HERE.parent.parent / "src" / "NetHop.App" / "Assets"
+LOGI_METADATA = HERE.parent.parent / "src" / "NetHop.LogiPlugin" / "package" / "metadata"
 
 SOURCES = [
     (16, "NetHop-16.svg"),
@@ -66,7 +67,10 @@ def main() -> int:
     write_ico(ASSETS / "NetHop.ico", images)
     (ASSETS / "NetHop.png").write_bytes(dict(images)[256])
     (ASSETS / "NetHop-32.png").write_bytes(dict(images)[32])
+    # Logi Options+ shows this icon for the plugin.
+    (LOGI_METADATA / "Icon256x256.png").write_bytes(dict(images)[256])
     print(f"Wrote NetHop.ico ({len(images)} sizes), NetHop.png and NetHop-32.png to {ASSETS}")
+    print(f"Wrote Icon256x256.png to {LOGI_METADATA}")
     return 0
 
 

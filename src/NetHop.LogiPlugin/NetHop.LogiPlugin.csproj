@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Logi Actions SDK plugin (MX Creative Console, Actions Ring on MX devices, Loupedeck).
+    PluginApi.dll ships with Logi Options+, so this project only builds on a machine that has it;
+    it is not part of NetHop.slnx or CI.
+
+      dotnet build -c Debug     builds and hot-loads the plugin into Logi Plugin Service
+      dotnet build -c Release   then: logiplugintool pack bin/Release NetHop.lplug4
+  -->
+  <PropertyGroup>
+    <!-- Logi Plugin Service hosts plugins on .NET 8. -->
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>NetHopPlugin</AssemblyName>
+    <RootNamespace>Loupedeck.NetHopPlugin</RootNamespace>
+    <Nullable>disable</Nullable>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+
+    <PluginApiDir Condition="'$(PluginApiDir)' == '' and '$(OS)' == 'Windows_NT'">C:\Program Files\Logi\LogiPluginService\</PluginApiDir>
+    <PluginApiDir Condition="'$(PluginApiDir)' == '' and '$(OS)' != 'Windows_NT'">/Applications/Utilities/LogiPluginService.app/Contents/MonoBundle/</PluginApiDir>
+    <PluginDir Condition="'$(OS)' == 'Windows_NT'">$(LocalAppData)\Logi\LogiPluginService\Plugins\</PluginDir>
+
+    <!-- Package layout expected by Logi Plugin Service: <root>/bin (binaries) + <root>/metadata. -->
+    <PackageRoot>$(MSBuildProjectDirectory)\bin\$(Configuration)\</PackageRoot>
+    <OutputPath>$(PackageRoot)bin\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="PluginApi">
+      <HintPath>$(PluginApiDir)PluginApi.dll</HintPath>
+      <!-- Provided by Logi Plugin Service at runtime. -->
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NetHop.Ipc\NetHop.Ipc.csproj" />
+  </ItemGroup>
+
+  <Target Name="CheckPluginApi" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('$(PluginApiDir)PluginApi.dll')"
+           Text="PluginApi.dll not found in '$(PluginApiDir)'. Install Logi Options+ (it includes Logi Plugin Service), or pass -p:PluginApiDir=&lt;folder&gt;." />
+  </Target>
+
+  <Target Name="CopyPackage" AfterTargets="Build">
+    <ItemGroup>
+      <PackageFiles Include="package\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageRoot)%(RecursiveDir)" />
+  </Target>
+
+  <!-- Debug builds register a .link file so Logi Plugin Service loads the plugin straight from bin. -->
+  <Target Name="LinkPlugin" AfterTargets="CopyPackage" Condition="'$(Configuration)' == 'Debug' and '$(OS)' == 'Windows_NT'">
+    <MakeDir Directories="$(PluginDir)" />
+    <WriteLinesToFile File="$(PluginDir)NetHopPlugin.link" Lines="$(PackageRoot)" Overwrite="true" />
+    <Exec Command="start loupedeck:plugin/NetHop/reload" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="UnlinkPlugin" AfterTargets="CoreClean" Condition="'$(OS)' == 'Windows_NT'">
+    <Delete Files="$(PluginDir)NetHopPlugin.link" />
+  </Target>
+</Project>
