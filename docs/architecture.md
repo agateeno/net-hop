@@ -60,6 +60,7 @@ To add a language, copy both `en-US` files to the new culture, translate them, a
 | Plain `net10.0` for Engine/Service/CLI | The `-windows` TFM makes StreamJsonRpc's VS.Threading dependency pull in WPF. The assemblies are marked `[SupportedOSPlatform("windows")]` instead |
 | Windows App SDK 2.5 | Every API NetHop uses exists unchanged in 2.x (checked against the 2.x metadata). CommunityToolkit and H.NotifyIcon restore fine on it. 2.x brings `SystemBackdropElement`, `ApplicationData.GetForUnpackaged()` and the new storage pickers, and it is the line that gets new features |
 | Unpackaged app + `ActivationRegistrationManager` | Registers `.nethop` and `nethop://` per user without MSIX; an installer can switch to a sparse package for the Windows 11 context menu |
+| Windows 11 context menu from a sparse package, registered by the app | Only packaged `IExplorerCommand` handlers reach the first level of the menu. The package carries no app code (its content is the install folder), so the app stays unpackaged; packages are per user, so the app registers it at startup instead of the per-machine MSI |
 | YAML profiles | Readable, diff-friendly, easy to share; strict parsing catches typos |
 
 ## Open questions (spikes)

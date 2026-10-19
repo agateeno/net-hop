@@ -53,14 +53,20 @@
     <SetProperty Id="WixShellExecTarget" Value="[INSTALLFOLDER]NetHop.App.exe" After="CostFinalize" Sequence="ui" />
     <CustomAction Id="LaunchNetHop" BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)" DllEntry="WixShellExec" Impersonate="yes" />
 
-    <!-- Uninstall: the app (as the user, before its files are removed) removes its startup entry and asks whether
-         to delete %USERPROFILE%\NetHop Profiles. Not on upgrades, and not in silent mode (UILevel 2), where the folder is kept. -->
+    <!-- Uninstall: the app (as the user, before its files are removed) removes its startup entry and its Windows 11
+         context menu package, and asks whether to delete %USERPROFILE%\NetHop Profiles. Not on upgrades. In silent
+         mode (UILevel 2) it runs with the quiet switch: no question, and the folder is kept. -->
     <CustomAction Id="UninstallUserCleanup" Directory="INSTALLFOLDER"
                   ExeCommand="&quot;[INSTALLFOLDER]NetHop.App.exe&quot; --uninstall"
+                  Execute="immediate" Impersonate="yes" Return="ignore" />
+    <CustomAction Id="UninstallUserCleanupQuiet" Directory="INSTALLFOLDER"
+                  ExeCommand="&quot;[INSTALLFOLDER]NetHop.App.exe&quot; --uninstall --quiet"
                   Execute="immediate" Impersonate="yes" Return="ignore" />
     <InstallExecuteSequence>
       <Custom Action="UninstallUserCleanup" Before="InstallInitialize"
               Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND UILevel &lt;&gt; 2" />
+      <Custom Action="UninstallUserCleanupQuiet" Before="InstallInitialize"
+              Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND UILevel = 2" />
     </InstallExecuteSequence>
 
     <UI>
@@ -116,7 +122,8 @@
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\DefaultIcon" Value="[INSTALLFOLDER]Assets\NetHopFile.ico,0" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell\open\command" Value="&quot;[INSTALLFOLDER]NetHop.App.exe&quot; &quot;%1&quot;" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell\edit\command" Value="notepad.exe &quot;%1&quot;" Type="string" />
-      <!-- "Apply with NetHop": in Windows 11 it appears under "Show more options" (the modern menu needs a signed package). -->
+      <!-- "Apply with NetHop" under "Show more options". The first-level Windows 11 entry comes from
+           NetHop.ContextMenu.msix, which the app registers per user (see Services/ContextMenuPackage.cs). -->
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell\apply" Value="Apply with NetHop" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell\apply" Name="Icon" Value="[INSTALLFOLDER]NetHop.App.exe,0" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell\apply\command" Value="&quot;[INSTALLFOLDER]NetHop.App.exe&quot; --apply &quot;%1&quot;" Type="string" />

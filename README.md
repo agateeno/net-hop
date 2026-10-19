@@ -120,7 +120,7 @@ Every push builds on GitHub Actions and produces **NetHop-msi** (x64 and ARM64 i
 - [x] ARM64 MSI, "Apply with NetHop" context menu, GitHub releases and winget manifests
 - [x] Code signing in CI (Azure Trusted Signing, active once the secrets are set)
 - [x] Localization: English and Italian
-- [ ] Modern Windows 11 context menu entry (needs signed releases)
+- [x] Modern Windows 11 context menu entry (sparse package; shown on every machine once releases are signed)
 - [ ] Verify everything on real hardware (spikes in docs/architecture.md)
 
 ## License
