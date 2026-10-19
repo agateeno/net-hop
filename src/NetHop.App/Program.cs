@@ -28,6 +28,7 @@ public static class Program
         }
 
         mainInstance.Activated += (_, e) => App.Current?.HandleActivation(e, isLaunch: false);
+        Services.AppLanguage.Apply();
 
         Application.Start(_ =>
         {

@@ -14,7 +14,7 @@ public sealed record Issue(IssueSeverity Severity, string Path, string Message)
     public static Issue Warning(string path, string message) => new(IssueSeverity.Warning, path, message);
 
     public override string ToString() =>
-        $"{(Severity == IssueSeverity.Error ? "error" : "warning")}: {(Path.Length > 0 ? Path + ": " : "")}{Message}";
+        $"{Text.Get(Severity == IssueSeverity.Error ? "Issue_Error" : "Issue_Warning")}: {(Path.Length > 0 ? Path + ": " : "")}{Message}";
 }
 
 public static class IssueExtensions

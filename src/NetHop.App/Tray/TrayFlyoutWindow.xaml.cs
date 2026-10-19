@@ -88,14 +88,14 @@ public sealed partial class TrayFlyoutWindow : Window
     private void Refresh()
     {
         ProfileList.ItemsSource = _connection.Profiles;
-        ActiveProfileText.Text = _connection.Status?.ActiveProfileName ?? "None";
+        ActiveProfileText.Text = _connection.Status?.ActiveProfileName ?? Loc.Get("Flyout_None");
 
         var warning = _connection.State switch
         {
-            ConnectionState.ServiceNotRunning => "The NetHop service is not running.",
-            ConnectionState.AccessDenied => "NetHop requires an administrator account.",
-            ConnectionState.Connecting => "Connecting to the NetHop service...",
-            _ when _connection.Status?.ActiveProfileDrifted == true => "The network was changed after the last profile was applied.",
+            ConnectionState.ServiceNotRunning => Loc.Get("Main_ServiceStoppedTitle"),
+            ConnectionState.AccessDenied => Loc.Get("Main_AccessDeniedTitle"),
+            ConnectionState.Connecting => Loc.Get("Common_ConnectingService"),
+            _ when _connection.Status?.ActiveProfileDrifted == true => Loc.Get("Dashboard_Drifted"),
             _ => null,
         };
         StateText.Text = warning ?? "";

@@ -35,7 +35,7 @@ public sealed class ProfileApplier(INetworkBackend backend)
         var plan = ProfilePlanner.Plan(profile, before);
 
         if (dryRun || plan.HasErrors)
-            return new(plan, [], !plan.HasErrors, plan.HasErrors ? "The profile has errors." : null, false, stopwatch.Elapsed);
+            return new(plan, [], !plan.HasErrors, plan.HasErrors ? Text.Get("Apply_ProfileHasErrors") : null, false, stopwatch.Elapsed);
 
         var executed = new List<PlanStep>();
         foreach (var step in plan.Steps)

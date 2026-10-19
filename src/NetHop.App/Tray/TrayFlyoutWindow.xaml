@@ -16,7 +16,7 @@
 
         <!-- Header: active profile -->
         <StackPanel Grid.Row="0" Padding="16,14,16,10" Spacing="2">
-            <TextBlock Text="Active profile" Style="{StaticResource CaptionTextBlockStyle}"
+            <TextBlock x:Uid="Flyout_ActiveProfile" Text="Active profile" Style="{StaticResource CaptionTextBlockStyle}"
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
             <TextBlock x:Name="ActiveProfileText" Text="-" Style="{StaticResource SubtitleTextBlockStyle}"
                        TextTrimming="CharacterEllipsis" />
@@ -60,16 +60,16 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <ToggleButton x:Name="PauseToggle" Click="OnPauseClick" ToolTipService.ToolTip="Pause automations for 1 hour">
+            <ToggleButton x:Uid="Flyout_Pause" x:Name="PauseToggle" Click="OnPauseClick" ToolTipService.ToolTip="Pause automations for 1 hour">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <FontIcon Glyph="&#xE769;" FontSize="14" />
-                    <TextBlock Text="Pause automations" />
+                    <TextBlock x:Uid="Flyout_PauseText" Text="Pause automations" />
                 </StackPanel>
             </ToggleButton>
-            <Button Grid.Column="1" Click="OnNextClick" ToolTipService.ToolTip="Apply next profile">
+            <Button x:Uid="Flyout_Next" Grid.Column="1" Click="OnNextClick" ToolTipService.ToolTip="Apply next profile">
                 <FontIcon Glyph="&#xE893;" FontSize="14" />
             </Button>
-            <Button Grid.Column="2" Click="OnSettingsClick" ToolTipService.ToolTip="Open NetHop">
+            <Button x:Uid="Flyout_Open" Grid.Column="2" Click="OnSettingsClick" ToolTipService.ToolTip="Open NetHop">
                 <FontIcon Glyph="&#xE713;" FontSize="14" />
             </Button>
         </Grid>

@@ -75,11 +75,9 @@ public sealed partial class MainWindow : Window
     {
         (ConnectionInfo.Severity, ConnectionInfo.Title, ConnectionInfo.Message) = _connection.State switch
         {
-            ConnectionState.ServiceNotRunning => (InfoBarSeverity.Error, "The NetHop service is not running",
-                "Profiles cannot be applied. Start the service from an administrator terminal: sc start NetHop"),
-            ConnectionState.AccessDenied => (InfoBarSeverity.Error, "Administrator account required",
-                "Only members of the Administrators group can use NetHop."),
-            _ => (InfoBarSeverity.Informational, "Connecting to the NetHop service...", ""),
+            ConnectionState.ServiceNotRunning => (InfoBarSeverity.Error, Loc.Get("Main_ServiceStoppedTitle"), Loc.Get("Main_ServiceStoppedMessage")),
+            ConnectionState.AccessDenied => (InfoBarSeverity.Error, Loc.Get("Main_AccessDeniedTitle"), Loc.Get("Main_AccessDeniedMessage")),
+            _ => (InfoBarSeverity.Informational, Loc.Get("Common_ConnectingService"), ""),
         };
         ConnectionInfo.IsOpen = _connection.State != ConnectionState.Connected;
     }

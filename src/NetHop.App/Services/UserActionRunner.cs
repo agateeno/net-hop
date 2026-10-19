@@ -44,9 +44,9 @@ public static class UserActionRunner
     private static void NotifyApplied(ApplyResult result)
     {
         if (result.Success)
-            Notify($"Profile '{result.ProfileName}' applied", result.Steps.Length == 0 ? "Nothing needed to change." : null);
+            Notify(Loc.Format("Common_ProfileApplied", result.ProfileName), result.Steps.Length == 0 ? Loc.Get("Common_NothingToChange") : null);
         else
-            Notify($"Profile '{result.ProfileName}' failed", result.Error + (result.RolledBack ? " The previous configuration was restored." : ""));
+            Notify(Loc.Format("Common_ProfileFailed", result.ProfileName), result.Error + (result.RolledBack ? " " + Loc.Get("Common_RolledBack") : ""));
     }
 
     private static void Run(UserActionRequestedEventArgs e)
@@ -57,7 +57,7 @@ public static class UserActionRunner
             switch (action.Type)
             {
                 case RuleActionType.Notify:
-                    Notify(action.Message ?? e.RuleName, $"Rule: {e.RuleName}");
+                    Notify(action.Message ?? e.RuleName, Loc.Format("Toast_Rule", e.RuleName));
                     break;
                 case RuleActionType.RunCommand:
                     Process.Start(new ProcessStartInfo(action.Command!, action.Arguments ?? "") { UseShellExecute = true });
@@ -69,7 +69,7 @@ public static class UserActionRunner
         }
         catch (Exception ex)
         {
-            Notify($"Rule '{e.RuleName}' failed", ex.Message);
+            Notify(Loc.Format("Toast_RuleFailed", e.RuleName), ex.Message);
         }
     }
 }

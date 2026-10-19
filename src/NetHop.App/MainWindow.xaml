@@ -29,19 +29,19 @@
             OpenPaneLength="240"
             SelectionChanged="OnNavigationSelectionChanged">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Dashboard" Tag="Dashboard">
+                <NavigationViewItem x:Uid="Nav_Dashboard" Content="Dashboard" Tag="Dashboard">
                     <NavigationViewItem.Icon><FontIcon Glyph="&#xE80F;" /></NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Profiles" Tag="Profiles">
+                <NavigationViewItem x:Uid="Nav_Profiles" Content="Profiles" Tag="Profiles">
                     <NavigationViewItem.Icon><FontIcon Glyph="&#xE8F1;" /></NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Network adapters" Tag="Adapters">
+                <NavigationViewItem x:Uid="Nav_Adapters" Content="Network adapters" Tag="Adapters">
                     <NavigationViewItem.Icon><FontIcon Glyph="&#xE839;" /></NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Automations" Tag="Automations">
+                <NavigationViewItem x:Uid="Nav_Automations" Content="Automations" Tag="Automations">
                     <NavigationViewItem.Icon><FontIcon Glyph="&#xE945;" /></NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Integrations" Tag="Integrations">
+                <NavigationViewItem x:Uid="Nav_Integrations" Content="Integrations" Tag="Integrations">
                     <NavigationViewItem.Icon><FontIcon Glyph="&#xE71B;" /></NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>

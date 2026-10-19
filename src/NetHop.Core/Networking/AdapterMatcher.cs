@@ -35,7 +35,7 @@ public static class AdapterMatcher
             if (byMac.Count == 1)
                 return new(byMac[0], AdapterMatchKind.Mac);
             if (byMac.Count > 1)
-                problem = $"{byMac.Count} adapters share MAC {mac}.";
+                problem = Text.Format("Match_SharedMac", byMac.Count, mac);
         }
 
         if (!string.IsNullOrWhiteSpace(match.Name))
@@ -46,10 +46,10 @@ public static class AdapterMatcher
             if (byName.Count == 1)
                 return new(byName[0], AdapterMatchKind.Name);
             if (byName.Count > 1)
-                problem = $"{byName.Count} adapters are named '{match.Name}'.";
+                problem = Text.Format("Match_SharedName", byName.Count, match.Name);
         }
 
-        return new(null, AdapterMatchKind.NotFound, problem ?? $"No adapter matches '{match}'.");
+        return new(null, AdapterMatchKind.NotFound, problem ?? Text.Format("Match_NotFound", match));
     }
 
     /// <summary>Builds the match block NetHop writes when a profile is created from a live adapter.</summary>

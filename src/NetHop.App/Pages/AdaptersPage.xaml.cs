@@ -71,7 +71,7 @@ public sealed partial class AdaptersPage : Page
     private SettingsExpander CreateExpander(AdapterSnapshot adapter)
     {
         var info = adapter.Info;
-        var toggle = new ToggleSwitch { IsOn = adapter.Enabled, OnContent = "Enabled", OffContent = "Disabled" };
+        var toggle = new ToggleSwitch { IsOn = adapter.Enabled, OnContent = Loc.Get("Adapters_Enabled"), OffContent = Loc.Get("Adapters_Disabled") };
         toggle.Toggled += async (_, _) => await RunAsync(() => _connection.Service.SetAdapterEnabledAsync(info.Id, toggle.IsOn));
 
         var expander = new SettingsExpander
@@ -82,19 +82,19 @@ public sealed partial class AdaptersPage : Page
             Content = toggle,
         };
 
-        AddRow(expander, "MAC address", string.IsNullOrEmpty(info.Mac) ? "-" : info.Mac);
-        AddRow(expander, "Adapter ID", info.Id.ToString("B"));
+        AddRow(expander, Loc.Get("Adapters_Mac"), string.IsNullOrEmpty(info.Mac) ? "-" : info.Mac);
+        AddRow(expander, Loc.Get("Adapters_Id"), info.Id.ToString("B"));
         if (adapter.Ssid is not null)
-            AddRow(expander, "Wi-Fi network", adapter.Ssid);
+            AddRow(expander, Loc.Get("Adapters_WifiNetwork"), adapter.Ssid);
         AddFamilyRows(expander, "IPv4", adapter.Ipv4);
         AddFamilyRows(expander, "IPv6", adapter.Ipv6);
 
-        var rename = new Button { Content = "Rename" };
+        var rename = new Button { Content = Loc.Get("Adapters_Rename") };
         rename.Click += async (_, _) => await RenameAsync(info);
         expander.Items.Add(new SettingsCard
         {
-            Header = "Name",
-            Description = "Profiles keep working after a rename: they find adapters by ID and MAC first.",
+            Header = Loc.Get("Adapters_NameHeader"),
+            Description = Loc.Get("Adapters_NameDescription"),
             Content = rename,
         });
 
@@ -105,12 +105,12 @@ public sealed partial class AdaptersPage : Page
     {
         if (family is null)
             return;
-        var addresses = family.AllAddresses.Count == 0 ? "no address" : string.Join(Environment.NewLine, family.AllAddresses);
-        AddRow(expander, $"{label} ({(family.Dhcp ? "automatic" : "static")})", addresses);
+        var addresses = family.AllAddresses.Count == 0 ? Loc.Get("Adapters_NoAddress") : string.Join(Environment.NewLine, family.AllAddresses);
+        AddRow(expander, Loc.Format(family.Dhcp ? "Adapters_FamilyAutomatic" : "Adapters_FamilyStatic", label), addresses);
         if (family.ManualGateways.Count > 0)
-            AddRow(expander, $"{label} gateway", string.Join(Environment.NewLine, family.ManualGateways));
+            AddRow(expander, Loc.Format("Adapters_Gateway", label), string.Join(Environment.NewLine, family.ManualGateways));
         if (family.EffectiveDnsServers.Count > 0)
-            AddRow(expander, $"{label} DNS{(family.StaticDnsServers.Count > 0 ? " (static)" : "")}", string.Join(Environment.NewLine, family.EffectiveDnsServers));
+            AddRow(expander, Loc.Format(family.StaticDnsServers.Count > 0 ? "Adapters_DnsStatic" : "Adapters_Dns", label), string.Join(Environment.NewLine, family.EffectiveDnsServers));
     }
 
     private static void AddRow(SettingsExpander expander, string header, string value) =>
@@ -126,10 +126,10 @@ public sealed partial class AdaptersPage : Page
         var dialog = new ContentDialog
         {
             XamlRoot = XamlRoot,
-            Title = "Rename adapter",
+            Title = Loc.Get("Adapters_RenameTitle"),
             Content = box,
-            PrimaryButtonText = "Rename",
-            CloseButtonText = "Cancel",
+            PrimaryButtonText = Loc.Get("Adapters_Rename"),
+            CloseButtonText = Loc.Get("Common_Cancel"),
             DefaultButton = ContentDialogButton.Primary,
         };
 
@@ -153,12 +153,12 @@ public sealed partial class AdaptersPage : Page
 
     private void ShowError(string message)
     {
-        ErrorInfo.Title = "The operation failed";
+        ErrorInfo.Title = Loc.Get("Common_OperationFailed");
         ErrorInfo.Message = message;
         ErrorInfo.IsOpen = true;
     }
 
-    private static string StateText(AdapterSnapshot a) => !a.Enabled ? "Disabled" : a.Connected ? "Connected" : "Disconnected";
+    private static string StateText(AdapterSnapshot a) => Loc.Get(!a.Enabled ? "Adapters_StateDisabled" : a.Connected ? "Adapters_StateConnected" : "Adapters_StateDisconnected");
 
     private static string GlyphFor(AdapterKind kind) => kind switch
     {

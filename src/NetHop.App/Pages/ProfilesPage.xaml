@@ -16,7 +16,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.ColumnSpan="2" Text="Profiles" Style="{StaticResource PageTitleStyle}" />
+        <TextBlock x:Uid="Profiles_Title" Grid.ColumnSpan="2" Text="Profiles" Style="{StaticResource PageTitleStyle}" />
 
         <!-- Profile list -->
         <Grid Grid.Row="1" RowSpacing="8">
@@ -25,16 +25,16 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Spacing="8">
-                <Button Click="OnNewClick" ToolTipService.ToolTip="New empty profile">
+                <Button x:Uid="Profiles_New" Click="OnNewClick" ToolTipService.ToolTip="New empty profile">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE710;" FontSize="14" />
-                        <TextBlock Text="New" />
+                        <TextBlock x:Uid="Profiles_NewText" Text="New" />
                     </StackPanel>
                 </Button>
-                <Button Click="OnCaptureClick" ToolTipService.ToolTip="New profile from the current configuration of all adapters">
+                <Button x:Uid="Profiles_Capture" Click="OnCaptureClick" ToolTipService.ToolTip="New profile from the current configuration of all adapters">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE722;" FontSize="14" />
-                        <TextBlock Text="From current" />
+                        <TextBlock x:Uid="Profiles_CaptureText" Text="From current" />
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -52,9 +52,10 @@
             </ListView>
         </Grid>
 
-        <!-- Editor -->
+        <!-- Editor: form or YAML -->
         <Grid Grid.Row="1" Grid.Column="1" RowSpacing="12">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
@@ -64,39 +65,54 @@
                 <Button x:Name="SaveButton" Style="{StaticResource AccentButtonStyle}" Click="OnSaveClick">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE74E;" FontSize="14" />
-                        <TextBlock Text="Save" />
+                        <TextBlock x:Uid="Profiles_Save" Text="Save" />
                     </StackPanel>
                 </Button>
                 <Button x:Name="ApplyButton" Click="OnApplyClick">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE768;" FontSize="14" />
-                        <TextBlock Text="Apply" />
+                        <TextBlock x:Uid="Profiles_Apply" Text="Apply" />
                     </StackPanel>
                 </Button>
-                <Button x:Name="DryRunButton" Click="OnDryRunClick" ToolTipService.ToolTip="Show what would change, without changing anything">
+                <Button x:Uid="Profiles_Preview" x:Name="DryRunButton" Click="OnDryRunClick" ToolTipService.ToolTip="Show what would change, without changing anything">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE7B3;" FontSize="14" />
-                        <TextBlock Text="Preview" />
+                        <TextBlock x:Uid="Profiles_PreviewText" Text="Preview" />
                     </StackPanel>
                 </Button>
                 <Button x:Name="ExportButton" Click="OnExportClick">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xEDE1;" FontSize="14" />
-                        <TextBlock Text="Export" />
+                        <TextBlock x:Uid="Profiles_Export" Text="Export" />
                     </StackPanel>
                 </Button>
                 <Button x:Name="DeleteButton" Click="OnDeleteClick">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE74D;" FontSize="14" />
-                        <TextBlock Text="Delete" />
+                        <TextBlock x:Uid="Profiles_Delete" Text="Delete" />
                     </StackPanel>
                 </Button>
             </StackPanel>
 
-            <TextBox x:Name="Editor" Grid.Row="1" Style="{StaticResource CodeEditorStyle}"
-                     PlaceholderText="Select a profile, or create a new one." TextChanged="OnEditorTextChanged" />
+            <SelectorBar x:Name="ViewSelector" Grid.Row="1" SelectionChanged="OnViewChanged">
+                <SelectorBarItem x:Uid="Profiles_FormView" x:Name="FormViewItem" Text="Form" IsSelected="True">
+                    <SelectorBarItem.Icon><FontIcon Glyph="&#xE70F;" /></SelectorBarItem.Icon>
+                </SelectorBarItem>
+                <SelectorBarItem x:Uid="Profiles_YamlView" x:Name="YamlViewItem" Text="YAML">
+                    <SelectorBarItem.Icon><FontIcon Glyph="&#xE943;" /></SelectorBarItem.Icon>
+                </SelectorBarItem>
+            </SelectorBar>
 
-            <InfoBar x:Name="Result" Grid.Row="2" IsClosable="True" />
+            <ScrollViewer x:Name="FormScroller" Grid.Row="2">
+                <ContentControl x:Name="FormHost" HorizontalContentAlignment="Stretch" Margin="0,0,16,0" />
+            </ScrollViewer>
+            <TextBlock x:Uid="Profiles_Empty" x:Name="EmptyText" Grid.Row="2" Text="Select a profile, or create a new one."
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+            <TextBox x:Name="Editor" Grid.Row="2" Style="{StaticResource CodeEditorStyle}" Visibility="Collapsed"
+                     TextChanged="OnEditorTextChanged" />
+
+            <InfoBar x:Name="Result" Grid.Row="3" IsClosable="True" />
         </Grid>
     </Grid>
 </Page>

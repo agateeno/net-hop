@@ -91,9 +91,14 @@
       <RegistryValue Root="HKLM" Key="Software\Classes\.nethop" Value="NetHop.Profile" Type="string" KeyPath="yes" />
       <RegistryValue Root="HKLM" Key="Software\Classes\.nethop" Name="Content Type" Value="application/x-yaml" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile" Value="NetHop profile" Type="string" />
+      <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell" Value="open" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\DefaultIcon" Value="[INSTALLFOLDER]NetHop.App.exe,0" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell\open\command" Value="&quot;[INSTALLFOLDER]NetHop.App.exe&quot; &quot;%1&quot;" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell\edit\command" Value="notepad.exe &quot;%1&quot;" Type="string" />
+      <!-- "Apply with NetHop": in Windows 11 it appears under "Show more options" (the modern menu needs a signed package). -->
+      <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell\apply" Value="Apply with NetHop" Type="string" />
+      <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell\apply" Name="Icon" Value="[INSTALLFOLDER]NetHop.App.exe,0" Type="string" />
+      <RegistryValue Root="HKLM" Key="Software\Classes\NetHop.Profile\shell\apply\command" Value="&quot;[INSTALLFOLDER]NetHop.App.exe&quot; --apply &quot;%1&quot;" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\nethop" Value="URL:NetHop" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\nethop" Name="URL Protocol" Value="" Type="string" />
       <RegistryValue Root="HKLM" Key="Software\Classes\nethop\DefaultIcon" Value="[INSTALLFOLDER]NetHop.App.exe,0" Type="string" />

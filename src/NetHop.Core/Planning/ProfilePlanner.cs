@@ -33,13 +33,13 @@ public static class ProfilePlanner
             var match = AdapterMatcher.Resolve(config.Match, adapters);
             if (!match.Found)
             {
-                issues.Add(Issue.Warning(path, $"{match.Problem} Skipped."));
+                issues.Add(Issue.Warning(path, Text.Format("Plan_Skipped", match.Problem)));
                 missing++;
                 continue;
             }
             if (!resolved.Add(match.Adapter!.Id))
             {
-                issues.Add(Issue.Error(path, $"Adapter '{match.Adapter.Name}' is configured more than once."));
+                issues.Add(Issue.Error(path, Text.Format("Plan_AdapterTwice", match.Adapter.Name)));
                 continue;
             }
 
@@ -67,7 +67,7 @@ public static class ProfilePlanner
             if (!willBeEnabled)
             {
                 if (config.Ipv4 is not null || config.Ipv6 is not null)
-                    issues.Add(Issue.Warning(path, $"Adapter '{adapter.Name}' is disabled, IP settings skipped."));
+                    issues.Add(Issue.Warning(path, Text.Format("Plan_DisabledSkipsIp", adapter.Name)));
                 continue;
             }
 

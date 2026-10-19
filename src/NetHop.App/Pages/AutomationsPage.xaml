@@ -10,13 +10,14 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Automations" Style="{StaticResource PageTitleStyle}" />
+        <TextBlock x:Uid="Automations_Title" Text="Automations" Style="{StaticResource PageTitleStyle}" />
 
-        <toolkit:SettingsCard Grid.Row="1" Header="Run automations"
+        <toolkit:SettingsCard x:Uid="Automations_Run" Grid.Row="1" Header="Run automations"
                               Description="NetHop's own rule engine: no Power Automate needed. Rules can still start Power Automate flows.">
             <toolkit:SettingsCard.HeaderIcon>
                 <FontIcon Glyph="&#xE945;" />
@@ -28,14 +29,31 @@
             <Button x:Name="SaveButton" Style="{StaticResource AccentButtonStyle}" Click="OnSaveClick">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <FontIcon Glyph="&#xE74E;" FontSize="14" />
-                    <TextBlock Text="Save rules" />
+                    <TextBlock x:Uid="Automations_Save" Text="Save rules" />
                 </StackPanel>
             </Button>
-            <Button Click="OnExampleClick" Content="Insert example rule" />
+            <Button x:Name="AddRuleButton" Click="OnAddRuleClick">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <FontIcon Glyph="&#xE710;" FontSize="14" />
+                    <TextBlock x:Uid="Automations_AddRule" Text="Add rule" />
+                </StackPanel>
+            </Button>
         </StackPanel>
 
-        <TextBox x:Name="Editor" Grid.Row="3" Style="{StaticResource CodeEditorStyle}" />
+        <SelectorBar x:Name="ViewSelector" Grid.Row="3" SelectionChanged="OnViewChanged">
+            <SelectorBarItem x:Uid="Automations_FormView" x:Name="FormViewItem" Text="Form" IsSelected="True">
+                <SelectorBarItem.Icon><FontIcon Glyph="&#xE70F;" /></SelectorBarItem.Icon>
+            </SelectorBarItem>
+            <SelectorBarItem x:Uid="Automations_YamlView" x:Name="YamlViewItem" Text="YAML">
+                <SelectorBarItem.Icon><FontIcon Glyph="&#xE943;" /></SelectorBarItem.Icon>
+            </SelectorBarItem>
+        </SelectorBar>
 
-        <InfoBar x:Name="Result" Grid.Row="4" IsClosable="True" />
+        <ScrollViewer x:Name="FormScroller" Grid.Row="4">
+            <ContentControl x:Name="FormHost" HorizontalContentAlignment="Stretch" Margin="0,0,16,0" />
+        </ScrollViewer>
+        <TextBox x:Name="Editor" Grid.Row="4" Style="{StaticResource CodeEditorStyle}" Visibility="Collapsed" TextChanged="OnEditorTextChanged" />
+
+        <InfoBar x:Name="Result" Grid.Row="5" IsClosable="True" />
     </Grid>
 </Page>

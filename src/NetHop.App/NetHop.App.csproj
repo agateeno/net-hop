@@ -21,6 +21,8 @@
     <!-- Program.cs provides Main to enforce a single instance and redirect activations. -->
     <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- UI strings: Strings/en-US (default) and Strings/it-IT. -->
+    <DefaultLanguage>en-US</DefaultLanguage>
   </PropertyGroup>
 
   <ItemGroup>

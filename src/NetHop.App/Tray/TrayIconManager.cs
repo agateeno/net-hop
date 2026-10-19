@@ -22,10 +22,10 @@ public sealed class TrayIconManager : IDisposable
         _connection = connection;
 
         var menu = new MenuFlyout();
-        menu.Items.Add(new MenuFlyoutItem { Text = "Open NetHop", Command = new RelayCommand(openSettings) });
-        menu.Items.Add(new MenuFlyoutItem { Text = "Apply next profile", Command = new AsyncRelayCommand(() => _connection.ApplyNextAsync()) });
+        menu.Items.Add(new MenuFlyoutItem { Text = Loc.Get("Tray_Open"), Command = new RelayCommand(openSettings) });
+        menu.Items.Add(new MenuFlyoutItem { Text = Loc.Get("Tray_Next"), Command = new AsyncRelayCommand(() => _connection.ApplyNextAsync()) });
         menu.Items.Add(new MenuFlyoutSeparator());
-        menu.Items.Add(new MenuFlyoutItem { Text = "Exit", Command = new RelayCommand(exit) });
+        menu.Items.Add(new MenuFlyoutItem { Text = Loc.Get("Tray_Exit"), Command = new RelayCommand(exit) });
 
         _icon = new TaskbarIcon
         {
@@ -54,10 +54,10 @@ public sealed class TrayIconManager : IDisposable
 
         _icon.ToolTipText = _connection.State switch
         {
-            ConnectionState.Connected => $"NetHop - {_connection.Status?.ActiveProfileName ?? "no active profile"}",
-            ConnectionState.ServiceNotRunning => "NetHop - service not running",
-            ConnectionState.AccessDenied => "NetHop - administrator account required",
-            _ => "NetHop - connecting...",
+            ConnectionState.Connected => $"NetHop - {_connection.Status?.ActiveProfileName ?? Loc.Get("Dashboard_NoActiveProfile")}",
+            ConnectionState.ServiceNotRunning => $"NetHop - {Loc.Get("Settings_ServiceStopped")}",
+            ConnectionState.AccessDenied => $"NetHop - {Loc.Get("Main_AccessDeniedTitle")}",
+            _ => $"NetHop - {Loc.Get("Common_Connecting")}",
         };
     }
 

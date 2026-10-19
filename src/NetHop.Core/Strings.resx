@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Rules_SchemaUnsupported" xml:space="preserve">
+    <value>Unsupported schema version {0}.</value>
+  </data>
+  <data name="Rules_NameRequired" xml:space="preserve">
+    <value>The rule needs a name.</value>
+  </data>
+  <data name="Rules_TriggerRequired" xml:space="preserve">
+    <value>The rule needs a trigger.</value>
+  </data>
+  <data name="Rules_TimeFormat" xml:space="preserve">
+    <value>Use the HH:mm format.</value>
+  </data>
+  <data name="Rules_NoActions" xml:space="preserve">
+    <value>The rule has no actions.</value>
+  </data>
+  <data name="Rules_ConditionTypeMissing" xml:space="preserve">
+    <value>Missing condition type.</value>
+  </data>
+  <data name="Rules_FromToFormat" xml:space="preserve">
+    <value>'from' and 'to' must use the HH:mm format.</value>
+  </data>
+  <data name="Rules_AdapterRequired" xml:space="preserve">
+    <value>Specify the adapter.</value>
+  </data>
+  <data name="Rules_ProfileNameRequired" xml:space="preserve">
+    <value>Specify the profile name.</value>
+  </data>
+  <data name="Rules_SsidRequired" xml:space="preserve">
+    <value>Specify the SSID.</value>
+  </data>
+  <data name="Rules_ActionTypeMissing" xml:space="preserve">
+    <value>Missing action type.</value>
+  </data>
+  <data name="Rules_ProfileToApplyRequired" xml:space="preserve">
+    <value>Specify the profile to apply.</value>
+  </data>
+  <data name="Rules_MessageRequired" xml:space="preserve">
+    <value>Specify the notification text.</value>
+  </data>
+  <data name="Rules_CommandRequired" xml:space="preserve">
+    <value>Specify the command to run.</value>
+  </data>
+  <data name="Rules_UrlRequired" xml:space="preserve">
+    <value>Specify an absolute URL.</value>
+  </data>
+  <data name="Rules_FlowUrlRequired" xml:space="preserve">
+    <value>Paste the flow's run URL (it starts with ms-powerautomate:).</value>
+  </data>
+  <data name="Rules_DelayRange" xml:space="preserve">
+    <value>The delay must be between 1 and 600 seconds.</value>
+  </data>
+  <data name="Profile_SchemaUnsupported" xml:space="preserve">
+    <value>Unsupported schema version {0} (this NetHop understands up to {1}).</value>
+  </data>
+  <data name="Profile_NameRequired" xml:space="preserve">
+    <value>The profile needs a name.</value>
+  </data>
+  <data name="Profile_NameTooLong" xml:space="preserve">
+    <value>The name is longer than {0} characters.</value>
+  </data>
+  <data name="Profile_IdEmpty" xml:space="preserve">
+    <value>The profile id must not be empty.</value>
+  </data>
+  <data name="Profile_ColorFormat" xml:space="preserve">
+    <value>Use the #RRGGBB format.</value>
+  </data>
+  <data name="Profile_NoAdapters" xml:space="preserve">
+    <value>The profile does not configure any adapter.</value>
+  </data>
+  <data name="Profile_MatchEmpty" xml:space="preserve">
+    <value>Set at least one of guid, mac or name.</value>
+  </data>
+  <data name="Profile_GuidInvalid" xml:space="preserve">
+    <value>'{0}' is not a valid GUID.</value>
+  </data>
+  <data name="Profile_MacInvalid" xml:space="preserve">
+    <value>'{0}' is not a valid MAC address.</value>
+  </data>
+  <data name="Profile_AdapterChangesNothing" xml:space="preserve">
+    <value>This adapter entry changes nothing.</value>
+  </data>
+  <data name="Profile_DisabledIgnoresIp" xml:space="preserve">
+    <value>The adapter is disabled, so its IP settings will be ignored.</value>
+  </data>
+  <data name="Profile_CidrInvalid" xml:space="preserve">
+    <value>'{0}' is not an address in CIDR notation (e.g. {1}).</value>
+  </data>
+  <data name="Profile_WrongFamily" xml:space="preserve">
+    <value>'{0}' is not an {1} address.</value>
+  </data>
+  <data name="Profile_NetworkOrBroadcast" xml:space="preserve">
+    <value>'{0}' is the network or broadcast address of its subnet.</value>
+  </data>
+  <data name="Profile_LinkLocal" xml:space="preserve">
+    <value>Link-local addresses are assigned by Windows automatically.</value>
+  </data>
+  <data name="Profile_Duplicate" xml:space="preserve">
+    <value>'{0}' is listed twice.</value>
+  </data>
+  <data name="Profile_StaticNeedsAddress" xml:space="preserve">
+    <value>Static mode needs at least one address.</value>
+  </data>
+  <data name="Profile_AddressesOnlyStatic" xml:space="preserve">
+    <value>Addresses and gateways can only be set in static mode (mode is '{0}').</value>
+  </data>
+  <data name="Profile_GatewayOutsideSubnet" xml:space="preserve">
+    <value>Gateway {0} is outside every configured subnet.</value>
+  </data>
+  <data name="Profile_StaticDnsNeedsServer" xml:space="preserve">
+    <value>Static DNS needs at least one server.</value>
+  </data>
+  <data name="Profile_DnsServersOnlyStatic" xml:space="preserve">
+    <value>DNS servers can only be listed in static mode.</value>
+  </data>
+  <data name="Profile_StaticIpv4NoDhcpDns" xml:space="preserve">
+    <value>With a static IPv4 address Windows gets no DNS servers from DHCP.</value>
+  </data>
+  <data name="Profile_FamilyChangesNothing" xml:space="preserve">
+    <value>This {0} block changes nothing.</value>
+  </data>
+  <data name="Profile_IpInvalid" xml:space="preserve">
+    <value>'{0}' is not a valid IP address.</value>
+  </data>
+  <data name="Profile_SameAdapter" xml:space="preserve">
+    <value>Same adapter as adapters[{0}].</value>
+  </data>
+  <data name="Step_Enable" xml:space="preserve">
+    <value>Enable adapter '{0}'</value>
+  </data>
+  <data name="Step_Wait" xml:space="preserve">
+    <value>Wait for adapter '{0}' to come up</value>
+  </data>
+  <data name="Step_Disable" xml:space="preserve">
+    <value>Disable adapter '{0}'</value>
+  </data>
+  <data name="Step_DhcpOn" xml:space="preserve">
+    <value>Enable automatic {0} configuration on '{1}'</value>
+  </data>
+  <data name="Step_DhcpOff" xml:space="preserve">
+    <value>Disable automatic {0} configuration on '{1}'</value>
+  </data>
+  <data name="Step_AddAddress" xml:space="preserve">
+    <value>Add address {0} to '{1}'</value>
+  </data>
+  <data name="Step_RemoveAddress" xml:space="preserve">
+    <value>Remove address {0} from '{1}'</value>
+  </data>
+  <data name="Step_AddGateway" xml:space="preserve">
+    <value>Add default gateway {0} to '{1}'</value>
+  </data>
+  <data name="Step_RemoveGateway" xml:space="preserve">
+    <value>Remove default gateway {0} from '{1}'</value>
+  </data>
+  <data name="Step_DnsAuto" xml:space="preserve">
+    <value>Use automatic {0} DNS on '{1}'</value>
+  </data>
+  <data name="Step_DnsSet" xml:space="preserve">
+    <value>Set {0} DNS on '{1}' to {2}</value>
+  </data>
+  <data name="Plan_Skipped" xml:space="preserve">
+    <value>{0} Skipped.</value>
+  </data>
+  <data name="Plan_AdapterTwice" xml:space="preserve">
+    <value>Adapter '{0}' is configured more than once.</value>
+  </data>
+  <data name="Plan_DisabledSkipsIp" xml:space="preserve">
+    <value>Adapter '{0}' is disabled, IP settings skipped.</value>
+  </data>
+  <data name="Match_SharedMac" xml:space="preserve">
+    <value>{0} adapters share MAC {1}.</value>
+  </data>
+  <data name="Match_SharedName" xml:space="preserve">
+    <value>{0} adapters are named '{1}'.</value>
+  </data>
+  <data name="Match_NotFound" xml:space="preserve">
+    <value>No adapter matches '{0}'.</value>
+  </data>
+  <data name="Apply_ProfileHasErrors" xml:space="preserve">
+    <value>The profile has errors.</value>
+  </data>
+  <data name="Issue_Error" xml:space="preserve">
+    <value>error</value>
+  </data>
+  <data name="Issue_Warning" xml:space="preserve">
+    <value>warning</value>
+  </data>
+</root>

@@ -40,19 +40,19 @@ public sealed partial class DashboardPage : Page
         ProfileGrid.ItemsSource = _connection.Profiles;
         NoProfilesText.Visibility = _connection.IsConnected && _connection.Profiles.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
 
-        ActiveCard.Header = status?.ActiveProfileName ?? "No active profile";
+        ActiveCard.Header = status?.ActiveProfileName ?? Loc.Get("Dashboard_NoActiveProfile");
         ActiveCard.Description = status switch
         {
-            null => "Not connected to the service",
-            { ActiveProfileDrifted: true } => "The network was changed by hand after the last profile was applied",
-            { LastAppliedAt: { } at } => $"Last change {at.LocalDateTime:g}",
-            _ => "The current network does not match any profile",
+            null => Loc.Get("Dashboard_NotConnected"),
+            { ActiveProfileDrifted: true } => Loc.Get("Dashboard_Drifted"),
+            { LastAppliedAt: { } at } => Loc.Format("Dashboard_LastChange", at.LocalDateTime),
+            _ => Loc.Get("Dashboard_NoMatch"),
         };
         NextButton.IsEnabled = _connection.IsConnected && _connection.Profiles.Length > 0;
 
         AutomationsSwitch.IsEnabled = _connection.IsConnected;
         AutomationsSwitch.IsOn = status?.AutomationsPausedUntil is null;
-        AutomationsCard.Description = status?.AutomationsPausedUntil is { } until ? $"Paused until {until.LocalDateTime:t}" : "Rules run when the network changes";
+        AutomationsCard.Description = status?.AutomationsPausedUntil is { } until ? Loc.Format("Common_PausedUntil", until.LocalDateTime) : Loc.Get("Dashboard_RulesRun");
 
         SsidWarning.IsOpen = status?.SsidUnavailable == true;
         _updating = false;
@@ -61,10 +61,10 @@ public sealed partial class DashboardPage : Page
     private void OnProfileApplied(object? sender, ApplyResult result)
     {
         LastResult.Severity = result.Success ? InfoBarSeverity.Success : InfoBarSeverity.Error;
-        LastResult.Title = result.Success ? $"'{result.ProfileName}' applied" : $"'{result.ProfileName}' failed";
+        LastResult.Title = Loc.Format(result.Success ? "Common_ProfileApplied" : "Common_ProfileFailed", result.ProfileName);
         LastResult.Message = result.Success
-            ? (result.Steps.Length == 0 ? "Nothing needed to change." : $"{result.Steps.Length} changes in {result.Duration.TotalSeconds:0.0}s")
-            : result.Error + (result.RolledBack ? " The previous configuration was restored." : "");
+            ? (result.Steps.Length == 0 ? Loc.Get("Common_NothingToChange") : Loc.Format("Dashboard_ChangesIn", result.Steps.Length, result.Duration.TotalSeconds))
+            : result.Error + (result.RolledBack ? " " + Loc.Get("Common_RolledBack") : "");
         LastResult.IsOpen = true;
     }
 

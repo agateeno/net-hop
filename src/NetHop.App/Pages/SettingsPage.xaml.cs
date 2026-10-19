@@ -14,28 +14,46 @@ public sealed partial class SettingsPage : Page
     public SettingsPage()
     {
         InitializeComponent();
-        AboutCard.Description = $"Version {Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion}";
+        AboutCard.Description = Loc.Format("Settings_Version", Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion);
     }
+
+    private static readonly (string Tag, string Label)[] Languages =
+    [
+        (AppLanguage.SystemDefault, "Settings_LanguageSystem"),
+        ("en-US", "English"),
+        ("it-IT", "Italiano"),
+    ];
 
     protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
         _loading = true;
         StartupSwitch.IsOn = ShellIntegration.StartsWithWindows;
+        // Language names are shown in their own language, as Windows does.
+        LanguageBox.ItemsSource = Languages.Select(l => l.Tag == AppLanguage.SystemDefault ? Loc.Get(l.Label) : l.Label).ToList();
+        LanguageBox.SelectedIndex = Math.Max(0, Array.FindIndex(Languages, l => l.Tag == AppLanguage.Saved));
         _loading = false;
 
         ServiceCard.Description = _connection.State switch
         {
-            ConnectionState.Connected => "Running",
-            ConnectionState.ServiceNotRunning => "Not running",
-            ConnectionState.AccessDenied => "Running, but your account is not an administrator",
-            _ => "Connecting...",
+            ConnectionState.Connected => Loc.Get("Settings_ServiceRunning"),
+            ConnectionState.ServiceNotRunning => Loc.Get("Settings_ServiceStopped"),
+            ConnectionState.AccessDenied => Loc.Get("Settings_ServiceNotAdmin"),
+            _ => Loc.Get("Common_Connecting"),
         };
 
         if (_connection.IsConnected)
         {
             var info = await _connection.Service.GetInfoAsync();
-            ServiceCard.Description = $"Running · version {info.Version} · profiles in {info.ProfilesFolder}";
+            ServiceCard.Description = Loc.Format("Settings_ServiceDetails", info.Version, info.ProfilesFolder);
         }
+    }
+
+    private void OnLanguageChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_loading || LanguageBox.SelectedIndex < 0)
+            return;
+        AppLanguage.Saved = Languages[LanguageBox.SelectedIndex].Tag;
+        Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(LanguageBox, Loc.Get("Settings_LanguageRestart"));
     }
 
     private void OnStartupToggled(object sender, RoutedEventArgs e)

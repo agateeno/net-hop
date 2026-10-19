@@ -7,18 +7,23 @@
 
     <ScrollViewer>
         <StackPanel Margin="{StaticResource PageMargin}" MaxWidth="{StaticResource PageMaxWidth}" Spacing="{StaticResource SettingsCardSpacing}">
-            <TextBlock Text="Settings" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock x:Uid="Settings_Title" Text="Settings" Style="{StaticResource PageTitleStyle}" />
 
-            <toolkit:SettingsCard Header="Start with Windows" Description="NetHop starts in the notification area when you sign in.">
+            <toolkit:SettingsCard x:Uid="Settings_Startup" Header="Start with Windows" Description="NetHop starts in the notification area when you sign in.">
                 <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE7E8;" /></toolkit:SettingsCard.HeaderIcon>
                 <ToggleSwitch x:Name="StartupSwitch" Toggled="OnStartupToggled" />
             </toolkit:SettingsCard>
 
-            <toolkit:SettingsCard x:Name="ServiceCard" Header="NetHop service" Description="-">
+            <toolkit:SettingsCard x:Uid="Settings_Language" Header="Language" Description="Restart NetHop after changing it.">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xF2B7;" /></toolkit:SettingsCard.HeaderIcon>
+                <ComboBox x:Name="LanguageBox" MinWidth="200" SelectionChanged="OnLanguageChanged" />
+            </toolkit:SettingsCard>
+
+            <toolkit:SettingsCard x:Uid="Settings_Service" x:Name="ServiceCard" Header="NetHop service" Description="-">
                 <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE912;" /></toolkit:SettingsCard.HeaderIcon>
             </toolkit:SettingsCard>
 
-            <TextBlock Text="About" Style="{StaticResource SectionHeaderStyle}" />
+            <TextBlock x:Uid="Settings_About" Text="About" Style="{StaticResource SectionHeaderStyle}" />
             <toolkit:SettingsCard x:Name="AboutCard" Header="NetHop" Description="Network profiles for Windows">
                 <toolkit:SettingsCard.HeaderIcon>
                     <ImageIcon Source="ms-appx:///Assets/NetHop.png" />

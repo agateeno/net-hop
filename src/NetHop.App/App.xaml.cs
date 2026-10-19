@@ -68,7 +68,9 @@ public partial class App : Application
 
                 var uri = arguments.FirstOrDefault(a => a.StartsWith(NetHopConstants.UriScheme + ":", StringComparison.OrdinalIgnoreCase));
                 var file = arguments.FirstOrDefault(a => a.EndsWith(NetHopConstants.ProfileExtension, StringComparison.OrdinalIgnoreCase));
-                if (uri is not null)
+                if (file is not null && arguments.Contains("--apply"))
+                    ApplyFile(file); // "Apply with NetHop" in Explorer's context menu
+                else if (uri is not null)
                     HandleUri(uri);
                 else if (file is not null)
                 {
@@ -78,6 +80,39 @@ public partial class App : Application
                 else if (!(isLaunch && arguments.Contains("--tray")))
                     ShowMainWindow(); // started at logon with --tray: stay in the tray
                 break;
+        }
+    }
+
+    /// <summary>Applies a .nethop file: the saved profile with the same id, or the file imported first.</summary>
+    private async void ApplyFile(string path)
+    {
+        try
+        {
+            // At launch the service connection may still be opening.
+            for (var i = 0; i < 20 && Connection.State == ConnectionState.Connecting; i++)
+                await Task.Delay(500);
+            if (!Connection.IsConnected)
+            {
+                UserActionRunner.Notify(Loc.Get("Main_ServiceStoppedTitle"));
+                return;
+            }
+
+            var yaml = await File.ReadAllTextAsync(path);
+            var profile = Core.Profiles.ProfileSerializer.Deserialize(yaml);
+            if (Connection.Profiles.All(p => p.Id != profile.Id))
+            {
+                var saved = await Connection.Service.SaveProfileYamlAsync(yaml);
+                if (!saved.Saved)
+                {
+                    UserActionRunner.Notify(Loc.Format("Common_ProfileFailed", profile.Name), string.Join(Environment.NewLine, saved.Issues.Select(i => i.ToString())));
+                    return;
+                }
+            }
+            await Connection.ApplyAsync(profile.Id.ToString()); // the result arrives as a toast
+        }
+        catch (Exception ex) when (ex is IOException or Core.Serialization.NetHopFormatException or UnauthorizedAccessException)
+        {
+            UserActionRunner.Notify(Loc.Format("Common_ProfileFailed", Path.GetFileName(path)), ex.Message);
         }
     }
 

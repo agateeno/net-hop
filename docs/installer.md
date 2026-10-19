@@ -10,6 +10,7 @@
 | NetHop Windows service | Runs as LocalSystem, starts automatically, restarts after a crash (5 s) |
 | `nethop.exe` on the system `PATH` | `%ProgramFiles%\NetHop` |
 | `.nethop` file type and `nethop://` protocol | `HKLM\Software\Classes`, opened by `NetHop.App.exe` |
+| **Apply with NetHop** on `.nethop` files | Explorer context menu (Windows 11: under *Show more options*) |
 | Start menu shortcut | All users |
 | PowerShell module (optional feature) | `%ProgramFiles%\WindowsPowerShell\Modules\NetHop` |
 
@@ -37,12 +38,31 @@ WiX is open source, but from v6 organizations with more than USD 10,000 in yearl
 1. deciding whether the fee applies (or paying it),
 2. setting `<AcceptEula>wix7</AcceptEula>` in `NetHop.Installer.wixproj` and bumping the SDK and extension versions.
 
+MSIs are built for **x64 and ARM64** (`-p:InstallerPlatform=arm64` with binaries published for `win-arm64`).
+
 ## Code signing
 
-The MSI and the executables are not signed yet, so SmartScreen will warn on download. Before a public release, sign them (for example with Azure Trusted Signing). The same certificate can sign the Power Automate module.
+Unsigned MSIs trigger SmartScreen warnings, and Power Automate refuses unsigned custom actions. CI signs everything with [Azure Trusted Signing](https://learn.microsoft.com/azure/trusted-signing/) as soon as these repository secrets exist (*Settings › Secrets and variables › Actions*):
 
-## Not covered yet
+| Secret | Value |
+|---|---|
+| `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET` | An app registration with the *Trusted Signing Certificate Profile Signer* role |
+| `AZURE_SIGNING_ENDPOINT` | The account's endpoint, e.g. `https://weu.codesigning.azure.net/` |
+| `AZURE_SIGNING_ACCOUNT` | The Trusted Signing account name |
+| `AZURE_SIGNING_PROFILE` | The certificate profile name |
 
-- ARM64 MSI (publish with `-r win-arm64` and set `InstallerPlatform=arm64`)
-- Windows 11 modern context menu entry ("Apply profile" on `.nethop` files): needs a sparse package
-- Winget manifest
+Without them CI still builds everything, unsigned. Only NetHop's own files are signed (`NetHop*.exe/dll`, `nethop.exe`, `Modules.NetHop.dll`, the MSIs and `NetHop.cab`); the .NET and Windows App SDK files already carry Microsoft's signature.
+
+Trusted Signing needs an Azure subscription and identity validation (individual developers included); it costs a few euros a month. Any other code-signing certificate works with `signtool` too, for example through `scripts/Build-PowerAutomateModule.ps1 -CertificatePath`.
+
+## Releases and winget
+
+Pushing a tag such as `v0.2.0` builds version 0.2.0, creates a GitHub release with both MSIs and `NetHop.cab`, and produces the **winget-manifests** artifact (`scripts/New-WingetManifest.ps1`). To publish on winget, submit that folder to [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs), for example with `wingetcreate submit`. After the first approval, users install NetHop with:
+
+```powershell
+winget install agateeno.NetHop
+```
+
+## Windows 11 context menu
+
+**Apply with NetHop** is a classic shell verb, so Windows 11 shows it under *Show more options*. A first-level entry in the new menu needs an `IExplorerCommand` handler declared in a signed sparse package: it will come once releases are signed.

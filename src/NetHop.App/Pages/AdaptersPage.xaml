@@ -7,10 +7,10 @@
     <ScrollViewer>
         <StackPanel Margin="{StaticResource PageMargin}" MaxWidth="{StaticResource PageMaxWidth}" Spacing="{StaticResource SettingsCardSpacing}">
             <Grid Margin="0,0,0,16">
-                <TextBlock Text="Network adapters" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock x:Uid="Adapters_Title" Text="Network adapters" Style="{StaticResource TitleTextBlockStyle}" />
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="16">
-                    <ToggleSwitch x:Name="ShowVirtual" OnContent="Virtual adapters shown" OffContent="Virtual adapters hidden" Toggled="OnShowVirtualToggled" />
-                    <Button Click="OnRefreshClick" ToolTipService.ToolTip="Refresh">
+                    <ToggleSwitch x:Uid="Adapters_ShowVirtual" x:Name="ShowVirtual" OnContent="Virtual adapters shown" OffContent="Virtual adapters hidden" Toggled="OnShowVirtualToggled" />
+                    <Button x:Uid="Adapters_Refresh" Click="OnRefreshClick" ToolTipService.ToolTip="Refresh">
                         <FontIcon Glyph="&#xE72C;" FontSize="14" />
                     </Button>
                 </StackPanel>

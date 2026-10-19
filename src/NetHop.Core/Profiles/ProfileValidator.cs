@@ -14,21 +14,21 @@ public static partial class ProfileValidator
         var issues = new List<Issue>();
 
         if (profile.Schema < 1 || profile.Schema > NetHopConstants.CurrentSchemaVersion)
-            issues.Add(Issue.Error("schema", $"Unsupported schema version {profile.Schema} (this NetHop understands up to {NetHopConstants.CurrentSchemaVersion})."));
+            issues.Add(Issue.Error("schema", Text.Format("Profile_SchemaUnsupported", profile.Schema, NetHopConstants.CurrentSchemaVersion)));
 
         if (string.IsNullOrWhiteSpace(profile.Name))
-            issues.Add(Issue.Error("name", "The profile needs a name."));
+            issues.Add(Issue.Error("name", Text.Get("Profile_NameRequired")));
         else if (profile.Name.Length > MaxNameLength)
-            issues.Add(Issue.Error("name", $"The name is longer than {MaxNameLength} characters."));
+            issues.Add(Issue.Error("name", Text.Format("Profile_NameTooLong", MaxNameLength)));
 
         if (profile.Id == Guid.Empty)
-            issues.Add(Issue.Error("id", "The profile id must not be empty."));
+            issues.Add(Issue.Error("id", Text.Get("Profile_IdEmpty")));
 
         if (profile.Color is not null && !ColorRegex().IsMatch(profile.Color))
-            issues.Add(Issue.Error("color", "Use the #RRGGBB format."));
+            issues.Add(Issue.Error("color", Text.Get("Profile_ColorFormat")));
 
         if (profile.Adapters.Count == 0)
-            issues.Add(Issue.Error("adapters", "The profile does not configure any adapter."));
+            issues.Add(Issue.Error("adapters", Text.Get("Profile_NoAdapters")));
 
         for (var i = 0; i < profile.Adapters.Count; i++)
             ValidateAdapter(profile.Adapters[i], $"adapters[{i}]", issues);
@@ -41,18 +41,18 @@ public static partial class ProfileValidator
     {
         var match = adapter.Match;
         if (match.IsEmpty)
-            issues.Add(Issue.Error($"{path}.match", "Set at least one of guid, mac or name."));
+            issues.Add(Issue.Error($"{path}.match", Text.Get("Profile_MatchEmpty")));
         if (match.Guid is not null && !Guid.TryParse(match.Guid, out _))
-            issues.Add(Issue.Error($"{path}.match.guid", $"'{match.Guid}' is not a valid GUID."));
+            issues.Add(Issue.Error($"{path}.match.guid", Text.Format("Profile_GuidInvalid", match.Guid)));
         if (match.Mac is not null && !MacAddress.TryNormalize(match.Mac, out _))
-            issues.Add(Issue.Error($"{path}.match.mac", $"'{match.Mac}' is not a valid MAC address."));
+            issues.Add(Issue.Error($"{path}.match.mac", Text.Format("Profile_MacInvalid", match.Mac)));
 
         var nothingToDo = adapter.State == DesiredAdapterState.Unchanged && adapter.Ipv4 is null && adapter.Ipv6 is null;
         if (nothingToDo)
-            issues.Add(Issue.Warning(path, "This adapter entry changes nothing."));
+            issues.Add(Issue.Warning(path, Text.Get("Profile_AdapterChangesNothing")));
 
         if (adapter.State == DesiredAdapterState.Disabled && (adapter.Ipv4 is not null || adapter.Ipv6 is not null))
-            issues.Add(Issue.Warning(path, "The adapter is disabled, so its IP settings will be ignored."));
+            issues.Add(Issue.Warning(path, Text.Get("Profile_DisabledIgnoresIp")));
 
         if (adapter.Ipv4 is not null)
             ValidateFamily(adapter.Ipv4, AddressFamily.InterNetwork, $"{path}.ipv4", issues);
@@ -70,20 +70,20 @@ public static partial class ProfileValidator
             var itemPath = $"{path}.addresses[{i}]";
             if (!IpCidr.TryParse(config.Addresses[i], out var cidr))
             {
-                issues.Add(Issue.Error(itemPath, $"'{config.Addresses[i]}' is not an address in CIDR notation (e.g. {(family == AddressFamily.InterNetwork ? "192.168.1.10/24" : "2001:db8::10/64")})."));
+                issues.Add(Issue.Error(itemPath, Text.Format("Profile_CidrInvalid", config.Addresses[i], family == AddressFamily.InterNetwork ? "192.168.1.10/24" : "2001:db8::10/64")));
                 continue;
             }
             if (cidr.Family != family)
             {
-                issues.Add(Issue.Error(itemPath, $"'{cidr}' is not an {familyName} address."));
+                issues.Add(Issue.Error(itemPath, Text.Format("Profile_WrongFamily", cidr, familyName)));
                 continue;
             }
             if (cidr.IsNetworkOrBroadcastAddress())
-                issues.Add(Issue.Warning(itemPath, $"'{cidr}' is the network or broadcast address of its subnet."));
+                issues.Add(Issue.Warning(itemPath, Text.Format("Profile_NetworkOrBroadcast", cidr)));
             if (family == AddressFamily.InterNetworkV6 && cidr.Address.IsIPv6LinkLocal)
-                issues.Add(Issue.Warning(itemPath, "Link-local addresses are assigned by Windows automatically."));
+                issues.Add(Issue.Warning(itemPath, Text.Get("Profile_LinkLocal")));
             if (addresses.Contains(cidr))
-                issues.Add(Issue.Error(itemPath, $"'{cidr}' is listed twice."));
+                issues.Add(Issue.Error(itemPath, Text.Format("Profile_Duplicate", cidr)));
             addresses.Add(cidr);
         }
 
@@ -92,10 +92,10 @@ public static partial class ProfileValidator
         switch (config.Mode)
         {
             case IpMode.Static when config.Addresses.Count == 0:
-                issues.Add(Issue.Error($"{path}.addresses", "Static mode needs at least one address."));
+                issues.Add(Issue.Error($"{path}.addresses", Text.Get("Profile_StaticNeedsAddress")));
                 break;
             case IpMode.Dhcp or IpMode.Unchanged when config.Addresses.Count > 0 || config.Gateways.Count > 0:
-                issues.Add(Issue.Error(path, $"Addresses and gateways can only be set in static mode (mode is '{config.Mode.ToString().ToLowerInvariant()}')."));
+                issues.Add(Issue.Error(path, Text.Format("Profile_AddressesOnlyStatic", config.Mode.ToString().ToLowerInvariant())));
                 break;
         }
 
@@ -104,7 +104,7 @@ public static partial class ProfileValidator
             for (var i = 0; i < gateways.Count; i++)
             {
                 if (!addresses.Any(a => a.Contains(gateways[i])))
-                    issues.Add(Issue.Warning($"{path}.gateways[{i}]", $"Gateway {gateways[i]} is outside every configured subnet."));
+                    issues.Add(Issue.Warning($"{path}.gateways[{i}]", Text.Format("Profile_GatewayOutsideSubnet", gateways[i])));
             }
         }
 
@@ -112,15 +112,15 @@ public static partial class ProfileValidator
         {
             ParseAddresses(dns.Servers, family, familyName, $"{path}.dns.servers", issues);
             if (dns.Mode == DnsMode.Static && dns.Servers.Count == 0)
-                issues.Add(Issue.Error($"{path}.dns", "Static DNS needs at least one server."));
+                issues.Add(Issue.Error($"{path}.dns", Text.Get("Profile_StaticDnsNeedsServer")));
             if (dns.Mode != DnsMode.Static && dns.Servers.Count > 0)
-                issues.Add(Issue.Error($"{path}.dns", "DNS servers can only be listed in static mode."));
+                issues.Add(Issue.Error($"{path}.dns", Text.Get("Profile_DnsServersOnlyStatic")));
             if (dns.Mode == DnsMode.Dhcp && config.Mode == IpMode.Static && family == AddressFamily.InterNetwork)
-                issues.Add(Issue.Warning($"{path}.dns", "With a static IPv4 address Windows gets no DNS servers from DHCP."));
+                issues.Add(Issue.Warning($"{path}.dns", Text.Get("Profile_StaticIpv4NoDhcpDns")));
         }
 
         if (config.Mode == IpMode.Unchanged && config.Dns is null)
-            issues.Add(Issue.Warning(path, $"This {familyName} block changes nothing."));
+            issues.Add(Issue.Warning(path, Text.Format("Profile_FamilyChangesNothing", familyName)));
     }
 
     private static List<IPAddress> ParseAddresses(List<string> values, AddressFamily family, string familyName, string path, List<Issue> issues)
@@ -129,11 +129,11 @@ public static partial class ProfileValidator
         for (var i = 0; i < values.Count; i++)
         {
             if (!IPAddress.TryParse(values[i], out var address))
-                issues.Add(Issue.Error($"{path}[{i}]", $"'{values[i]}' is not a valid IP address."));
+                issues.Add(Issue.Error($"{path}[{i}]", Text.Format("Profile_IpInvalid", values[i])));
             else if (address.AddressFamily != family)
-                issues.Add(Issue.Error($"{path}[{i}]", $"'{values[i]}' is not an {familyName} address."));
+                issues.Add(Issue.Error($"{path}[{i}]", Text.Format("Profile_WrongFamily", values[i], familyName)));
             else if (result.Contains(address))
-                issues.Add(Issue.Error($"{path}[{i}]", $"'{values[i]}' is listed twice."));
+                issues.Add(Issue.Error($"{path}[{i}]", Text.Format("Profile_Duplicate", values[i])));
             else
                 result.Add(address);
         }
@@ -152,7 +152,7 @@ public static partial class ProfileValidator
             if (key is null)
                 continue;
             if (seen.TryGetValue(key, out var first))
-                issues.Add(Issue.Error($"adapters[{i}].match", $"Same adapter as adapters[{first}]."));
+                issues.Add(Issue.Error($"adapters[{i}].match", Text.Format("Profile_SameAdapter", first)));
             else
                 seen[key] = i;
         }

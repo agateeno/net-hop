@@ -2,7 +2,7 @@
   <!--
     Per-machine MSI. Build it after publishing the binaries into one folder (see .github/workflows/ci.yml):
 
-      dotnet build installer/NetHop.Installer.wixproj -c Release -p:NetHopBinDir=<publish folder> -p:ProductVersion=0.1.0
+      dotnet build installer/NetHop.Installer.wixproj -c Release -p:NetHopBinDir=<publish folder> -p:ProductVersion=0.1.0 [-p:InstallerPlatform=arm64]
 
     WiX 6 on purpose: WiX 7 requires every build to accept the Open Source Maintenance Fee EULA
     (AcceptEula=wix7), which is a decision for the project owner. See docs/installer.md.
@@ -10,8 +10,9 @@
   <PropertyGroup>
     <ProductVersion Condition="'$(ProductVersion)' == ''">0.1.0</ProductVersion>
     <NetHopBinDir Condition="'$(NetHopBinDir)' == ''">$(MSBuildThisFileDirectory)..\out\bin</NetHopBinDir>
-    <InstallerPlatform>x64</InstallerPlatform>
-    <OutputName>NetHop-$(ProductVersion)-x64</OutputName>
+    <!-- x64 or arm64; publish the binaries for the same architecture. -->
+    <InstallerPlatform Condition="'$(InstallerPlatform)' == ''">x64</InstallerPlatform>
+    <OutputName>NetHop-$(ProductVersion)-$(InstallerPlatform)</OutputName>
     <DefineConstants>ProductVersion=$(ProductVersion);BinDir=$(NetHopBinDir);RepoDir=$(MSBuildThisFileDirectory)..</DefineConstants>
   </PropertyGroup>
 

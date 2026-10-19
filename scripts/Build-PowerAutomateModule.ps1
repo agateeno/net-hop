@@ -29,6 +29,8 @@ param(
     [Parameter(ParameterSetName = 'Pfx')][securestring]$CertificatePassword,
     [Parameter(ParameterSetName = 'Store', Mandatory = $true)][string]$CertificateThumbprint,
     [Parameter(ParameterSetName = 'Unsigned', Mandatory = $true)][switch]$SkipSigning,
+    # Pack an already built (and possibly already signed) bin folder, e.g. in CI.
+    [switch]$SkipBuild,
     [string]$OutputDirectory = (Join-Path $PSScriptRoot '..\out\power-automate')
 )
 
@@ -39,9 +41,11 @@ $repo = Resolve-Path (Join-Path $PSScriptRoot '..')
 $project = Join-Path $repo 'src\NetHop.PowerAutomate\NetHop.PowerAutomate.csproj'
 $buildDir = Join-Path $OutputDirectory 'bin'
 
-Write-Host 'Building the module...'
-dotnet build $project -c Release -o $buildDir
-if ($LASTEXITCODE -ne 0) { throw 'Build failed.' }
+if (-not $SkipBuild) {
+    Write-Host 'Building the module...'
+    dotnet build $project -c Release -o $buildDir
+    if ($LASTEXITCODE -ne 0) { throw 'Build failed.' }
+}
 
 function Get-SignTool {
     $command = Get-Command signtool.exe -ErrorAction SilentlyContinue

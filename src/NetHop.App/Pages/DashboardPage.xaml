@@ -9,13 +9,13 @@
 
     <ScrollViewer>
         <StackPanel Margin="{StaticResource PageMargin}" MaxWidth="{StaticResource PageMaxWidth}" Spacing="{StaticResource SettingsCardSpacing}">
-            <TextBlock Text="Dashboard" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock x:Uid="Dashboard_Title" Text="Dashboard" Style="{StaticResource PageTitleStyle}" />
 
-            <InfoBar x:Name="SsidWarning" Severity="Warning" IsClosable="False"
+            <InfoBar x:Uid="Dashboard_SsidWarning" x:Name="SsidWarning" Severity="Warning" IsClosable="False"
                      Title="Wi-Fi names are not available"
                      Message="Windows only shares the SSID of the current network with apps that have location access. Rules based on Wi-Fi names will not fire until it is turned on." >
                 <InfoBar.ActionButton>
-                    <HyperlinkButton Content="Open location settings" NavigateUri="ms-settings:privacy-location" />
+                    <HyperlinkButton x:Uid="Dashboard_OpenLocation" Content="Open location settings" NavigateUri="ms-settings:privacy-location" />
                 </InfoBar.ActionButton>
             </InfoBar>
 
@@ -25,17 +25,17 @@
                 <toolkit:SettingsCard.HeaderIcon>
                     <FontIcon Glyph="&#xE80F;" />
                 </toolkit:SettingsCard.HeaderIcon>
-                <Button x:Name="NextButton" Content="Apply next profile" Click="OnNextClick" />
+                <Button x:Uid="Dashboard_NextButton" x:Name="NextButton" Content="Apply next profile" Click="OnNextClick" />
             </toolkit:SettingsCard>
 
-            <toolkit:SettingsCard x:Name="AutomationsCard" Header="Automations" Description="Active">
+            <toolkit:SettingsCard x:Uid="Dashboard_Automations" x:Name="AutomationsCard" Header="Automations" Description="Active">
                 <toolkit:SettingsCard.HeaderIcon>
                     <FontIcon Glyph="&#xE945;" />
                 </toolkit:SettingsCard.HeaderIcon>
-                <ToggleSwitch x:Name="AutomationsSwitch" OnContent="On" OffContent="Paused for 1 hour" Toggled="OnAutomationsToggled" />
+                <ToggleSwitch x:Uid="Dashboard_AutomationsSwitch" x:Name="AutomationsSwitch" OnContent="On" OffContent="Paused for 1 hour" Toggled="OnAutomationsToggled" />
             </toolkit:SettingsCard>
 
-            <TextBlock Text="Switch profile" Style="{StaticResource SectionHeaderStyle}" />
+            <TextBlock x:Uid="Dashboard_SwitchProfile" Text="Switch profile" Style="{StaticResource SectionHeaderStyle}" />
             <GridView x:Name="ProfileGrid" SelectionMode="None" IsItemClickEnabled="True" ItemClick="OnProfileClick">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="ipc:ProfileSummary">
@@ -50,14 +50,14 @@
                             <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="24" VerticalAlignment="Center" />
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                                 <TextBlock Text="{x:Bind Name}" Style="{StaticResource BodyStrongTextBlockStyle}" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="Active" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                <TextBlock x:Uid="Dashboard_ActiveBadge" Text="Active" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                            Style="{StaticResource CaptionTextBlockStyle}" Visibility="{x:Bind IsActive}" />
                             </StackPanel>
                         </Grid>
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
-            <TextBlock x:Name="NoProfilesText" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+            <TextBlock x:Uid="Dashboard_NoProfiles" x:Name="NoProfilesText" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                        Text="No profiles yet. Create one in the Profiles page, or double-click a .nethop file." TextWrapping="Wrap" />
         </StackPanel>
     </ScrollViewer>

@@ -39,6 +39,15 @@ Everything except step 1 and the execution of individual steps is pure code in `
 - when several matching rules apply a profile, only the highest-priority one does;
 - a global pause, set from the tray, the dashboard or `nethop pause`.
 
+## Localization
+
+- **App**: `Strings/en-US/Resources.resw` (default) and `Strings/it-IT/Resources.resw`. XAML uses `x:Uid`, so the English text in the XAML is also the fallback. Code uses `Loc.Get("Key")`.
+- **Core messages** (validation, plan steps): `Strings.resx` and `Strings.it.resx` in NetHop.Core, picked by the current UI culture. A unit test checks that every key exists in both languages with the same placeholders.
+- **Language choice**: Windows' display language by default; Settings can force English or Italian (`HKCU\Software\NetHop\Language`). It is applied at startup through `ApplicationLanguages.PrimaryLanguageOverride` and the .NET UI culture.
+- Messages created by the service (apply steps, errors) use the system language, because the service runs as SYSTEM. The CLI stays in English so scripts can rely on it.
+
+To add a language, copy both `en-US` files to the new culture, translate them, and add the tag to `AppLanguage.Supported`.
+
 ## Decisions
 
 | Decision | Why |

@@ -13,7 +13,8 @@
 - **Built-in automations**: rules such as "when I join the Wi-Fi `CORP-WiFi` on a weekday, apply *Office*", with no extra software. Loop protection, cooldowns and a pause switch are included.
 - **Power Automate**: a *NetHop* group of custom actions in Power Automate Desktop, a PowerShell module, and a CLI with JSON output. NetHop rules can also start flows.
 - **Logitech**: a Logi Actions plugin for the MX Creative Console and the Actions Ring, with keys that show the active profile.
-- **Installer**: a per-machine MSI with the service, `PATH`, file types and Start menu entry.
+- **Installer**: per-machine MSIs for x64 and ARM64 with the service, `PATH`, file types, an "Apply with NetHop" context menu entry and a Start menu entry. Tagged releases also produce winget manifests.
+- **English and Italian**: the app follows the Windows display language, or the one picked in Settings.
 - **Rename adapters** without breaking profiles: profiles find adapters by GUID, then MAC, then name.
 
 ## Architecture
@@ -90,7 +91,7 @@ dotnet test tests/NetHop.Core.Tests
 
 The app icon is drawn in SVG under [assets/icon](assets/icon): `NetHop.svg` (large sizes), `NetHop-small.svg` (20–32 px) and `NetHop-16.svg` (16 px). After editing one, run `python assets/icon/build_icons.py` (needs [resvg](https://github.com/linebender/resvg)) to regenerate the `.ico` and `.png` files.
 
-Every push builds on GitHub Actions and produces three artifacts: **NetHop-msi** (the installer), **NetHop-win-x64** (the same binaries as a folder) and **NetHop-PowerAutomate-unsigned**. Install the MSI, or, for a quick test without it, extract the folder and run from an elevated PowerShell:
+Every push builds on GitHub Actions and produces **NetHop-msi** (x64 and ARM64 installers), **NetHop-win-x64** / **NetHop-win-arm64** (the same binaries as folders) and the Power Automate module (unsigned unless signing is configured, see [docs/installer.md](docs/installer.md#code-signing)). Install the MSI, or, for a quick test without it, extract the folder and run from an elevated PowerShell:
 
 ```powershell
 .\Install-NetHop.ps1      # copies to Program Files, registers and starts the service
@@ -104,12 +105,15 @@ Every push builds on GitHub Actions and produces three artifacts: **NetHop-msi**
 - [x] Windows service, admin-only named pipe, CLI
 - [ ] Verify the CIM backend on real hardware (see the spike list in [docs/architecture.md](docs/architecture.md#open-questions-spikes))
 - [x] WinUI scaffold: dashboard, YAML editors, adapters page, tray flyout
-- [ ] Form-based profile and rule editors
+- [x] Form-based profile and rule editors (with a YAML view kept in sync)
 - [x] Installer (WiX) with service, PATH, file types and Start menu
 - [x] Logi Actions SDK plugin (to verify with real hardware)
 - [x] Power Automate Desktop custom actions and PowerShell module
-- [ ] Code signing, Windows 11 context menu, ARM64 MSI, winget
-- [ ] Localization (Italian, English)
+- [x] ARM64 MSI, "Apply with NetHop" context menu, GitHub releases and winget manifests
+- [x] Code signing in CI (Azure Trusted Signing, active once the secrets are set)
+- [x] Localization: English and Italian
+- [ ] Modern Windows 11 context menu entry (needs signed releases)
+- [ ] Verify everything on real hardware (spikes in docs/architecture.md)
 
 ## License
 

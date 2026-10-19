@@ -15,52 +15,52 @@ public abstract record PlanStep(AdapterInfo Adapter)
 
 public sealed record EnableAdapterStep(AdapterInfo Adapter) : PlanStep(Adapter)
 {
-    public override string Describe() => $"Enable adapter '{Adapter.Name}'";
+    public override string Describe() => Text.Format("Step_Enable", Adapter.Name);
 }
 
 /// <summary>Waits until a just-enabled adapter has its IP interfaces available.</summary>
 public sealed record WaitForAdapterStep(AdapterInfo Adapter) : PlanStep(Adapter)
 {
-    public override string Describe() => $"Wait for adapter '{Adapter.Name}' to come up";
+    public override string Describe() => Text.Format("Step_Wait", Adapter.Name);
 }
 
 public sealed record DisableAdapterStep(AdapterInfo Adapter) : PlanStep(Adapter)
 {
-    public override string Describe() => $"Disable adapter '{Adapter.Name}'";
+    public override string Describe() => Text.Format("Step_Disable", Adapter.Name);
 }
 
 public sealed record SetDhcpStep(AdapterInfo Adapter, AddressFamily Family, bool Enabled) : PlanStep(Adapter)
 {
     public override string Describe() =>
-        $"{(Enabled ? "Enable" : "Disable")} automatic {FamilyName(Family)} configuration on '{Adapter.Name}'";
+        Text.Format(Enabled ? "Step_DhcpOn" : "Step_DhcpOff", FamilyName(Family), Adapter.Name);
 }
 
 public sealed record AddAddressStep(AdapterInfo Adapter, IpCidr Address) : PlanStep(Adapter)
 {
-    public override string Describe() => $"Add address {Address} to '{Adapter.Name}'";
+    public override string Describe() => Text.Format("Step_AddAddress", Address, Adapter.Name);
 }
 
 public sealed record RemoveAddressStep(AdapterInfo Adapter, IpCidr Address) : PlanStep(Adapter)
 {
-    public override string Describe() => $"Remove address {Address} from '{Adapter.Name}'";
+    public override string Describe() => Text.Format("Step_RemoveAddress", Address, Adapter.Name);
 }
 
 public sealed record AddGatewayStep(AdapterInfo Adapter, IPAddress Gateway) : PlanStep(Adapter)
 {
-    public override string Describe() => $"Add default gateway {Gateway} to '{Adapter.Name}'";
+    public override string Describe() => Text.Format("Step_AddGateway", Gateway, Adapter.Name);
 }
 
 public sealed record RemoveGatewayStep(AdapterInfo Adapter, IPAddress Gateway) : PlanStep(Adapter)
 {
-    public override string Describe() => $"Remove default gateway {Gateway} from '{Adapter.Name}'";
+    public override string Describe() => Text.Format("Step_RemoveGateway", Gateway, Adapter.Name);
 }
 
 /// <summary>Sets static DNS servers; an empty list returns DNS to automatic (DHCP).</summary>
 public sealed record SetDnsStep(AdapterInfo Adapter, AddressFamily Family, IReadOnlyList<IPAddress> Servers) : PlanStep(Adapter)
 {
     public override string Describe() => Servers.Count == 0
-        ? $"Use automatic {FamilyName(Family)} DNS on '{Adapter.Name}'"
-        : $"Set {FamilyName(Family)} DNS on '{Adapter.Name}' to {string.Join(", ", Servers)}";
+        ? Text.Format("Step_DnsAuto", FamilyName(Family), Adapter.Name)
+        : Text.Format("Step_DnsSet", FamilyName(Family), Adapter.Name, string.Join(", ", Servers));
 }
 
 public sealed record ApplyPlan(IReadOnlyList<PlanStep> Steps, IReadOnlyList<Issue> Issues, int MissingAdapters = 0)
