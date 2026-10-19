@@ -70,6 +70,9 @@
   <data name="Profile_ColorFormat" xml:space="preserve">
     <value>Use the #RRGGBB format.</value>
   </data>
+  <data name="Profile_IconFormat" xml:space="preserve">
+    <value>A custom icon must be a PNG image of at most {0} KB (data:image/png;base64,...).</value>
+  </data>
   <data name="Profile_NoAdapters" xml:space="preserve">
     <value>The profile does not configure any adapter.</value>
   </data>

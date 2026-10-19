@@ -70,6 +70,9 @@
   <data name="Profile_ColorFormat" xml:space="preserve">
     <value>Usa il formato #RRGGBB.</value>
   </data>
+  <data name="Profile_IconFormat" xml:space="preserve">
+    <value>Un'icona personalizzata deve essere un'immagine PNG di al massimo {0} KB (data:image/png;base64,...).</value>
+  </data>
   <data name="Profile_NoAdapters" xml:space="preserve">
     <value>Il profilo non configura nessuna scheda di rete.</value>
   </data>

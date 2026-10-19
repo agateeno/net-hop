@@ -79,34 +79,123 @@ internal sealed class ProfileForm
 
     private ComboBox IconPicker()
     {
-        var combo = new ComboBox { MinWidth = 160 };
+        var combo = new ComboBox { MinWidth = 180 };
         foreach (var (glyph, key) in Icons)
             combo.Items.Add(Row(new FontIcon { Glyph = glyph, FontSize = 16 }, new TextBlock { Text = Loc.Get(key) }));
-        combo.SelectedIndex = Math.Max(0, Array.FindIndex(Icons, i => i.Glyph == _profile.Icon));
-        combo.SelectionChanged += (_, _) => Edit(() => _profile.Icon = Icons[combo.SelectedIndex].Glyph);
+
+        // The profile's own icon when it is not a preset: a custom image, or a glyph typed in the YAML.
+        var preset = Array.FindIndex(Icons, i => i.Glyph == _profile.Icon);
+        var custom = preset < 0 && !string.IsNullOrEmpty(_profile.Icon);
+        if (custom)
+            combo.Items.Add(Row(IconPreview(_profile.Icon!), new TextBlock { Text = Loc.Get("Icon_Custom") }));
+        var chooseIndex = combo.Items.Count;
+        combo.Items.Add(Row(new FontIcon { Glyph = "\uE8B9", FontSize = 16 }, new TextBlock { Text = Loc.Get("Icon_ChooseImage") }));
+
+        combo.SelectedIndex = preset >= 0 ? preset : custom ? Icons.Length : 0;
+        var current = combo.SelectedIndex;
+        combo.SelectionChanged += async (_, _) =>
+        {
+            if (combo.SelectedIndex == chooseIndex)
+            {
+                var image = await IconImage.PickAsync();
+                if (image is null)
+                {
+                    combo.SelectedIndex = current; // cancelled: back to the previous choice
+                    return;
+                }
+                _profile.Icon = image;
+                Rebuild(); // shows the image as the "Custom" entry
+                return;
+            }
+            current = combo.SelectedIndex;
+            if (current >= 0 && current < Icons.Length)
+                Edit(() => _profile.Icon = Icons[current].Glyph);
+        };
         return combo;
     }
 
+    private static FrameworkElement IconPreview(string icon) =>
+        XamlHelpers.ProfileImage(icon) is { } image
+            ? new Image { Source = image, Width = 16, Height = 16 }
+            : new FontIcon { Glyph = XamlHelpers.GlyphOrDefault(icon), FontSize = 16 };
+
     private ComboBox ColorPicker()
     {
-        var combo = new ComboBox { MinWidth = 160 };
+        var combo = new ComboBox { MinWidth = 180 };
         foreach (var (color, key) in Colors)
+            combo.Items.Add(Row(Swatch(color), new TextBlock { Text = Loc.Get(key) }));
+
+        // A color that is not a preset (picked with "Custom color..." or typed in the YAML).
+        var preset = Array.FindIndex(Colors, c => string.Equals(c.Color, _profile.Color, StringComparison.OrdinalIgnoreCase));
+        var custom = preset < 0 && _profile.Color is not null;
+        if (custom)
+            combo.Items.Add(Row(Swatch(_profile.Color), new TextBlock { Text = Loc.Format("Color_CustomValue", _profile.Color!.ToUpperInvariant()) }));
+        var chooseIndex = combo.Items.Count;
+        combo.Items.Add(Row(new FontIcon { Glyph = "\uE790", FontSize = 14 }, new TextBlock { Text = Loc.Get("Color_Choose") }));
+
+        combo.SelectedIndex = preset >= 0 ? preset : custom ? Colors.Length : 0;
+        var current = combo.SelectedIndex;
+        combo.SelectionChanged += (_, _) =>
         {
-            var swatch = new Border
+            if (combo.SelectedIndex == chooseIndex)
             {
-                Width = 14,
-                Height = 14,
-                CornerRadius = new CornerRadius(7),
-                Background = color is null ? null : XamlHelpers.ProfileBrush(color),
-                BorderThickness = new Thickness(1),
-                BorderBrush = (Microsoft.UI.Xaml.Media.Brush)Application.Current.Resources["ControlStrokeColorDefaultBrush"],
-            };
-            combo.Items.Add(Row(swatch, new TextBlock { Text = Loc.Get(key) }));
-        }
-        combo.SelectedIndex = Math.Max(0, Array.FindIndex(Colors, c => string.Equals(c.Color, _profile.Color, StringComparison.OrdinalIgnoreCase)));
-        combo.SelectionChanged += (_, _) => Edit(() => _profile.Color = Colors[Math.Max(0, combo.SelectedIndex)].Color);
+                ShowColorFlyout(combo, () => combo.SelectedIndex = current);
+                return;
+            }
+            current = combo.SelectedIndex;
+            if (current >= 0 && current < Colors.Length)
+                Edit(() => _profile.Color = Colors[current].Color);
+        };
         return combo;
     }
+
+    private void ShowColorFlyout(FrameworkElement anchor, Action cancelled)
+    {
+        var start = XamlHelpers.TryParseColor(_profile.Color, out var color) ? color : Microsoft.UI.ColorHelper.FromArgb(255, 0x00, 0x78, 0xD4);
+        var picker = new Microsoft.UI.Xaml.Controls.ColorPicker
+        {
+            Color = start,
+            IsAlphaEnabled = false,
+            IsMoreButtonVisible = false,
+            IsHexInputVisible = true,
+            ColorSpectrumShape = ColorSpectrumShape.Ring,
+        };
+        var ok = new Button
+        {
+            Content = Loc.Get("Color_Use"),
+            Style = (Style)Application.Current.Resources["AccentButtonStyle"],
+            HorizontalAlignment = HorizontalAlignment.Right,
+        };
+        var panel = new StackPanel { Spacing = 12 };
+        panel.Children.Add(picker);
+        panel.Children.Add(ok);
+
+        var flyout = new Flyout { Content = panel };
+        var applied = false;
+        ok.Click += (_, _) =>
+        {
+            applied = true;
+            flyout.Hide();
+            _profile.Color = $"#{picker.Color.R:X2}{picker.Color.G:X2}{picker.Color.B:X2}";
+            Rebuild(); // shows the new color as the "Custom" entry
+        };
+        flyout.Closed += (_, _) =>
+        {
+            if (!applied)
+                cancelled();
+        };
+        flyout.ShowAt(anchor);
+    }
+
+    private static Border Swatch(string? color) => new()
+    {
+        Width = 14,
+        Height = 14,
+        CornerRadius = new CornerRadius(7),
+        Background = color is null ? null : XamlHelpers.ProfileBrush(color),
+        BorderThickness = new Thickness(1),
+        BorderBrush = (Microsoft.UI.Xaml.Media.Brush)Application.Current.Resources["ControlStrokeColorDefaultBrush"],
+    };
 
     private MenuFlyout AddAdapterMenu()
     {

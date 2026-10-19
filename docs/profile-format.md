@@ -7,8 +7,8 @@ schema: 1                      # required for forward compatibility
 id: 3f2b6c1e-...               # generated when missing; identifies the profile across renames
 name: Office                   # required, unique, max 64 characters
 description: Docking station   # optional
-icon: ""                 # optional Segoe Fluent Icons glyph
-color: "#0078D4"               # optional accent color
+icon: ""                 # optional: a Segoe Fluent Icons glyph, or a custom image as "data:image/png;base64,..." (PNG, max 48 KB; the app scales it to 64×64)
+color: "#0078D4"               # optional accent color, any #RRGGBB
 adapters: [...]                # at least one entry
 ```
 

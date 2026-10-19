@@ -37,8 +37,9 @@
                         </Grid.ColumnDefinitions>
                         <Grid Width="28" Height="28" CornerRadius="6" VerticalAlignment="Center"
                               Background="{x:Bind app:XamlHelpers.ProfileBrush(Color)}">
-                            <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="14" Visibility="{x:Bind app:XamlHelpers.VisibleIfNoColor(Color)}" />
-                            <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="14" Foreground="White" Visibility="{x:Bind app:XamlHelpers.VisibleIfColor(Color)}" />
+                            <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="14" Visibility="{x:Bind app:XamlHelpers.PlainGlyphVisibility(Icon, Color)}" />
+                            <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="14" Foreground="White" Visibility="{x:Bind app:XamlHelpers.WhiteGlyphVisibility(Icon, Color)}" />
+                            <Image Source="{x:Bind app:XamlHelpers.ProfileImage(Icon)}" Margin="3" Visibility="{x:Bind app:XamlHelpers.ImageVisibility(Icon)}" />
                         </Grid>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" />

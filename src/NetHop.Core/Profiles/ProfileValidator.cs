@@ -27,6 +27,9 @@ public static partial class ProfileValidator
         if (profile.Color is not null && !ColorRegex().IsMatch(profile.Color))
             issues.Add(Issue.Error("color", Text.Get("Profile_ColorFormat")));
 
+        if (Profile.IsImageIcon(profile.Icon) && !IsValidImageIcon(profile.Icon!))
+            issues.Add(Issue.Error("icon", Text.Format("Profile_IconFormat", Profile.MaxImageIconBytes / 1024)));
+
         if (profile.Adapters.Count == 0)
             issues.Add(Issue.Error("adapters", Text.Get("Profile_NoAdapters")));
 
@@ -156,6 +159,21 @@ public static partial class ProfileValidator
             else
                 seen[key] = i;
         }
+    }
+
+    private static readonly byte[] PngSignature = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+
+    private static bool IsValidImageIcon(string icon)
+    {
+        if (!icon.StartsWith(Profile.ImageIconPrefix, StringComparison.Ordinal))
+            return false;
+        var data = icon.AsSpan(Profile.ImageIconPrefix.Length);
+        if (data.Length > (Profile.MaxImageIconBytes + 2) / 3 * 4)
+            return false;
+        var bytes = new byte[data.Length];
+        return Convert.TryFromBase64Chars(data, bytes, out var length)
+            && length >= PngSignature.Length
+            && bytes.AsSpan(0, PngSignature.Length).SequenceEqual(PngSignature);
     }
 
     [GeneratedRegex("^#[0-9A-Fa-f]{6}$")]

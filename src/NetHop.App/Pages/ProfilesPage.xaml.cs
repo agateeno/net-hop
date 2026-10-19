@@ -8,7 +8,7 @@ using NetHop.Core.Networking;
 using NetHop.Core.Profiles;
 using NetHop.Core.Serialization;
 using NetHop.Ipc;
-using Windows.Storage.Pickers;
+using Microsoft.Windows.Storage.Pickers;
 
 namespace NetHop.App.Pages;
 
@@ -161,9 +161,9 @@ public sealed partial class ProfilesPage : Page
     private async void OnExportClick(object sender, RoutedEventArgs e)
     {
         var yaml = CurrentYaml();
-        var picker = new FileSavePicker { SuggestedFileName = _profile?.Name ?? "profile" };
+        // The Windows App SDK picker also works when NetHop runs as administrator, unlike Windows.Storage.Pickers.
+        var picker = new FileSavePicker(App.Current!.MainWindowForDialogs.AppWindow.Id) { SuggestedFileName = _profile?.Name ?? "profile" };
         picker.FileTypeChoices.Add(Loc.Get("Profiles_FileType"), [NetHopConstants.ProfileExtension]);
-        WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(App.Current!.MainWindowForDialogs));
 
         var file = await picker.PickSaveFileAsync();
         if (file is not null)

@@ -133,6 +133,15 @@
   <data name="Color_Green" xml:space="preserve">
     <value>Green</value>
   </data>
+  <data name="Color_Choose" xml:space="preserve">
+    <value>Custom color...</value>
+  </data>
+  <data name="Color_CustomValue" xml:space="preserve">
+    <value>Custom ({0})</value>
+  </data>
+  <data name="Color_Use" xml:space="preserve">
+    <value>Use this color</value>
+  </data>
   <data name="Color_None" xml:space="preserve">
     <value>No color</value>
   </data>
@@ -300,6 +309,18 @@
   </data>
   <data name="Icon_Network" xml:space="preserve">
     <value>Network</value>
+  </data>
+  <data name="Icon_ChooseImage" xml:space="preserve">
+    <value>Choose an image...</value>
+  </data>
+  <data name="Icon_Custom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="Icon_ImageError" xml:space="preserve">
+    <value>The image cannot be used</value>
+  </data>
+  <data name="Icon_ImageTooLarge" xml:space="preserve">
+    <value>The image is too large even after scaling it down.</value>
   </data>
   <data name="Icon_Travel" xml:space="preserve">
     <value>Travel</value>

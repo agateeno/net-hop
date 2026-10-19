@@ -14,8 +14,18 @@ public sealed class Profile
 
     public string? Description { get; set; }
 
-    /// <summary>Segoe Fluent Icons glyph shown in the UI, tray flyout and Logi plugin.</summary>
+    /// <summary>
+    /// Shown in the UI and the tray flyout: a Segoe Fluent Icons glyph, or a custom image as a PNG data URI
+    /// (<c>data:image/png;base64,...</c>, see <see cref="ImageIconPrefix"/>) so it travels with exported files.
+    /// </summary>
     public string? Icon { get; set; }
+
+    public const string ImageIconPrefix = "data:image/png;base64,";
+
+    /// <summary>Largest custom icon accepted, in bytes of PNG data. The app stores 64×64 images, well below it.</summary>
+    public const int MaxImageIconBytes = 48 * 1024;
+
+    public static bool IsImageIcon(string? icon) => icon?.StartsWith("data:", StringComparison.OrdinalIgnoreCase) == true;
 
     /// <summary>Accent color as <c>#RRGGBB</c>.</summary>
     public string? Color { get; set; }

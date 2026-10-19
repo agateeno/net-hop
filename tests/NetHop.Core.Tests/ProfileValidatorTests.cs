@@ -22,6 +22,19 @@ public class ProfileValidatorTests
     private static IEnumerable<Issue> Warnings(Profile p) =>
         ProfileValidator.Validate(p).Where(i => i.Severity == IssueSeverity.Warning);
 
+    [Theory]
+    [InlineData("\uE968", true)]
+    [InlineData("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", true)]
+    [InlineData("data:image/jpeg;base64,/9j/4AAQSkZJRg==", false)]
+    [InlineData("data:image/png;base64,not base64!", false)]
+    [InlineData("data:image/png;base64,R0lGODlhAQABAAAAACw=", false)] // a GIF, not a PNG
+    public void Icons_are_glyphs_or_png_images(string icon, bool valid)
+    {
+        var p = WithIpv4(new IpConfig { Mode = IpMode.Dhcp });
+        p.Icon = icon;
+        Assert.Equal(valid, !Errors(p).Any(i => i.Path == "icon"));
+    }
+
     [Fact]
     public void Valid_static_ipv4_with_multiple_addresses()
     {
