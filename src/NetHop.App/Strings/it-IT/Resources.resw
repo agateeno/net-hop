@@ -736,6 +736,21 @@
   <data name="Settings_Startup.Header" xml:space="preserve">
     <value>Avvia con Windows</value>
   </data>
+  <data name="Settings_Theme.Description" xml:space="preserve">
+    <value>Chiaro, scuro o come Windows.</value>
+  </data>
+  <data name="Settings_Theme.Header" xml:space="preserve">
+    <value>Tema dell'app</value>
+  </data>
+  <data name="Settings_ThemeDark" xml:space="preserve">
+    <value>Scuro</value>
+  </data>
+  <data name="Settings_ThemeLight" xml:space="preserve">
+    <value>Chiaro</value>
+  </data>
+  <data name="Settings_ThemeSystem" xml:space="preserve">
+    <value>Usa impostazione di Windows</value>
+  </data>
   <data name="Settings_Title.Text" xml:space="preserve">
     <value>Impostazioni</value>
   </data>

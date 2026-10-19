@@ -24,6 +24,13 @@ public sealed partial class SettingsPage : Page
         ("it-IT", "Italiano"),
     ];
 
+    private static readonly (ElementTheme Theme, string Label)[] Themes =
+    [
+        (ElementTheme.Default, "Settings_ThemeSystem"),
+        (ElementTheme.Light, "Settings_ThemeLight"),
+        (ElementTheme.Dark, "Settings_ThemeDark"),
+    ];
+
     protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
         _loading = true;
@@ -31,6 +38,8 @@ public sealed partial class SettingsPage : Page
         // Language names are shown in their own language, as Windows does.
         LanguageBox.ItemsSource = Languages.Select(l => l.Tag == AppLanguage.SystemDefault ? Loc.Get(l.Label) : l.Label).ToList();
         LanguageBox.SelectedIndex = Math.Max(0, Array.FindIndex(Languages, l => l.Tag == AppLanguage.Saved));
+        ThemeBox.ItemsSource = Themes.Select(t => Loc.Get(t.Label)).ToList();
+        ThemeBox.SelectedIndex = Math.Max(0, Array.FindIndex(Themes, t => t.Theme == AppTheme.Saved));
         _loading = false;
 
         ServiceCard.Description = _connection.State switch
@@ -55,6 +64,12 @@ public sealed partial class SettingsPage : Page
             return;
         AppLanguage.Saved = Languages[LanguageBox.SelectedIndex].Tag;
         Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(LanguageBox, Loc.Get("Settings_LanguageRestart"));
+    }
+
+    private void OnThemeChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!_loading && ThemeBox.SelectedIndex >= 0)
+            AppTheme.Saved = Themes[ThemeBox.SelectedIndex].Theme;
     }
 
     private void OnOpenFolderClick(object sender, RoutedEventArgs e) => ProfileFolder.Open();

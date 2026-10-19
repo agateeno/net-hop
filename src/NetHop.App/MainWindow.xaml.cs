@@ -29,6 +29,7 @@ public sealed partial class MainWindow : Window
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
         SystemBackdrop = new MicaBackdrop();
+        AppTheme.Track(this);
         AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "NetHop.ico"));
         AppWindow.Resize(new Windows.Graphics.SizeInt32(1180, 800));
 

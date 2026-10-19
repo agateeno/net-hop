@@ -19,6 +19,11 @@
                 <ComboBox x:Name="LanguageBox" MinWidth="200" SelectionChanged="OnLanguageChanged" />
             </toolkit:SettingsCard>
 
+            <toolkit:SettingsCard x:Uid="Settings_Theme" Header="App theme" Description="Light, dark, or the same as Windows.">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE790;" /></toolkit:SettingsCard.HeaderIcon>
+                <ComboBox x:Name="ThemeBox" MinWidth="200" SelectionChanged="OnThemeChanged" />
+            </toolkit:SettingsCard>
+
             <toolkit:SettingsCard x:Uid="Settings_Folder" x:Name="FolderCard" Header="Profiles folder"
                                   Description="A copy of every profile, pinned to Quick Access. Double-click a file to edit it, right-click to apply it.">
                 <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE8B7;" /></toolkit:SettingsCard.HeaderIcon>

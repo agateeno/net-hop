@@ -736,6 +736,21 @@
   <data name="Settings_Startup.Header" xml:space="preserve">
     <value>Start with Windows</value>
   </data>
+  <data name="Settings_Theme.Description" xml:space="preserve">
+    <value>Light, dark, or the same as Windows.</value>
+  </data>
+  <data name="Settings_Theme.Header" xml:space="preserve">
+    <value>App theme</value>
+  </data>
+  <data name="Settings_ThemeDark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="Settings_ThemeLight" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="Settings_ThemeSystem" xml:space="preserve">
+    <value>Use Windows setting</value>
+  </data>
   <data name="Settings_Title.Text" xml:space="preserve">
     <value>Settings</value>
   </data>

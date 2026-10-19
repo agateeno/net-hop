@@ -44,6 +44,7 @@ Everything except step 1 and the execution of individual steps is pure code in `
 - **App**: `Strings/en-US/Resources.resw` (default) and `Strings/it-IT/Resources.resw`. XAML uses `x:Uid`, so the English text in the XAML is also the fallback. Code uses `Loc.Get("Key")`.
 - **Core messages** (validation, plan steps): `Strings.resx` and `Strings.it.resx` in NetHop.Core, picked by the current UI culture. A unit test checks that every key exists in both languages with the same placeholders.
 - **Language choice**: Windows' display language by default; Settings can force English or Italian (`HKCU\Software\NetHop\Language`). It is applied at startup through `ApplicationLanguages.PrimaryLanguageOverride` and the .NET UI culture.
+- **Theme**: light or dark like Windows' app mode by default; Settings can force Light or Dark (`HKCU\Software\NetHop\Theme`). `AppTheme` applies it live to every window: the root element's `RequestedTheme` (the Mica/acrylic backdrop follows it) and the title bar's `PreferredTheme`.
 - Messages created by the service (apply steps, errors) use the system language, because the service runs as SYSTEM. The CLI stays in English so scripts can rely on it.
 
 To add a language, copy both `en-US` files to the new culture, translate them, and add the tag to `AppLanguage.Supported`.

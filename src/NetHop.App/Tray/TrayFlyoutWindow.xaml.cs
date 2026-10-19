@@ -30,6 +30,7 @@ public sealed partial class TrayFlyoutWindow : Window
         InitializeComponent();
 
         SystemBackdrop = new DesktopAcrylicBackdrop();
+        AppTheme.Track(this);
         var presenter = OverlappedPresenter.Create();
         presenter.IsResizable = false;
         presenter.IsMaximizable = false;
