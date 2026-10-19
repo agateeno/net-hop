@@ -66,8 +66,8 @@ jobs:
         shell: pwsh
         run: |
           foreach ($arch in 'x64', 'arm64') {
-            $pri = Get-ChildItem "out/$arch/NetHop/bin" -Filter *.pri | Where-Object Name -in 'NetHop.App.pri', 'resources.pri'
-            if (-not $pri) { throw "$arch: the app's .pri file is missing from the build" }
+            $pri = Get-ChildItem "out/$arch/NetHop/bin" -Filter *.pri | Where-Object Name -in 'NetHop.App.pri', 'resources.pri' | Select-Object -First 1
+            if (-not $pri) { throw "${arch}: the app's .pri file is missing from the build" }
             "{0}: {1} ({2:N0} KB)" -f $arch, $pri.Name, ($pri.Length / 1KB)
           }
 
