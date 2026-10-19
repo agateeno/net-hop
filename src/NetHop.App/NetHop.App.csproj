@@ -25,6 +25,7 @@
   <ItemGroup>
     <Content Include="Assets\NetHop.ico" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Assets\NetHop.png" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\NetHop-32.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

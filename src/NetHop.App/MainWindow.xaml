@@ -16,7 +16,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Image Source="ms-appx:///Assets/NetHop.png" Width="16" Height="16" VerticalAlignment="Center" />
+            <Image Source="ms-appx:///Assets/NetHop-32.png" Width="16" Height="16" VerticalAlignment="Center" />
             <TextBlock Grid.Column="1" Text="NetHop" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
         </Grid>
 

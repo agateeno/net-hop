@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <!--
+    NetHop icon, 16px only (notification area at 100% scaling).
+    Hand-placed on whole pixels: each glyph rect is one or more full pixels, so nothing blurs.
+  -->
+  <defs>
+    <linearGradient id="folderBack" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F2A60C" />
+      <stop offset="1" stop-color="#D97F00" />
+    </linearGradient>
+    <linearGradient id="folderFront" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFD452" />
+      <stop offset="1" stop-color="#F7AE14" />
+    </linearGradient>
+  </defs>
+
+  <!-- Folder back with tab -->
+  <path fill="url(#folderBack)" d="M2 2 H6 L7 3 H14 Q15 3 15 4 V13 Q15 14 14 14 H2 Q1 14 1 13 V3 Q1 2 2 2 Z" />
+
+  <!-- Sheets -->
+  <rect x="2" y="3" width="6" height="6" fill="#FFFFFF" />
+  <rect x="8" y="3" width="7" height="6" fill="#FFFFFF" />
+  <rect x="8" y="3" width="0.5" height="6" fill="#000000" fill-opacity="0.12" />
+
+  <g fill="#0F6CBD" shape-rendering="crispEdges">
+    <!-- Ethernet jack: hollow body and latch -->
+    <rect x="3" y="4" width="4" height="1" />
+    <rect x="3" y="5" width="1" height="1" />
+    <rect x="6" y="5" width="1" height="1" />
+    <rect x="3" y="6" width="4" height="1" />
+    <rect x="4" y="7" width="2" height="1" />
+    <!-- Wi-Fi: outer arc, inner arc, dot
+         .####.
+         #.##.#
+         .#..#.
+         ..##..  -->
+    <rect x="10" y="4" width="4" height="1" />
+    <rect x="9" y="5" width="1" height="1" />
+    <rect x="11" y="5" width="2" height="1" />
+    <rect x="14" y="5" width="1" height="1" />
+    <rect x="10" y="6" width="1" height="1" />
+    <rect x="13" y="6" width="1" height="1" />
+    <rect x="11" y="7" width="2" height="1" />
+  </g>
+
+  <!-- Folder front -->
+  <rect x="1" y="8" width="14" height="6" rx="1" fill="url(#folderFront)" />
+  <rect x="2" y="8" width="12" height="1" fill="#FFFFFF" fill-opacity="0.35" />
+</svg>

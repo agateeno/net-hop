@@ -45,7 +45,7 @@ Everything except step 1 and the execution of individual steps is pure code in `
 | CIM (`root\StandardCimv2`) instead of `netsh` | Locale-independent, structured errors, same classes as the PowerShell NetTCPIP module |
 | `SetInterfaceDnsSettings` for DNS | Clean "back to DHCP" (empty list) and IPv6 support without registry tweaks |
 | Plain `net10.0` for Engine/Service/CLI | The `-windows` TFM makes StreamJsonRpc's VS.Threading dependency pull in WPF. The assemblies are marked `[SupportedOSPlatform("windows")]` instead |
-| Windows App SDK 1.8 (not 2.x yet) | Widest compatibility with CommunityToolkit and H.NotifyIcon today; upgrade later |
+| Windows App SDK 2.5 | Every API NetHop uses exists unchanged in 2.x (checked against the 2.x metadata). CommunityToolkit and H.NotifyIcon restore fine on it. 2.x brings `SystemBackdropElement`, `ApplicationData.GetForUnpackaged()` and the new storage pickers, and it is the line that gets new features |
 | Unpackaged app + `ActivationRegistrationManager` | Registers `.nethop` and `nethop://` per user without MSIX; an installer can switch to a sparse package for the Windows 11 context menu |
 | YAML profiles | Readable, diff-friendly, easy to share; strict parsing catches typos |
 
@@ -60,4 +60,5 @@ These need a real Windows machine with physical adapters (USB Ethernet + Wi-Fi):
 5. **Timing**: how long do enabling an adapter and applying a typical profile take?
 6. **Logi Actions SDK**: can plugin actions be assigned directly to MX Master buttons, or only to the Actions Ring and the Creative Console?
 7. **Rename**: does `MSFT_NetAdapter.Rename` behave on Wi-Fi adapters, and are Wi-Fi profiles affected?
-8. **WinUI 2.x**: plan the move to Windows App SDK 2.x once the toolkit libraries support it.
+8. **Windows App SDK 2.x at runtime**: H.NotifyIcon and the CommunityToolkit were built against 1.6. They restore and should bind fine, but check the tray icon, the context menu and SettingsCard on a real machine.
+9. **Install size**: the `Microsoft.WindowsAppSDK` metapackage also brings AI, ML, Search and Widgets. Measure the self-contained output and, if it is large, reference only `Microsoft.WindowsAppSDK.WinUI` (which pulls Foundation and InteractiveExperiences).

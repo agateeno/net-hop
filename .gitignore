@@ -480,3 +480,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# The macOS "Icon" rule above also matches this folder on case-insensitive file systems.
+!assets/icon/

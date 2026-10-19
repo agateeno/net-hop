@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!--
+    NetHop icon, small sizes (20-32px: tray at 125-200% scaling, taskbar, title bar).
+    Same idea as NetHop.svg on a 32px grid: straight sheets, thick glyphs, no fine detail,
+    so the Ethernet and Wi-Fi symbols stay readable. 16px has its own file: NetHop-16.svg.
+  -->
+  <defs>
+    <linearGradient id="folderBack" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F2A60C" />
+      <stop offset="1" stop-color="#D97F00" />
+    </linearGradient>
+    <linearGradient id="folderFront" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFD452" />
+      <stop offset="1" stop-color="#F7AE14" />
+    </linearGradient>
+    <linearGradient id="glyph" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2B95E8" />
+      <stop offset="1" stop-color="#0F6CBD" />
+    </linearGradient>
+  </defs>
+
+  <!-- Folder back with tab -->
+  <path fill="url(#folderBack)"
+        d="M4 4 H11 L13 6 H28 Q30 6 30 8 V26 Q30 28 28 28 H4 Q2 28 2 26 V6 Q2 4 4 4 Z" />
+
+  <!-- Ethernet sheet -->
+  <rect x="4.5" y="5.5" width="11" height="13" rx="1.5" fill="#FFFFFF" />
+  <path fill="url(#glyph)" fill-rule="evenodd"
+        d="M6.5 8 H13.5 V12.5 H11.5 V14 H8.5 V12.5 H6.5 Z M8 9.5 V11 H12 V9.5 Z" />
+
+  <!-- Wi-Fi sheet -->
+  <rect x="16.5" y="4.5" width="11" height="13" rx="1.5" fill="#FFFFFF" />
+    <g fill="none" stroke="url(#glyph)" stroke-width="2" stroke-linecap="round">
+    <path d="M18 10 A5.7 5.7 0 0 1 26 10" />
+    <path d="M20.2 12.4 A2.6 2.6 0 0 1 23.8 12.4" />
+  </g>
+  <circle cx="22" cy="14.2" r="1.3" fill="url(#glyph)" />
+
+  <!-- Folder front -->
+  <path fill="url(#folderFront)"
+        d="M2 17 Q2 15 4 15 H28 Q30 15 30 17 V26 Q30 28 28 28 H4 Q2 28 2 26 Z" />
+  <path fill="none" stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="0.75"
+        d="M3 17 Q3 15.9 4.2 15.9 H27.8 Q29 15.9 29 17" />
+</svg>

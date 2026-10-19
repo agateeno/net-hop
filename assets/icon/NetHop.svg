@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!--
+    NetHop app icon (Fluent style, 48px and larger).
+    A File Explorer-like folder holding two sheets: Ethernet (left) and Wi-Fi (right).
+    Layers, back to front: folder back, sheets, folder front. Colors are gradients defined below.
+    For 16-32px (tray, taskbar) use NetHop-small.svg, which has bigger, simpler shapes.
+  -->
+  <defs>
+    <!-- Folder back: deeper amber -->
+    <linearGradient id="folderBack" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F2A60C" />
+      <stop offset="1" stop-color="#D97F00" />
+    </linearGradient>
+    <!-- Folder front: warm yellow, lighter at the top -->
+    <linearGradient id="folderFront" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFD452" />
+      <stop offset="0.55" stop-color="#FFC22E" />
+      <stop offset="1" stop-color="#F7AE14" />
+    </linearGradient>
+    <!-- Sheets: white to a faint cool grey -->
+    <linearGradient id="sheet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" />
+      <stop offset="1" stop-color="#E6EBF2" />
+    </linearGradient>
+    <!-- Glyphs: Fluent blue -->
+    <linearGradient id="glyph" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#36A3F2" />
+      <stop offset="1" stop-color="#0F6CBD" />
+    </linearGradient>
+    <!-- Soft shadow the front panel casts on the sheets -->
+    <linearGradient id="frontShadow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7A4A00" stop-opacity="0" />
+      <stop offset="1" stop-color="#7A4A00" stop-opacity="0.28" />
+    </linearGradient>
+  </defs>
+
+  <!-- Folder back with tab -->
+  <path id="folder-back" fill="url(#folderBack)"
+        d="M40 40 H96 Q104 40 110 46 L122 58 Q126 62 132 62 H216 Q232 62 232 78 V200 Q232 216 216 216 H40 Q24 216 24 200 V56 Q24 40 40 40 Z" />
+
+  <!-- Ethernet sheet (left, tilted) -->
+  <g id="sheet-ethernet" transform="rotate(-7 94 120)">
+    <rect x="52" y="52" width="84" height="120" rx="10" fill="url(#sheet)" />
+    <rect x="52.5" y="52.5" width="83" height="119" rx="9.5" fill="none" stroke="#000000" stroke-opacity="0.08" />
+    <!-- RJ45 jack: body with the latch notch at the bottom, and four contacts -->
+    <path fill="url(#glyph)" fill-rule="evenodd"
+          d="M72 68 H116 Q120 68 120 72 V96 Q120 100 116 100 H104 V106 Q104 108 102 108 H86 Q84 108 84 106 V100 H72 Q68 100 68 96 V72 Q68 68 72 68 Z
+             M76 76 V92 H112 V76 Z" />
+    <rect x="80" y="78" width="4" height="8" rx="1" fill="url(#glyph)" />
+    <rect x="88" y="78" width="4" height="8" rx="1" fill="url(#glyph)" />
+    <rect x="96" y="78" width="4" height="8" rx="1" fill="url(#glyph)" />
+    <rect x="104" y="78" width="4" height="8" rx="1" fill="url(#glyph)" />
+  </g>
+
+  <!-- Wi-Fi sheet (right, tilted the other way) -->
+  <g id="sheet-wifi" transform="rotate(6 162 112)">
+    <rect x="120" y="44" width="84" height="120" rx="10" fill="url(#sheet)" />
+    <rect x="120.5" y="44.5" width="83" height="119" rx="9.5" fill="none" stroke="#000000" stroke-opacity="0.08" />
+    <!-- Three arcs and a dot, centered at (162, 100) -->
+    <g fill="none" stroke="url(#glyph)" stroke-width="7" stroke-linecap="round">
+      <path d="M135 79 A38 38 0 0 1 189 79" />
+      <path d="M144 88 A25 25 0 0 1 180 88" />
+      <path d="M153 96 A12 12 0 0 1 171 96" />
+    </g>
+    <circle cx="162" cy="102" r="5" fill="url(#glyph)" />
+  </g>
+
+  <!-- Shadow strip just above the front panel -->
+  <rect x="24" y="100" width="208" height="12" fill="url(#frontShadow)" />
+
+  <!-- Folder front -->
+  <path id="folder-front" fill="url(#folderFront)"
+        d="M24 124 Q24 108 40 108 H216 Q232 108 232 124 V200 Q232 216 216 216 H40 Q24 216 24 200 Z" />
+  <!-- Top highlight of the front panel -->
+  <path fill="none" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="2"
+        d="M28 122 Q28 112 40 112 H216 Q228 112 228 122" />
+  <!-- Bottom edge, for depth -->
+  <path fill="none" stroke="#B36A00" stroke-opacity="0.35" stroke-width="2"
+        d="M25 200 Q25 215 40 215 H216 Q231 215 231 200" />
+</svg>

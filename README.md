@@ -36,7 +36,7 @@ Changing IP settings needs administrator rights, so all changes are made by a Wi
 | `NetHop.Engine` | net10.0, Windows | Reads and changes the network through CIM (`root\StandardCimv2`), iphlpapi and wlanapi |
 | `NetHop.Service` | net10.0, Windows | Windows service hosting everything above |
 | `NetHop.Cli` | net10.0 | `nethop.exe` |
-| `NetHop.App` | net10.0-windows10.0.22621 | WinUI 3 app (Windows App SDK 1.8) |
+| `NetHop.App` | net10.0-windows10.0.22621 | WinUI 3 app (Windows App SDK 2.5) |
 
 ## Profile format
 
@@ -80,6 +80,8 @@ Requirements: .NET 10 SDK. The WinUI app builds only on Windows (Visual Studio 2
 dotnet build NetHop.slnx
 dotnet test tests/NetHop.Core.Tests
 ```
+
+The app icon is drawn in SVG under [assets/icon](assets/icon): `NetHop.svg` (large sizes), `NetHop-small.svg` (20–32 px) and `NetHop-16.svg` (16 px). After editing one, run `python assets/icon/build_icons.py` (needs [resvg](https://github.com/linebender/resvg)) to regenerate the `.ico` and `.png` files.
 
 Every push builds on GitHub Actions; the **NetHop-win-x64** artifact contains the service, CLI and app. To try it on a Windows machine, extract the artifact and run from an elevated PowerShell:
 
