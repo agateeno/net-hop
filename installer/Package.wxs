@@ -49,7 +49,8 @@
     <!-- "Launch NetHop" on the last page: the first launch creates %USERPROFILE%\NetHop and pins it to Quick Access. -->
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch NetHop" />
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
-    <Property Id="WixShellExecTarget" Value="[INSTALLFOLDER]NetHop.App.exe" />
+    <!-- SetProperty, not Property: a Property value is not resolved, so [INSTALLFOLDER] would stay literal. -->
+    <SetProperty Id="WixShellExecTarget" Value="[INSTALLFOLDER]NetHop.App.exe" After="CostFinalize" Sequence="ui" />
     <CustomAction Id="LaunchNetHop" BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)" DllEntry="WixShellExec" Impersonate="yes" />
 
     <UI>

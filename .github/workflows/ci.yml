@@ -61,6 +61,47 @@ jobs:
           }
           dotnet build src/NetHop.PowerAutomate -c Release -o out/power-automate/bin
 
+      # Runs the real binaries on the runner: installs the service, reads the network through CIM, imports a
+      # profile and plans it. Dry run only: the runner's network configuration is never changed.
+      - name: Smoke test (service and CLI)
+        shell: pwsh
+        run: |
+          $root = "out/x64/NetHop"
+          $target = Join-Path $env:RUNNER_TEMP 'NetHop'
+          $cli = Join-Path $target 'nethop.exe'
+          function Check($what) { if ($LASTEXITCODE -ne 0) { throw "$what failed with exit code $LASTEXITCODE" } }
+
+          & "$root/bin/nethop.exe" validate samples/Office.nethop; Check 'validate'
+          & "$root/Install-NetHop.ps1" -Source $root -Destination $target
+          Start-Sleep -Seconds 3
+          & $cli status; Check 'status'
+          & $cli adapters; Check 'adapters'
+          & $cli import samples/Home.nethop; Check 'import'
+          & $cli list; Check 'list'
+          & $cli apply Home --dry-run; Check 'dry run'
+          Get-Service NetHop | Format-List Name, Status
+
+      - name: Smoke test (app starts)
+        continue-on-error: true # the runner may have no interactive desktop for the tray icon
+        shell: pwsh
+        run: |
+          $app = Start-Process (Join-Path $env:RUNNER_TEMP 'NetHop\NetHop.App.exe') -ArgumentList '--tray' -PassThru
+          Start-Sleep -Seconds 15
+          if ($app.HasExited) {
+            Get-WinEvent -FilterHashtable @{ LogName = 'Application'; Level = 2; StartTime = (Get-Date).AddMinutes(-2) } -ErrorAction SilentlyContinue |
+              Select-Object -First 5 | Format-List TimeCreated, ProviderName, Message
+            throw "NetHop.App.exe exited after start with code $($app.ExitCode)"
+          }
+          "NetHop.App.exe is running (pid $($app.Id))"
+          Stop-Process $app -Force
+
+      - name: Remove smoke test install
+        if: always()
+        shell: pwsh
+        run: |
+          $target = Join-Path $env:RUNNER_TEMP 'NetHop'
+          if (Get-Service NetHop -ErrorAction SilentlyContinue) { & out/x64/NetHop/Uninstall-NetHop.ps1 -Destination $target -RemoveData }
+
       # Only NetHop's own binaries are signed; the .NET and Windows App SDK files are already signed by Microsoft.
       # They are staged in one folder for the signing action, then copied back.
       - name: Stage binaries for signing

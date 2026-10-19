@@ -23,6 +23,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- UI strings: Strings/en-US (default) and Strings/it-IT. -->
     <DefaultLanguage>en-US</DefaultLanguage>
+    <!-- StreamJsonRpc's VS.Threading dependency declares WPF for -windows targets; NetHop never uses it,
+         and skipping it keeps ~30 MB of WPF out of the self-contained build. -->
+    <DisableTransitiveFrameworkReferences>true</DisableTransitiveFrameworkReferences>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,6 +37,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" />
+    <!-- Keep these metapackage components out of the build: ONNX Runtime, DirectML, semantic search and
+         widgets add ~50 MB and NetHop uses none of them. Referencing them directly lets ExcludeAssets apply. -->
+    <PackageReference Include="Microsoft.WindowsAppSDK.AI" ExcludeAssets="all" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.ML" ExcludeAssets="all" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Windows.AI.MachineLearning" ExcludeAssets="all" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Search" ExcludeAssets="all" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Widgets" ExcludeAssets="all" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" />
