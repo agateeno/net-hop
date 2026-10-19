@@ -42,7 +42,11 @@
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="ipc:ProfileSummary">
                         <StackPanel Orientation="Horizontal" Spacing="12" Padding="0,8">
-                            <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="16" />
+                            <Grid Width="28" Height="28" CornerRadius="6" VerticalAlignment="Center"
+                                  Background="{x:Bind app:XamlHelpers.ProfileBrush(Color)}">
+                                <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="14" Visibility="{x:Bind app:XamlHelpers.VisibleIfNoColor(Color)}" />
+                                <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="14" Foreground="White" Visibility="{x:Bind app:XamlHelpers.VisibleIfColor(Color)}" />
+                            </Grid>
                             <TextBlock Text="{x:Bind Name}" />
                             <FontIcon Glyph="&#xE73E;" FontSize="12" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                       Visibility="{x:Bind IsActive}" />

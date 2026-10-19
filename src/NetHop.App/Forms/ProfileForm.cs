@@ -97,7 +97,7 @@ internal sealed class ProfileForm
                 Width = 14,
                 Height = 14,
                 CornerRadius = new CornerRadius(7),
-                Background = color is null ? null : new Microsoft.UI.Xaml.Media.SolidColorBrush(ParseColor(color)),
+                Background = color is null ? null : XamlHelpers.ProfileBrush(color),
                 BorderThickness = new Thickness(1),
                 BorderBrush = (Microsoft.UI.Xaml.Media.Brush)Application.Current.Resources["ControlStrokeColorDefaultBrush"],
             };
@@ -235,10 +235,4 @@ internal sealed class ProfileForm
     }
 
     private void RaiseChanged() => Changed?.Invoke(this, EventArgs.Empty);
-
-    private static Windows.UI.Color ParseColor(string hex)
-    {
-        var rgb = Convert.ToInt32(hex[1..], 16);
-        return Microsoft.UI.ColorHelper.FromArgb(255, (byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb);
-    }
 }
