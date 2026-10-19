@@ -79,7 +79,7 @@ Full reference: [docs/profile-format.md](docs/profile-format.md). More examples 
 
 ```
 nethop list                      nethop apply Office [--dry-run]
-nethop status [--json]           nethop next
+nethop status [--json]           nethop export Office out.nethop
 nethop adapters                  nethop rename "Ethernet 2" "Dock"
 nethop enable|disable <adapter>  nethop import Office.nethop
 nethop validate Office.nethop    nethop pause 60 | resume

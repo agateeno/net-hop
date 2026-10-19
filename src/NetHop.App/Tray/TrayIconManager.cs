@@ -23,7 +23,6 @@ public sealed class TrayIconManager : IDisposable
 
         var menu = new MenuFlyout();
         menu.Items.Add(new MenuFlyoutItem { Text = Loc.Get("Tray_Open"), Command = new RelayCommand(openSettings) });
-        menu.Items.Add(new MenuFlyoutItem { Text = Loc.Get("Tray_Next"), Command = new AsyncRelayCommand(() => _connection.ApplyNextAsync()) });
         menu.Items.Add(new MenuFlyoutSeparator());
         menu.Items.Add(new MenuFlyoutItem { Text = Loc.Get("Tray_Exit"), Command = new RelayCommand(exit) });
 
@@ -37,6 +36,7 @@ public sealed class TrayIconManager : IDisposable
             LeftClickCommand = new RelayCommand(() => ToggleFlyout(openSettings)),
         };
         _icon.ForceCreate(enablesEfficiencyMode: false);
+        UserActionRunner.FallbackNotifier = (title, message) => _icon.ShowNotification(title, message ?? "");
 
         _connection.PropertyChanged += OnConnectionChanged;
     }
@@ -64,6 +64,7 @@ public sealed class TrayIconManager : IDisposable
     public void Dispose()
     {
         _connection.PropertyChanged -= OnConnectionChanged;
+        UserActionRunner.FallbackNotifier = null;
         _flyout?.Close();
         _icon.Dispose();
     }

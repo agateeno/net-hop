@@ -43,9 +43,6 @@ public partial interface INetHopService
     /// <param name="dryRun">Only plan, change nothing.</param>
     Task<ApplyResult> ApplyProfileAsync(string profile, bool dryRun = false, CancellationToken cancellationToken = default);
 
-    /// <summary>Applies the profile after the active one, in list order. Handy for a single mouse button.</summary>
-    Task<ApplyResult> ApplyNextProfileAsync(CancellationToken cancellationToken = default);
-
     // Adapters
 
     Task RenameAdapterAsync(Guid adapterId, string newName, CancellationToken cancellationToken = default);

@@ -10,7 +10,6 @@
         'Get-NetHopProfile'
         'Get-NetHopStatus'
         'Set-NetHopProfile'
-        'Switch-NetHopProfile'
         'Get-NetHopAdapter'
         'Suspend-NetHopAutomation'
         'Resume-NetHopAutomation'

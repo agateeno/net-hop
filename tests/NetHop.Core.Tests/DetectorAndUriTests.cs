@@ -51,7 +51,6 @@ public class DetectorAndUriTests
     [Theory]
     [InlineData("nethop://apply/Office", UriCommand.Apply, "Office")]
     [InlineData("NETHOP://apply/Home%20Office", UriCommand.Apply, "Home Office")]
-    [InlineData("nethop://next", UriCommand.Next, null)]
     [InlineData("nethop://open", UriCommand.Open, null)]
     public void Uris_are_parsed(string text, UriCommand command, string? profile)
     {
@@ -62,6 +61,7 @@ public class DetectorAndUriTests
     [Theory]
     [InlineData("nethop://apply/")]
     [InlineData("nethop://format/c")]
+    [InlineData("nethop://next")] // removed: applying "the next profile" was dropped
     [InlineData("https://apply/Office")]
     [InlineData("Office")]
     public void Bad_uris_are_rejected(string text) =>

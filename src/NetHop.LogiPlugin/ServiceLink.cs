@@ -43,9 +43,6 @@ internal sealed class ServiceLink : IDisposable
     public async Task ApplyAsync(string profileId) =>
         await this.RunBusyAsync(profileId, client => client.Service.ApplyProfileAsync(profileId));
 
-    public async Task ApplyNextAsync() =>
-        await this.RunBusyAsync("next", client => client.Service.ApplyNextProfileAsync());
-
     public async Task SetAutomationsPausedAsync(bool paused)
     {
         if (this._client is { } client)

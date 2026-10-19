@@ -96,18 +96,6 @@ function Set-NetHopProfile {
 
 <#
 .SYNOPSIS
-    Applies the profile after the active one.
-#>
-function Switch-NetHopProfile {
-    [CmdletBinding()]
-    param()
-    $result = Invoke-NetHopCli -Arguments @('next') -AllowFailure
-    if (-not $result.success) { throw "Switching profile failed: $($result.error)" }
-    $result
-}
-
-<#
-.SYNOPSIS
     Lists network adapters with their live configuration.
 #>
 function Get-NetHopAdapter {
@@ -143,5 +131,5 @@ function Resume-NetHopAutomation {
     if ($LASTEXITCODE -ne 0) { throw "nethop.exe exited with code $LASTEXITCODE" }
 }
 
-Export-ModuleMember -Function Get-NetHopProfile, Get-NetHopStatus, Set-NetHopProfile, Switch-NetHopProfile,
+Export-ModuleMember -Function Get-NetHopProfile, Get-NetHopStatus, Set-NetHopProfile,
     Get-NetHopAdapter, Suspend-NetHopAutomation, Resume-NetHopAutomation

@@ -62,7 +62,6 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <ToggleButton x:Uid="Flyout_Pause" x:Name="PauseToggle" Click="OnPauseClick" ToolTipService.ToolTip="Pause automations for 1 hour">
                 <StackPanel Orientation="Horizontal" Spacing="6">
@@ -70,10 +69,7 @@
                     <TextBlock x:Uid="Flyout_PauseText" Text="Pause automations" />
                 </StackPanel>
             </ToggleButton>
-            <Button x:Uid="Flyout_Next" Grid.Column="1" Click="OnNextClick" ToolTipService.ToolTip="Apply next profile">
-                <FontIcon Glyph="&#xE893;" FontSize="14" />
-            </Button>
-            <Button x:Uid="Flyout_Open" Grid.Column="2" Click="OnSettingsClick" ToolTipService.ToolTip="Open NetHop">
+            <Button x:Uid="Flyout_Open" Grid.Column="1" Click="OnSettingsClick" ToolTipService.ToolTip="Open NetHop">
                 <FontIcon Glyph="&#xE713;" FontSize="14" />
             </Button>
         </Grid>

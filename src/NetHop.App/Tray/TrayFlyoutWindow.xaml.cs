@@ -130,8 +130,6 @@ public sealed partial class TrayFlyoutWindow : Window
             await _connection.Service.PauseAutomationsAsync(PauseToggle.IsChecked == true ? 60 : 0);
     }
 
-    private async void OnNextClick(object sender, RoutedEventArgs e) => await _connection.ApplyNextAsync();
-
     private void OnSettingsClick(object sender, RoutedEventArgs e)
     {
         AppWindow.Hide();

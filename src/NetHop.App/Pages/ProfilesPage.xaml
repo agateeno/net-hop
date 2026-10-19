@@ -6,17 +6,18 @@
     xmlns:ipc="using:NetHop.Ipc"
     xmlns:app="using:NetHop.App">
 
-    <Grid Margin="{StaticResource PageMargin}" ColumnSpacing="24" RowSpacing="12">
+    <Grid Margin="{StaticResource PageMargin}" ColumnSpacing="20" RowSpacing="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="260" />
+            <ColumnDefinition Width="280" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock x:Uid="Profiles_Title" Grid.ColumnSpan="2" Text="Profiles" Style="{StaticResource PageTitleStyle}" />
+        <TextBlock x:Uid="Profiles_Title" Grid.ColumnSpan="3" Text="Profiles" Style="{StaticResource PageTitleStyle}" />
 
         <!-- Profile list -->
         <Grid Grid.Row="1" RowSpacing="8">
@@ -24,20 +25,26 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal" Spacing="8">
-                <Button x:Uid="Profiles_New" Click="OnNewClick" ToolTipService.ToolTip="New empty profile">
+            <!-- Two equal buttons that always fit the column; the tooltips give the full meaning. -->
+            <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button x:Uid="Profiles_New" HorizontalAlignment="Stretch" Click="OnNewClick" ToolTipService.ToolTip="New empty profile">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE710;" FontSize="14" />
-                        <TextBlock x:Uid="Profiles_NewText" Text="New" />
+                        <TextBlock x:Uid="Profiles_NewText" Text="New" TextTrimming="CharacterEllipsis" />
                     </StackPanel>
                 </Button>
-                <Button x:Uid="Profiles_Capture" Click="OnCaptureClick" ToolTipService.ToolTip="New profile from the current configuration of all adapters">
+                <Button x:Uid="Profiles_Capture" Grid.Column="1" HorizontalAlignment="Stretch" Click="OnCaptureClick"
+                        ToolTipService.ToolTip="New profile from the current configuration of all adapters">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE722;" FontSize="14" />
-                        <TextBlock x:Uid="Profiles_CaptureText" Text="From current" />
+                        <TextBlock x:Uid="Profiles_CaptureText" Text="From current" TextTrimming="CharacterEllipsis" />
                     </StackPanel>
                 </Button>
-            </StackPanel>
+            </Grid>
             <ListView x:Name="ProfileList" Grid.Row="1" SelectionChanged="OnSelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="ipc:ProfileSummary">
@@ -56,8 +63,11 @@
             </ListView>
         </Grid>
 
+        <!-- Separator between the list and the editor -->
+        <Rectangle Grid.Row="1" Grid.Column="1" Width="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+
         <!-- Editor: form or YAML -->
-        <Grid Grid.Row="1" Grid.Column="1" RowSpacing="12">
+        <Grid Grid.Row="1" Grid.Column="2" RowSpacing="12">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />

@@ -20,9 +20,6 @@
                     <toolkit:SettingsCard x:Uid="Integrations_LinkApply" Header="Apply a profile">
                         <TextBlock Text="nethop://apply/Office" IsTextSelectionEnabled="True" FontFamily="Cascadia Mono, Consolas" />
                     </toolkit:SettingsCard>
-                    <toolkit:SettingsCard x:Uid="Integrations_LinkNext" Header="Apply the next profile">
-                        <TextBlock Text="nethop://next" IsTextSelectionEnabled="True" FontFamily="Cascadia Mono, Consolas" />
-                    </toolkit:SettingsCard>
                 </toolkit:SettingsExpander.Items>
             </toolkit:SettingsExpander>
 
@@ -66,7 +63,7 @@
 
             <TextBlock x:Uid="Integrations_Logitech" Text="Logitech" Style="{StaticResource SectionHeaderStyle}" />
             <toolkit:SettingsCard x:Uid="Integrations_Logi" Header="Logi Actions plugin"
-                                  Description="Install NetHop.lplug4, then in Logi Options+ assign 'Apply profile', 'Next profile' or 'Pause automations' to MX Creative Console keys or Actions Ring slots. Keys show the profile color and which profile is active.">
+                                  Description="Install NetHop.lplug4, then in Logi Options+ assign 'Apply profile' or 'Pause automations' to MX Creative Console keys or Actions Ring slots. Keys show the profile color and which profile is active.">
                 <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE962;" /></toolkit:SettingsCard.HeaderIcon>
             </toolkit:SettingsCard>
             <toolkit:SettingsCard x:Uid="Integrations_Mouse" Header="Mouse buttons"

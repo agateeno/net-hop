@@ -25,7 +25,6 @@ internal static class Commands
           status                      Show the active profile and automation state
           adapters                    List network adapters with their addresses
           apply <profile> [--dry-run] Apply a profile by name or id (--dry-run only shows the steps)
-          next                        Apply the profile after the active one
           enable <adapter>            Enable an adapter (name, GUID or MAC)
           disable <adapter>           Disable an adapter
           rename <adapter> <new name> Rename an adapter
@@ -34,7 +33,7 @@ internal static class Commands
           validate <file.nethop>      Check a profile file without the service
           pause [minutes]             Pause automations (default 60 minutes)
           resume                      Resume automations
-          nethop://...                Run an activation URI (nethop://apply/Office, nethop://next)
+          nethop://...                Run an activation URI (nethop://apply/Office)
 
         Exit codes: 0 ok, 1 failed, 2 usage error, 3 service not running, 4 access denied
         """;
@@ -43,7 +42,7 @@ internal static class Commands
 
     private static readonly HashSet<string> ServiceCommands = new(StringComparer.OrdinalIgnoreCase)
     {
-        "list", "status", "adapters", "apply", "next", "enable", "disable", "rename", "import", "export", "pause", "resume",
+        "list", "status", "adapters", "apply", "enable", "disable", "rename", "import", "export", "pause", "resume",
     };
 
     private static JsonSerializerOptions CreateJsonOptions()
@@ -66,7 +65,6 @@ internal static class Commands
             args = uri.Command switch
             {
                 UriCommand.Apply => ["apply", uri.Profile!],
-                UriCommand.Next => ["next"],
                 _ => ["status"],
             };
             command = args[0];
@@ -110,9 +108,6 @@ internal static class Commands
 
             case "apply":
                 return Report(await service.ApplyProfileAsync(Arg(args, 1, "profile"), dryRun), json);
-
-            case "next":
-                return Report(await service.ApplyNextProfileAsync(), json);
 
             case "enable" or "disable":
                 var adapter = await FindAdapterAsync(service, Arg(args, 1, "adapter"));

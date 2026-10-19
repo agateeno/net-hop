@@ -41,26 +41,6 @@ namespace Modules.NetHop
         }
     }
 
-    [Action(Id = "ApplyNextProfile", Order = 2, FriendlyName = "Apply next network profile",
-        Description = "Applies the profile that follows the active one")]
-    [Throws(NetHopCli.FailedError)]
-    [Throws(NetHopCli.ServiceUnavailableError)]
-    [Throws(NetHopCli.AccessDeniedError)]
-    [Throws(NetHopCli.NotInstalledError)]
-    public class ApplyNextProfile : ActionBase
-    {
-        [OutputArgument(FriendlyName = "Profile", Description = "Name of the profile that was applied")]
-        public string ProfileName { get; set; }
-
-        public override void Execute(ActionContext context)
-        {
-            var result = NetHopCli.Run<ApplyResultJson>("next");
-            if (!result.Success)
-                throw new ActionException(NetHopCli.FailedError, result.Error);
-            ProfileName = result.ProfileName;
-        }
-    }
-
     [Action(Id = "GetStatus", Order = 3, FriendlyName = "Get network profile status",
         Description = "Reads the active NetHop profile and the automation state")]
     [Throws(NetHopCli.FailedError)]

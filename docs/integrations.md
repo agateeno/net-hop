@@ -30,7 +30,6 @@ Installed to `%ProgramFiles%\WindowsPowerShell\Modules\NetHop`, so it loads in b
 | `Get-NetHopProfile [name]` | Lists profiles (`isActive` marks the active one) |
 | `Get-NetHopStatus` | Active profile, drift, automation pause |
 | `Set-NetHopProfile <name>` | Applies a profile; `-WhatIf` only shows the steps |
-| `Switch-NetHopProfile` | Applies the next profile |
 | `Get-NetHopAdapter [name]` | Adapters with their live addresses |
 | `Suspend-NetHopAutomation [-Minutes 60]`, `Resume-NetHopAutomation` | Pause/resume NetHop's own rules |
 
@@ -43,7 +42,6 @@ Errors are thrown as terminating errors, so a Power Automate "Run PowerShell scr
 | Action | Inputs | Outputs |
 |---|---|---|
 | Apply network profile | Profile, Preview only | Changes, Warnings |
-| Apply next network profile | | Profile |
 | Get network profile status | | Active profile, Changed by hand, Automations paused |
 | Get network profiles | | Profiles (one per line), Count |
 | If network profile is active | Profile | (condition) |
@@ -77,7 +75,6 @@ Power Automate Desktop has no "network changed" trigger. Use NetHop rules instea
 | Action | On the key |
 |---|---|
 | **Apply profile**: pick the profile from a list in Options+ | Profile name on the profile color; a bar marks the active profile; "applying..." while it runs |
-| **Next profile** | "Next ›" and the active profile |
 | **Pause automations** | "Auto on" / "Auto paused" |
 
 The plugin connects to the NetHop service and reconnects by itself. Keys redraw when anything changes, including changes made from the tray, the CLI or a rule. When the service is unreachable, Options+ shows the plugin status as an error with the reason.

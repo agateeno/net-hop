@@ -49,7 +49,6 @@ public sealed partial class DashboardPage : Page
             _ => Loc.Get("Dashboard_NoMatch"),
         };
         ProfileGrid.IsItemClickEnabled = _connection.CanEdit;
-        NextButton.IsEnabled = _connection.CanEdit && _connection.Profiles.Length > 0;
 
         AutomationsSwitch.IsEnabled = _connection.CanEdit;
         AutomationsSwitch.IsOn = status?.AutomationsPausedUntil is null;
@@ -74,8 +73,6 @@ public sealed partial class DashboardPage : Page
         if (e.ClickedItem is ProfileSummary profile)
             await _connection.ApplyAsync(profile.Id.ToString());
     }
-
-    private async void OnNextClick(object sender, RoutedEventArgs e) => await _connection.ApplyNextAsync();
 
     private async void OnAutomationsToggled(object sender, RoutedEventArgs e)
     {

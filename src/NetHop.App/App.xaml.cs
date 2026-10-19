@@ -134,9 +134,6 @@ public partial class App : Application
             case UriCommand.Apply:
                 await Connection.ApplyAsync(uri.Profile!);
                 break;
-            case UriCommand.Next:
-                await Connection.ApplyNextAsync();
-                break;
             default:
                 ShowMainWindow();
                 break;

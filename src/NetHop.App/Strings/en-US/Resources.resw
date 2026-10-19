@@ -223,9 +223,6 @@
   <data name="Dashboard_LastChange" xml:space="preserve">
     <value>Last change {0:g}</value>
   </data>
-  <data name="Dashboard_NextButton.Content" xml:space="preserve">
-    <value>Apply next profile</value>
-  </data>
   <data name="Dashboard_NoActiveProfile" xml:space="preserve">
     <value>No active profile</value>
   </data>
@@ -267,9 +264,6 @@
   </data>
   <data name="Flyout_ActiveProfile.Text" xml:space="preserve">
     <value>Active profile</value>
-  </data>
-  <data name="Flyout_Next.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Apply next profile</value>
   </data>
   <data name="Flyout_None" xml:space="preserve">
     <value>None</value>
@@ -349,9 +343,6 @@
   <data name="Integrations_LinkApply.Header" xml:space="preserve">
     <value>Apply a profile</value>
   </data>
-  <data name="Integrations_LinkNext.Header" xml:space="preserve">
-    <value>Apply the next profile</value>
-  </data>
   <data name="Integrations_Links.Description" xml:space="preserve">
     <value>Apply a profile from a shortcut, a browser bookmark or any app that opens URLs.</value>
   </data>
@@ -359,7 +350,7 @@
     <value>Links (nethop://)</value>
   </data>
   <data name="Integrations_Logi.Description" xml:space="preserve">
-    <value>Install NetHop.lplug4, then in Logi Options+ assign 'Apply profile', 'Next profile' or 'Pause automations' to MX Creative Console keys or Actions Ring slots. Keys show the profile color and which profile is active.</value>
+    <value>Install NetHop.lplug4, then in Logi Options+ assign 'Apply profile' or 'Pause automations' to MX Creative Console keys or Actions Ring slots. Keys show the profile color and which profile is active.</value>
   </data>
   <data name="Integrations_Logi.Header" xml:space="preserve">
     <value>Logi Actions plugin</value>
@@ -766,17 +757,32 @@
   <data name="State_Unchanged" xml:space="preserve">
     <value>Leave as is</value>
   </data>
+  <data name="Toast_AutomationsPaused" xml:space="preserve">
+    <value>Automations paused</value>
+  </data>
+  <data name="Toast_AutomationsResumed" xml:space="preserve">
+    <value>Automations resumed</value>
+  </data>
+  <data name="Toast_Drifted" xml:space="preserve">
+    <value>'{0}' no longer matches the network</value>
+  </data>
+  <data name="Toast_ProfilesChanged" xml:space="preserve">
+    <value>Profiles updated</value>
+  </data>
   <data name="Toast_Rule" xml:space="preserve">
     <value>Rule: {0}</value>
   </data>
   <data name="Toast_RuleFailed" xml:space="preserve">
     <value>Rule '{0}' failed</value>
   </data>
+  <data name="Toast_RulesChanged" xml:space="preserve">
+    <value>Automations updated</value>
+  </data>
+  <data name="Toast_ServiceBack" xml:space="preserve">
+    <value>Connected to the NetHop service again</value>
+  </data>
   <data name="Tray_Exit" xml:space="preserve">
     <value>Exit</value>
-  </data>
-  <data name="Tray_Next" xml:space="preserve">
-    <value>Apply next profile</value>
   </data>
   <data name="Tray_Open" xml:space="preserve">
     <value>Open NetHop</value>

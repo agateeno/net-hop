@@ -85,20 +85,6 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
         }
     }
 
-    public async Task<ApplyResult?> ApplyNextAsync()
-    {
-        if (!IsConnected)
-            return null;
-        try
-        {
-            return await Service.ApplyNextProfileAsync();
-        }
-        catch (Exception ex) when (ex is StreamJsonRpc.RemoteInvocationException or StreamJsonRpc.ConnectionLostException)
-        {
-            return new ApplyResult { Error = ex.Message };
-        }
-    }
-
     public async Task RefreshAsync()
     {
         if (_client is null)

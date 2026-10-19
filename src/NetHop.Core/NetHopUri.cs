@@ -5,12 +5,11 @@ namespace NetHop.Core;
 public enum UriCommand
 {
     Apply,
-    Next,
     Open,
 }
 
 /// <summary>
-/// A parsed activation URI: <c>nethop://apply/Office</c>, <c>nethop://next</c> or <c>nethop://open</c>.
+/// A parsed activation URI: <c>nethop://apply/Office</c> or <c>nethop://open</c>.
 /// Used by Power Automate, Logi Options+, shortcuts and links.
 /// </summary>
 public sealed record NetHopUri(UriCommand Command, string? Profile = null)
@@ -28,9 +27,6 @@ public sealed record NetHopUri(UriCommand Command, string? Profile = null)
             case "apply" when argument.Length > 0:
                 result = new NetHopUri(UriCommand.Apply, argument);
                 return true;
-            case "next":
-                result = new NetHopUri(UriCommand.Next);
-                return true;
             case "open" or "":
                 result = new NetHopUri(UriCommand.Open);
                 return true;
@@ -42,7 +38,6 @@ public sealed record NetHopUri(UriCommand Command, string? Profile = null)
     public override string ToString() => Command switch
     {
         UriCommand.Apply => $"{NetHopConstants.UriScheme}://apply/{Uri.EscapeDataString(Profile ?? "")}",
-        UriCommand.Next => $"{NetHopConstants.UriScheme}://next",
         _ => $"{NetHopConstants.UriScheme}://open",
     };
 }

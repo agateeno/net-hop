@@ -25,7 +25,6 @@
                 <toolkit:SettingsCard.HeaderIcon>
                     <FontIcon Glyph="&#xE80F;" />
                 </toolkit:SettingsCard.HeaderIcon>
-                <Button x:Uid="Dashboard_NextButton" x:Name="NextButton" Content="Apply next profile" Click="OnNextClick" />
             </toolkit:SettingsCard>
 
             <toolkit:SettingsCard x:Uid="Dashboard_Automations" x:Name="AutomationsCard" Header="Automations" Description="Active">

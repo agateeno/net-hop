@@ -69,25 +69,6 @@ public class ApplyProfileCommand : NetHopCommand
     }
 }
 
-/// <summary>Cycles through profiles: handy on a single key or Actions Ring slot.</summary>
-public class NextProfileCommand : NetHopCommand
-{
-    public NextProfileCommand()
-        : base("Next profile", "Applies the NetHop profile after the active one")
-    {
-    }
-
-    protected override void RunCommand(string actionParameter) => _ = this.Link.ApplyNextAsync();
-
-    protected override BitmapImage GetCommandImage(string actionParameter, PluginImageSize imageSize)
-    {
-        var active = this.Link.Profiles.FirstOrDefault(p => p.IsActive);
-        return ButtonImages.Render(imageSize, "Next ›",
-            subtitle: this.Link.IsBusy("next") ? "applying..." : active?.Name ?? "no profile",
-            color: active?.Color, active: false);
-    }
-}
-
 /// <summary>Toggles NetHop's automation rules (paused for one hour).</summary>
 public class PauseAutomationsCommand : NetHopCommand
 {

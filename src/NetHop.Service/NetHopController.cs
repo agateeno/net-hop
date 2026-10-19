@@ -124,17 +124,6 @@ public sealed class NetHopController : INetHopService
             : ApplyAsync(found, dryRun, ruleName: null, cancellationToken);
     }
 
-    public Task<ApplyResult> ApplyNextProfileAsync(CancellationToken cancellationToken = default)
-    {
-        var all = _profiles.All();
-        if (all.Count == 0)
-            return Task.FromResult(new ApplyResult { Error = "There are no profiles." });
-
-        var current = BuildStatus(GetSnapshot()).ActiveProfileId ?? _state.LastAppliedProfileId;
-        var index = all.ToList().FindIndex(p => p.Id == current);
-        return ApplyAsync(all[(index + 1) % all.Count], dryRun: false, ruleName: null, cancellationToken);
-    }
-
     public async Task RenameAdapterAsync(Guid adapterId, string newName, CancellationToken cancellationToken = default)
     {
         await _applyLock.WaitAsync(cancellationToken);
