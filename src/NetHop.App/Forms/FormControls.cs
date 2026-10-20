@@ -8,11 +8,17 @@ namespace NetHop.App.Forms;
 /// <summary>Small builders for the form editors, so pages read as a description of the form.</summary>
 internal static class FormControls
 {
-    public static SettingsCard Card(string header, object? content, string? description = null)
+    /// <param name="wrapBelow">
+    /// Card width below which the content moves under the header. The default (476) suits one control; rows of several
+    /// controls need more, or they squeeze the header and get cut off before the card wraps.
+    /// </param>
+    public static SettingsCard Card(string header, object? content, string? description = null, double? wrapBelow = null)
     {
         var card = new SettingsCard { Header = header, Content = content };
         if (description is not null)
             card.Description = description;
+        if (wrapBelow is { } width)
+            card.Resources["SettingsCardWrapThreshold"] = width;
         return card;
     }
 
@@ -112,6 +118,15 @@ internal static class FormControls
         return row;
     }
 
+    /// <summary>Like <see cref="Row"/>, but continues on the next line when the controls do not fit.</summary>
+    public static WrapPanel WrapRow(params UIElement[] children)
+    {
+        var row = new WrapPanel();
+        foreach (var child in children)
+            row.Children.Add(child);
+        return row;
+    }
+
     /// <summary>Seven toggle buttons for days of the week, in the user's culture and first-day order.</summary>
     public static StackPanel DaysPicker(List<DayOfWeek> days, Action changed)
     {
@@ -137,6 +152,55 @@ internal static class FormControls
             row.Children.Add(toggle);
         }
         return row;
+    }
+}
+
+/// <summary>Lays out its children left to right, starting a new line when the next one does not fit.</summary>
+internal sealed class WrapPanel : Panel
+{
+    private const double Spacing = 8;
+
+    protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+    {
+        foreach (var child in Children)
+            child.Measure(availableSize);
+        var lines = Lines(availableSize.Width);
+        return new(lines.Max(l => l.Width), lines.Sum(l => l.Height) + Spacing * (lines.Count - 1));
+    }
+
+    protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+    {
+        double y = 0;
+        foreach (var line in Lines(finalSize.Width))
+        {
+            double x = 0;
+            foreach (var child in line.Children)
+            {
+                // The whole line's height, so children keep their own vertical alignment (centered labels, say).
+                child.Arrange(new Windows.Foundation.Rect(x, y, child.DesiredSize.Width, line.Height));
+                x += child.DesiredSize.Width + Spacing;
+            }
+            y += line.Height + Spacing;
+        }
+        return finalSize;
+    }
+
+    private List<(List<UIElement> Children, double Width, double Height)> Lines(double maxWidth)
+    {
+        var lines = new List<(List<UIElement> Children, double Width, double Height)> { ([], 0, 0) };
+        foreach (var child in Children)
+        {
+            var size = child.DesiredSize;
+            var (items, width, height) = lines[^1];
+            if (items.Count > 0 && width + Spacing + size.Width > maxWidth)
+            {
+                lines.Add(([child], size.Width, size.Height));
+                continue;
+            }
+            items.Add(child);
+            lines[^1] = (items, items.Count == 1 ? size.Width : width + Spacing + size.Width, Math.Max(height, size.Height));
+        }
+        return lines;
     }
 }
 

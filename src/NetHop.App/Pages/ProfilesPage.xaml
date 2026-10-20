@@ -26,9 +26,42 @@
 
     <Grid Style="{StaticResource PageGridStyle}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MaxWidth="{StaticResource PageMaxWidth}" />
+            <!-- Very wide windows lift the maximum (OnSizeChanged): the editor fills the window; adapters then go in two
+                 columns once the form is wide enough (OnFormSizeChanged). -->
+            <ColumnDefinition x:Name="PageColumn" MaxWidth="{StaticResource PageMaxWidth}" />
         </Grid.ColumnDefinitions>
-        <Grid x:Name="LayoutRoot" ColumnSpacing="20" RowSpacing="12">
+
+        <!-- Set by OnSizeChanged. The groups must sit on the page's root element: VisualStateManager.GoToState(page)
+             looks only there, and silently does nothing when they are further down. -->
+        <VisualStateManager.VisualStateGroups>
+            <!-- Wide: the list on the left. Narrow: a drop-down above the editor, which gets the whole width. -->
+            <VisualStateGroup>
+                <VisualState x:Name="WideLayout" />
+                <VisualState x:Name="NarrowLayout">
+                    <VisualState.Setters>
+                        <Setter Target="ListPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="ListSeparator.Visibility" Value="Collapsed" />
+                        <Setter Target="ListColumn.Width" Value="0" />
+                        <Setter Target="SeparatorColumn.Width" Value="0" />
+                        <Setter Target="LayoutRoot.ColumnSpacing" Value="0" />
+                        <Setter Target="PickerPanel.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <!-- Very narrow: the secondary buttons show only their icon (their tooltips give the full meaning). -->
+            <VisualStateGroup>
+                <VisualState x:Name="LabeledButtons" />
+                <VisualState x:Name="IconButtons">
+                    <VisualState.Setters>
+                        <Setter Target="PickerNewText.Visibility" Value="Collapsed" />
+                        <Setter Target="PickerCaptureText.Visibility" Value="Collapsed" />
+                        <Setter Target="PreviewText.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid x:Name="LayoutRoot" ColumnSpacing="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -36,30 +69,14 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="ListColumn" Width="240" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition x:Name="SeparatorColumn" Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!-- Wide: the list on the left. Narrow (OnSizeChanged): a drop-down above the editor, which gets the whole width. -->
-            <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup>
-                    <VisualState x:Name="WideLayout" />
-                    <VisualState x:Name="NarrowLayout">
-                        <VisualState.Setters>
-                            <Setter Target="ListPanel.Visibility" Value="Collapsed" />
-                            <Setter Target="ListSeparator.Visibility" Value="Collapsed" />
-                            <Setter Target="ListColumn.Width" Value="0" />
-                            <Setter Target="LayoutRoot.ColumnSpacing" Value="0" />
-                            <Setter Target="PickerPanel.Visibility" Value="Visible" />
-                        </VisualState.Setters>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateManager.VisualStateGroups>
-
-            <TextBlock x:Uid="Profiles_Title" Grid.ColumnSpan="3" Text="Profiles" Style="{StaticResource PageTitleStyle}" Margin="0,0,0,4" />
+            <TextBlock x:Uid="Profiles_Title" Grid.ColumnSpan="3" Text="Profiles" Style="{StaticResource PageTitleStyle}" />
 
             <!-- Narrow windows: profile drop-down and the two "new profile" buttons -->
-            <Grid x:Name="PickerPanel" Grid.Row="1" Grid.ColumnSpan="3" ColumnSpacing="8" Visibility="Collapsed">
+            <Grid x:Name="PickerPanel" Grid.Row="1" Grid.ColumnSpan="3" ColumnSpacing="8" Margin="0,0,0,12" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" MaxWidth="360" />
                     <ColumnDefinition Width="Auto" />
@@ -70,14 +87,14 @@
                 <Button x:Uid="Profiles_New" Grid.Column="1" Click="OnNewClick" ToolTipService.ToolTip="New empty profile">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE710;" FontSize="14" />
-                        <TextBlock x:Uid="Profiles_NewText" Text="New" />
+                        <TextBlock x:Uid="Profiles_NewText" x:Name="PickerNewText" Text="New" />
                     </StackPanel>
                 </Button>
                 <Button x:Uid="Profiles_Capture" Grid.Column="2" Click="OnCaptureClick"
                         ToolTipService.ToolTip="New profile from the current configuration of all adapters">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE722;" FontSize="14" />
-                        <TextBlock x:Uid="Profiles_CaptureText" Text="From current" />
+                        <TextBlock x:Uid="Profiles_CaptureText" x:Name="PickerCaptureText" Text="Current" />
                     </StackPanel>
                 </Button>
             </Grid>
@@ -104,7 +121,7 @@
                             ToolTipService.ToolTip="New profile from the current configuration of all adapters">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <FontIcon Glyph="&#xE722;" FontSize="14" />
-                            <TextBlock x:Uid="Profiles_CaptureText" Text="From current" TextTrimming="CharacterEllipsis" />
+                            <TextBlock x:Uid="Profiles_CaptureText" Text="Current" TextTrimming="CharacterEllipsis" />
                         </StackPanel>
                     </Button>
                 </Grid>
@@ -139,7 +156,7 @@
                     <Button x:Uid="Profiles_Preview" x:Name="DryRunButton" Click="OnDryRunClick" ToolTipService.ToolTip="Show what would change, without changing anything">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <FontIcon Glyph="&#xE7B3;" FontSize="14" />
-                            <TextBlock x:Uid="Profiles_PreviewText" Text="Preview" />
+                            <TextBlock x:Uid="Profiles_PreviewText" x:Name="PreviewText" Text="Preview" />
                         </StackPanel>
                     </Button>
                     <!-- Less frequent actions in a menu: the toolbar stays short in every language, and Delete is out of the way. -->
@@ -171,7 +188,7 @@
                     </SelectorBarItem>
                 </SelectorBar>
 
-                <ScrollViewer x:Name="FormScroller" Grid.Row="2">
+                <ScrollViewer x:Name="FormScroller" Grid.Row="2" SizeChanged="OnFormSizeChanged">
                     <ContentControl x:Name="FormHost" HorizontalContentAlignment="Stretch" Margin="0,0,16,0" />
                 </ScrollViewer>
                 <TextBlock x:Uid="Profiles_Empty" x:Name="EmptyText" Grid.Row="2" Text="Select a profile, or create a new one."
@@ -180,7 +197,10 @@
                 <TextBox x:Name="Editor" Grid.Row="2" Style="{StaticResource CodeEditorStyle}" Visibility="Collapsed"
                          TextChanged="OnEditorTextChanged" />
 
-                <InfoBar x:Name="Result" Grid.Row="3" IsClosable="True" />
+                <!-- A long preview or list of issues scrolls instead of pushing the editor off a short window. -->
+                <ScrollViewer Grid.Row="3" MaxHeight="240">
+                    <InfoBar x:Name="Result" IsClosable="True" />
+                </ScrollViewer>
             </Grid>
         </Grid>
     </Grid>

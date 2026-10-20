@@ -14,10 +14,16 @@ public sealed partial class AdaptersPage : Page
     private readonly ServiceConnection _connection = App.Current!.Connection;
     private NetworkSnapshot? _network;
 
+    // Below this page width the title and its controls no longer fit on one line.
+    private const double WideLayoutMinWidth = 640;
+
     public AdaptersPage()
     {
         InitializeComponent();
     }
+
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e) =>
+        VisualStateManager.GoToState(this, e.NewSize.Width >= WideLayoutMinWidth ? "WideLayout" : "NarrowLayout", false);
 
     protected override async void OnNavigatedTo(NavigationEventArgs e)
     {

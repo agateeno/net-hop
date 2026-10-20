@@ -18,6 +18,9 @@ internal sealed class RuleForm
     private static readonly ConditionType[] Conditions = Enum.GetValues<ConditionType>().Where(t => t != ConditionType.None).ToArray();
     private static readonly RuleActionType[] Actions = Enum.GetValues<RuleActionType>().Where(t => t != RuleActionType.None).ToArray();
 
+    // Condition and action cards hold a type, its fields and a remove button: below this width they go under the header.
+    private const double RowWrapWidth = 760;
+
     private readonly RuleSet _rules;
     private readonly IReadOnlyList<string> _profileNames;
     private readonly IReadOnlyList<string> _adapterNames;
@@ -167,7 +170,7 @@ internal sealed class RuleForm
         };
 
         var remove = DeleteButton(() => { rule.Conditions.Remove(condition); Rebuild(); });
-        return Card(Loc.Get("RuleForm_OnlyIf"), fields is null ? Row(type, remove) : Row(type, fields, remove));
+        return Card(Loc.Get("RuleForm_OnlyIf"), fields is null ? Row(type, remove) : WrapRow(type, fields, remove), wrapBelow: fields is null ? null : RowWrapWidth);
     }
 
     private SettingsCard ActionCard(Rule rule, RuleAction action)
@@ -191,7 +194,7 @@ internal sealed class RuleForm
                 EditableCombo(action.Adapter?.Name, _adapterNames, Loc.Get("RuleForm_Adapter"),
                     text => Edit(() => action.Adapter = NullIfEmpty(text) is { } name ? new AdapterMatch { Name = name } : null)),
             RuleActionType.Notify => TextBox(action.Message, Loc.Get("RuleForm_Message"), text => Edit(() => action.Message = text), width: 260),
-            RuleActionType.RunCommand => Row(
+            RuleActionType.RunCommand => WrapRow(
                 TextBox(action.Command, Loc.Get("RuleForm_Command"), text => Edit(() => action.Command = NullIfEmpty(text)), width: 200),
                 TextBox(action.Arguments, Loc.Get("RuleForm_Arguments"), text => Edit(() => action.Arguments = NullIfEmpty(text)), width: 160)),
             RuleActionType.OpenUrl => TextBox(action.Url, "https://", text => Edit(() => action.Url = NullIfEmpty(text)), width: 320),
@@ -201,8 +204,9 @@ internal sealed class RuleForm
         };
 
         var remove = DeleteButton(() => { rule.Actions.Remove(action); Rebuild(); });
-        return Card(Loc.Get("RuleForm_Then"), fields is null ? Row(type, remove) : Row(type, fields, remove),
-            action.Type == RuleActionType.RunCommand ? Loc.Get("RuleForm_RunCommandHelp") : null);
+        return Card(Loc.Get("RuleForm_Then"), fields is null ? Row(type, remove) : WrapRow(type, fields, remove),
+            action.Type == RuleActionType.RunCommand ? Loc.Get("RuleForm_RunCommandHelp") : null,
+            wrapBelow: fields is null ? null : RowWrapWidth);
     }
 
     private SettingsCard AddLink(string key, Action add)

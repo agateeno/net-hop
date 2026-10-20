@@ -30,6 +30,15 @@ public sealed partial class ProfilesPage : Page
 
     // Below this page width the profile list becomes a drop-down, so the editor gets the whole width.
     private const double WideLayoutMinWidth = 960;
+    // Below this one the secondary buttons lose their label, so the toolbar and the drop-down row still fit.
+    private const double LabeledButtonsMinWidth = 620;
+    // From this one (a window about 1440 wide with the menu open) the editor is no longer capped and fills the width.
+    private const double FullWidthMinWidth = 1200;
+    // Form width from which adapters go in two columns, each still wide enough for its card.
+    private const double TwoAdapterColumnsMinWidth = 860;
+
+    private ProfileForm? _form;
+    private int _adapterColumns = 1;
 
     public ProfilesPage()
     {
@@ -86,8 +95,21 @@ public sealed partial class ProfilesPage : Page
         SelectProfile(_connection.Profiles.FirstOrDefault(p => p.Id == selected));
     }
 
-    private void OnSizeChanged(object sender, SizeChangedEventArgs e) =>
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
         VisualStateManager.GoToState(this, e.NewSize.Width >= WideLayoutMinWidth ? "WideLayout" : "NarrowLayout", false);
+        VisualStateManager.GoToState(this, e.NewSize.Width >= LabeledButtonsMinWidth ? "LabeledButtons" : "IconButtons", false);
+
+        PageColumn.MaxWidth = e.NewSize.Width >= FullWidthMinWidth ? double.PositiveInfinity : (double)Application.Current.Resources["PageMaxWidth"];
+    }
+
+    // The form's own width, not the page's: it depends on the list, the margins and the page cap too.
+    private void OnFormSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        _adapterColumns = e.NewSize.Width >= TwoAdapterColumnsMinWidth ? 2 : 1;
+        if (_form is not null)
+            _form.AdapterColumns = _adapterColumns;
+    }
 
     /// <summary>Selects the profile in both the list and the drop-down, whichever the layout shows.</summary>
     private void SelectProfile(ProfileSummary? profile)
@@ -272,13 +294,13 @@ public sealed partial class ProfilesPage : Page
     {
         if (_profile is null)
             return;
-        var form = new ProfileForm(_profile, _adapters);
-        form.Changed += (_, _) =>
+        _form = new ProfileForm(_profile, _adapters) { AdapterColumns = _adapterColumns };
+        _form.Changed += (_, _) =>
         {
             Validate(_profile);
             UpdateView();
         };
-        FormHost.Content = form.View;
+        FormHost.Content = _form.View;
     }
 
     private string CurrentYaml()

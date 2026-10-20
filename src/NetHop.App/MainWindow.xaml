@@ -23,11 +23,12 @@
         <NavigationView
             x:Name="Nav"
             Grid.Row="1"
-            PaneDisplayMode="Left"
+            PaneDisplayMode="Auto"
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="True"
             OpenPaneLength="240"
-            SelectionChanged="OnNavigationSelectionChanged">
+            SelectionChanged="OnNavigationSelectionChanged"
+            DisplayModeChanged="OnNavigationDisplayModeChanged">
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Uid="Nav_Dashboard" Content="Dashboard" Tag="Dashboard">
                     <NavigationViewItem.Icon><FontIcon Glyph="&#xE80F;" /></NavigationViewItem.Icon>
@@ -46,7 +47,9 @@
                 </NavigationViewItem>
             </NavigationView.MenuItems>
 
-            <Grid>
+            <!-- Auto pane: expanded in wide windows, icons only in medium ones, hidden behind the menu button in narrow
+                 ones (OnNavigationDisplayModeChanged keeps the content below that button). -->
+            <Grid x:Name="ContentRoot">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />

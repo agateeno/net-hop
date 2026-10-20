@@ -539,7 +539,7 @@
     <value>Nuovo profilo dalla configurazione attuale di tutte le schede</value>
   </data>
   <data name="Profiles_CaptureText.Text" xml:space="preserve">
-    <value>Da attuale</value>
+    <value>Attuale</value>
   </data>
   <data name="Profiles_CapturedName" xml:space="preserve">
     <value>Configurazione attuale</value>

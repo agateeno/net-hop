@@ -29,7 +29,10 @@ internal sealed class ProfileForm
     private readonly Profile _profile;
     private readonly IReadOnlyList<AdapterInfo> _adapters;
     private readonly StackPanel _root = new() { Spacing = 4 };
+    private readonly Grid _adapterGrid = new() { ColumnSpacing = 4 };
+    private readonly List<SettingsExpander> _adapterViews = [];
     private readonly HashSet<int> _expanded = [];
+    private int _adapterColumns = 1;
 
     public ProfileForm(Profile profile, IReadOnlyList<AdapterInfo> adapters)
     {
@@ -42,6 +45,19 @@ internal sealed class ProfileForm
     public event EventHandler? Changed;
 
     public UIElement View => _root;
+
+    /// <summary>Adapters side by side in wide windows; changing it moves the existing cards, so edits and expanded state stay.</summary>
+    public int AdapterColumns
+    {
+        get => _adapterColumns;
+        set
+        {
+            if (value == _adapterColumns)
+                return;
+            _adapterColumns = value;
+            LayoutAdapters();
+        }
+    }
 
     /// <summary>Drops empty IP blocks so the YAML stays minimal (and free of "changes nothing" warnings).</summary>
     public static void Tidy(Profile profile)
@@ -62,7 +78,7 @@ internal sealed class ProfileForm
         _root.Children.Add(Card(Loc.Get("ProfileForm_Name"), TextBox(_profile.Name, Loc.Get("ProfileForm_NamePlaceholder"), text => Edit(() => _profile.Name = text.Trim()))));
         _root.Children.Add(Card(Loc.Get("ProfileForm_Description"), TextBox(_profile.Description, Loc.Get("ProfileForm_Optional"),
             text => Edit(() => _profile.Description = string.IsNullOrWhiteSpace(text) ? null : text.Trim()))));
-        _root.Children.Add(Card(Loc.Get("ProfileForm_Appearance"), Row(IconPicker(), ColorPicker())));
+        _root.Children.Add(Card(Loc.Get("ProfileForm_Appearance"), WrapRow(IconPicker(), ColorPicker()), wrapBelow: 600));
 
         var header = new Grid { Margin = new Thickness(1, 24, 0, 6) };
         header.Children.Add(new TextBlock { Text = Loc.Get("ProfileForm_Adapters"), Style = (Style)Application.Current.Resources["BodyStrongTextBlockStyle"] });
@@ -70,11 +86,37 @@ internal sealed class ProfileForm
         header.Children.Add(add);
         _root.Children.Add(header);
 
+        _adapterViews.Clear();
         for (var i = 0; i < _profile.Adapters.Count; i++)
-            _root.Children.Add(AdapterExpander(i));
+            _adapterViews.Add(AdapterExpander(i));
+        LayoutAdapters();
+        _root.Children.Add(_adapterGrid);
 
         if (_profile.Adapters.Count == 0)
             _root.Children.Add(new TextBlock { Text = Loc.Get("ProfileForm_NoAdapters"), Foreground = (Microsoft.UI.Xaml.Media.Brush)Application.Current.Resources["TextFillColorSecondaryBrush"] });
+    }
+
+    /// <summary>
+    /// One stack per column, filled in turn (1st, 3rd... left; 2nd, 4th... right): expanding a card pushes down only
+    /// its own column instead of leaving a gap next to it.
+    /// </summary>
+    private void LayoutAdapters()
+    {
+        foreach (var column in _adapterGrid.Children.OfType<StackPanel>())
+            column.Children.Clear();
+        _adapterGrid.Children.Clear();
+        _adapterGrid.ColumnDefinitions.Clear();
+
+        var columns = Math.Max(1, Math.Min(_adapterColumns, _adapterViews.Count));
+        for (var c = 0; c < columns; c++)
+        {
+            _adapterGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            var column = new StackPanel { Spacing = 4 };
+            Grid.SetColumn(column, c);
+            _adapterGrid.Children.Add(column);
+        }
+        for (var i = 0; i < _adapterViews.Count; i++)
+            ((StackPanel)_adapterGrid.Children[i % columns]).Children.Add(_adapterViews[i]);
     }
 
     private ComboBox IconPicker()

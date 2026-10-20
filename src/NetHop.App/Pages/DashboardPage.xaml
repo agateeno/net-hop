@@ -61,6 +61,14 @@
                                     <TextBlock x:Uid="Dashboard_ActiveBadge" Text="Active" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                                Style="{StaticResource CaptionTextBlockStyle}" Visibility="{x:Bind IsActive}" />
                                 </StackPanel>
+                                <!-- Active profile: a border in the profile's color, or in the Windows accent color when it has
+                                     none; drawn over the card's own so the content does not move. -->
+                                <Border Grid.ColumnSpan="2" Margin="-17" CornerRadius="{StaticResource ControlCornerRadius}"
+                                        BorderBrush="{x:Bind app:XamlHelpers.ProfileBrush(Color)}" BorderThickness="2"
+                                        IsHitTestVisible="False" Visibility="{x:Bind app:XamlHelpers.ColorBorderVisibility(IsActive, Color)}" />
+                                <Border Grid.ColumnSpan="2" Margin="-17" CornerRadius="{StaticResource ControlCornerRadius}"
+                                        BorderBrush="{ThemeResource AccentFillColorDefaultBrush}" BorderThickness="2"
+                                        IsHitTestVisible="False" Visibility="{x:Bind app:XamlHelpers.AccentBorderVisibility(IsActive, Color)}" />
                             </Grid>
                         </DataTemplate>
                     </GridView.ItemTemplate>

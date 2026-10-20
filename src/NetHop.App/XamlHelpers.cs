@@ -25,6 +25,12 @@ public static class XamlHelpers
     public static Brush ProfileBrush(string? color) =>
         new SolidColorBrush(TryParseColor(color, out var parsed) ? parsed : Microsoft.UI.Colors.Transparent);
 
+    // The active profile's card has a border in the profile's color, or the Windows accent color without one.
+
+    public static Visibility ColorBorderVisibility(bool isActive, string? color) => VisibleIf(isActive && TryParseColor(color, out _));
+
+    public static Visibility AccentBorderVisibility(bool isActive, string? color) => VisibleIf(isActive && !TryParseColor(color, out _));
+
     // The icon is either a glyph (plain, or white on a colored badge) or a custom image;
     // an unreadable image falls back to the default glyph.
 

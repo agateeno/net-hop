@@ -539,7 +539,7 @@
     <value>Novo perfil a partir da configuração atual de todos os adaptadores</value>
   </data>
   <data name="Profiles_CaptureText.Text" xml:space="preserve">
-    <value>Da atual</value>
+    <value>Atual</value>
   </data>
   <data name="Profiles_CapturedName" xml:space="preserve">
     <value>Configuração atual</value>
