@@ -22,6 +22,7 @@ All clients talk to the service through the `NetHop.Service.v1` named pipe using
 - **Storage.** `%ProgramData%\NetHop` gets an explicit, protected ACL (SYSTEM and Administrators only) with Administrators as owner. Standard users may create folders in `%ProgramData%`, so at every start the service takes over an existing folder: a link is removed, a folder not owned by SYSTEM or Administrators is moved aside (`NetHop.untrusted-<time>`), and inside a trusted folder links are deleted and every entry gets the folder's owner and inherited permissions.
 - **Install folder.** The MSI installs into Program Files and offers no folder choice. `Install-NetHop.ps1` gives any other destination the same permissions (only administrators may change it), because the service runs as SYSTEM from there.
 - Profiles saved through the service are validated first. The service only accepts typed operations, never shell commands; YAML is read into fixed types (no polymorphic deserialization) and JSON-RPC uses System.Text.Json without type names.
+- **Update check.** Only the app contacts GitHub, never the service. It reads the list of releases over HTTPS and, when one is newer, opens its page in the browser: the page address is built from the tag, not taken from the response, and nothing is downloaded or run.
 - **Untrusted profile files.** *Apply with NetHop* applies a file directly only if it is one of the saved profiles, and then it applies the saved version. Any other file (a downloaded profile could point DNS at an attacker's server) opens in the editor to be reviewed and saved first.
 
 Known limits, by design:
@@ -49,6 +50,16 @@ Everything except step 1 and the execution of individual steps is pure code in `
 - per-rule cooldown;
 - when several matching rules apply a profile, only the highest-priority one does;
 - a global pause, set from the tray, the dashboard or `nethop pause`.
+
+## Update check
+
+`UpdateCheck` (app) reads `https://api.github.com/repos/agateeno/net-hop/releases` 30 seconds after the app starts, then once a day (an hourly timer also retries a failed check), or when **Check for updates** is pressed in Settings. `ReleaseFeed` (Core, unit-tested) skips drafts and tags other than `vX.Y.Z`, picks the highest version, with or without pre-releases, and compares it with the app's version.
+
+- A newer release shows in Settings with a **Download** button that opens its page on github.com, and a notification once per version; clicking it opens Settings.
+- Settings: **Check for updates automatically** (`HKCU\Software\NetHop\CheckForUpdates`, on by default) and **Include pre-releases** (`IncludePrereleases`, on by default while every release is a pre-release). The last notified tag is kept in `UpdateNotified`.
+- Only tagged CI builds are releases (`NetHopBuildKind=release`, an assembly metadata value). Other builds (`0.1.<run>`, local builds) show the latest release but are never offered it, since their version number says nothing about how recent they are.
+- The request carries only a `NetHop/<version>` User-Agent. Without authentication GitHub allows 60 requests an hour per IP address.
+- Nothing is downloaded or installed: the builds are not code-signed yet, so there is nothing to verify a download against. Once they are, *Download and install* can verify the MSI's Authenticode signature before running it.
 
 ## Localization
 

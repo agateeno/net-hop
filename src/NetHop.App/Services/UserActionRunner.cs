@@ -12,6 +12,9 @@ namespace NetHop.App.Services;
 /// </summary>
 public static class UserActionRunner
 {
+    private const string PageArgumentName = "page";
+    private const string SettingsPageValue = "settings";
+
     private static bool _notificationsRegistered;
     private static bool _serviceDownNotified;
     private static bool _driftNotified;
@@ -29,8 +32,17 @@ public static class UserActionRunner
             if (AppNotificationManager.IsSupported())
             {
                 // Must be subscribed before Register(). Clicking a notification opens NetHop.
-                AppNotificationManager.Default.NotificationInvoked += (_, _) =>
-                    connection.Dispatcher.TryEnqueue(() => App.Current?.ShowMainWindow());
+                AppNotificationManager.Default.NotificationInvoked += (_, e) =>
+                {
+                    var settings = e.Arguments.TryGetValue(PageArgumentName, out var page) && page == SettingsPageValue;
+                    connection.Dispatcher.TryEnqueue(() =>
+                    {
+                        if (settings)
+                            App.Current?.ShowSettings();
+                        else
+                            App.Current?.ShowMainWindow();
+                    });
+                };
                 AppNotificationManager.Default.Register();
                 _notificationsRegistered = true;
             }
@@ -49,7 +61,8 @@ public static class UserActionRunner
         };
     }
 
-    public static void Notify(string title, string? message = null)
+    /// <param name="openSettings">Clicking the notification opens Settings rather than the dashboard.</param>
+    public static void Notify(string title, string? message = null, bool openSettings = false)
     {
         if (_notificationsRegistered)
         {
@@ -58,6 +71,8 @@ public static class UserActionRunner
                 var builder = new AppNotificationBuilder().AddText(title);
                 if (!string.IsNullOrEmpty(message))
                     builder.AddText(message);
+                if (openSettings)
+                    builder.AddArgument(PageArgumentName, SettingsPageValue);
                 AppNotificationManager.Default.Show(builder.BuildNotification());
                 return;
             }

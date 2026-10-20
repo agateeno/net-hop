@@ -34,6 +34,28 @@
                 <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE912;" /></toolkit:SettingsCard.HeaderIcon>
             </toolkit:SettingsCard>
 
+            <TextBlock x:Uid="Settings_Updates" Text="Updates" Style="{StaticResource SectionHeaderStyle}" />
+            <toolkit:SettingsExpander x:Name="UpdateCard" Header="-" Description="-">
+                <toolkit:SettingsExpander.HeaderIcon><FontIcon x:Name="UpdateIcon" Glyph="&#xE895;" /></toolkit:SettingsExpander.HeaderIcon>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <ProgressRing x:Name="UpdateProgress" Width="20" Height="20" IsActive="False" />
+                    <HyperlinkButton x:Uid="Settings_UpdateReleaseNotes" x:Name="ReleaseNotesButton" Content="Release notes" Click="OnReleaseClick" Visibility="Collapsed" />
+                    <Button x:Uid="Settings_UpdateDownload" x:Name="DownloadButton" Content="Download" Style="{StaticResource AccentButtonStyle}"
+                            Click="OnReleaseClick" Visibility="Collapsed" />
+                    <Button x:Uid="Settings_UpdateCheck" x:Name="CheckButton" Content="Check for updates" Click="OnCheckForUpdatesClick" />
+                </StackPanel>
+                <toolkit:SettingsExpander.Items>
+                    <toolkit:SettingsCard x:Uid="Settings_UpdateAuto" Header="Check for updates automatically"
+                                          Description="When NetHop starts and once a day. Only GitHub is contacted, and nothing is downloaded or installed.">
+                        <ToggleSwitch x:Name="UpdateAutoSwitch" Toggled="OnUpdateAutoToggled" />
+                    </toolkit:SettingsCard>
+                    <toolkit:SettingsCard x:Uid="Settings_UpdatePrerelease" Header="Include pre-releases"
+                                          Description="Preview versions, published before a stable release. NetHop is in preview: all its releases are pre-releases for now.">
+                        <ToggleSwitch x:Name="PrereleaseSwitch" Toggled="OnPrereleaseToggled" />
+                    </toolkit:SettingsCard>
+                </toolkit:SettingsExpander.Items>
+            </toolkit:SettingsExpander>
+
             <TextBlock x:Uid="Settings_About" Text="About" Style="{StaticResource SectionHeaderStyle}" />
             <toolkit:SettingsCard x:Name="AboutCard" Header="NetHop" Description="Network profiles for Windows">
                 <toolkit:SettingsCard.HeaderIcon>

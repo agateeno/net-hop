@@ -28,7 +28,13 @@
     <!-- StreamJsonRpc's VS.Threading dependency declares WPF for -windows targets; NetHop never uses it,
          and skipping it keeps ~30 MB of WPF out of the self-contained build. -->
     <DisableTransitiveFrameworkReferences>true</DisableTransitiveFrameworkReferences>
+    <!-- CI sets "release" for tagged builds. Any other build is a development build: the update check never offers it updates. -->
+    <NetHopBuildKind Condition="'$(NetHopBuildKind)' == ''">development</NetHopBuildKind>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="NetHopBuildKind" Value="$(NetHopBuildKind)" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\NetHop.ico" CopyToOutputDirectory="PreserveNewest" />

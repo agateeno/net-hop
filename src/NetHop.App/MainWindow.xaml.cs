@@ -56,6 +56,8 @@ public sealed partial class MainWindow : Window
         Nav.SelectedItem = Nav.MenuItems[1];
     }
 
+    public void ShowSettings() => Nav.SelectedItem = Nav.SettingsItem;
+
     private void OnNavigationSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         var page = args.IsSettingsSelected

@@ -44,6 +44,7 @@ public partial class App : Application
         };
         UserActionRunner.Initialize(Connection);
         Connection.Start();
+        UpdateCheck.Start();
 
         _tray = new TrayIconManager(Connection, ShowMainWindow, ExitApp);
         HandleActivation(_launchActivation, isLaunch: true);
@@ -158,6 +159,12 @@ public partial class App : Application
         }
 
         _mainWindow.ShowAndFocus();
+    }
+
+    public void ShowSettings()
+    {
+        ShowMainWindow();
+        _mainWindow!.ShowSettings();
     }
 
     /// <summary>
