@@ -1,14 +1,34 @@
 <Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
   <Folder Name="/src/">
-    <Project Path="src/NetHop.App/NetHop.App.csproj" />
-    <Project Path="src/NetHop.Cli/NetHop.Cli.csproj" />
-    <Project Path="src/NetHop.Core/NetHop.Core.csproj" />
-    <Project Path="src/NetHop.Engine/NetHop.Engine.csproj" />
-    <Project Path="src/NetHop.Ipc/NetHop.Ipc.csproj" />
-    <Project Path="src/NetHop.PowerAutomate/NetHop.PowerAutomate.csproj" />
-    <Project Path="src/NetHop.Service/NetHop.Service.csproj" />
+    <Project Path="src/NetHop.App/NetHop.App.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="src/NetHop.Cli/NetHop.Cli.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="src/NetHop.Core/NetHop.Core.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="src/NetHop.Engine/NetHop.Engine.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="src/NetHop.Ipc/NetHop.Ipc.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="src/NetHop.PowerAutomate/NetHop.PowerAutomate.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="src/NetHop.Service/NetHop.Service.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/NetHop.Core.Tests/NetHop.Core.Tests.csproj" />
+    <Project Path="tests/NetHop.Core.Tests/NetHop.Core.Tests.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
   </Folder>
 </Solution>

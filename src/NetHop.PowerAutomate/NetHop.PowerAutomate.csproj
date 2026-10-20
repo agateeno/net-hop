@@ -15,6 +15,7 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <!-- Keep the .cab small: the SDK's satellite resource folders are not needed. -->
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

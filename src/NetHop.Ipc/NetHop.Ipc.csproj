@@ -6,6 +6,7 @@
     <NoWarn>$(NoWarn);StreamJsonRpc0008</NoWarn>
     <!-- LibraryImport (PipeServerCheck) generates unsafe marshalling code. -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="StreamJsonRpc" />
