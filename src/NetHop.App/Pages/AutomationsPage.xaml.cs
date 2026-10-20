@@ -73,6 +73,7 @@ public sealed partial class AutomationsPage : Page
         _updating = true;
         RunSwitch.IsEnabled = SaveButton.IsEnabled = _connection.CanEdit;
         RunSwitch.IsOn = _connection.Status?.AutomationsPausedUntil is null;
+        RunSwitch.OnContent = Loc.Get("RuleForm_On"); // without it, WinUI shows "On" in Windows' language
         RunSwitch.OffContent = _connection.Status?.AutomationsPausedUntil is { } until
             ? Loc.Format("Common_PausedUntil", until.LocalDateTime)
             : Loc.Get("RuleForm_Off");

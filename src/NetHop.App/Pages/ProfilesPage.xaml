@@ -95,18 +95,24 @@
                         <TextBlock x:Uid="Profiles_PreviewText" Text="Preview" />
                     </StackPanel>
                 </Button>
-                <Button x:Name="ExportButton" Click="OnExportClick">
-                    <StackPanel Orientation="Horizontal" Spacing="6">
-                        <FontIcon Glyph="&#xEDE1;" FontSize="14" />
-                        <TextBlock x:Uid="Profiles_Export" Text="Export" />
-                    </StackPanel>
-                </Button>
-                <Button x:Name="DeleteButton" Click="OnDeleteClick">
-                    <StackPanel Orientation="Horizontal" Spacing="6">
-                        <FontIcon Glyph="&#xE74D;" FontSize="14" />
-                        <TextBlock x:Uid="Profiles_Delete" Text="Delete" />
-                    </StackPanel>
-                </Button>
+                <!-- Less frequent actions in a menu: the toolbar stays short in every language, and Delete is out of the way. -->
+                <DropDownButton x:Uid="Profiles_More" AutomationProperties.Name="More actions" ToolTipService.ToolTip="More actions">
+                    <FontIcon Glyph="&#xE712;" FontSize="14" />
+                    <DropDownButton.Flyout>
+                        <MenuFlyout Placement="BottomEdgeAlignedRight">
+                            <MenuFlyoutItem x:Uid="Profiles_Duplicate" x:Name="DuplicateItem" Text="Duplicate" Click="OnDuplicateClick">
+                                <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE8C8;" /></MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Uid="Profiles_Export" x:Name="ExportItem" Text="Export" Click="OnExportClick">
+                                <MenuFlyoutItem.Icon><FontIcon Glyph="&#xEDE1;" /></MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem x:Uid="Profiles_Delete" x:Name="DeleteItem" Text="Delete" Click="OnDeleteClick">
+                                <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE74D;" /></MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </DropDownButton.Flyout>
+                </DropDownButton>
             </StackPanel>
 
             <SelectorBar x:Name="ViewSelector" Grid.Row="1" SelectionChanged="OnViewChanged">
