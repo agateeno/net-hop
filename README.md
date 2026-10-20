@@ -159,6 +159,22 @@ Every push builds on GitHub Actions and produces **NetHop-msi** (x64 and ARM64 i
 - [x] Update check against GitHub releases (download and install once releases are signed)
 - [ ] Verify everything on real hardware (spikes in docs/architecture.md)
 
+## Code signing policy
+
+Releases are signed through SignPath: free code signing provided by [SignPath.io](https://about.signpath.io/), certificate by [SignPath Foundation](https://signpath.org/). Until the project is accepted by SignPath Foundation, releases are unsigned.
+
+- Only files built from this repository's source by its GitHub Actions workflow are signed.
+- Committers and reviewers: [agateeno](https://github.com/agateeno). Approver: [agateeno](https://github.com/agateeno) approves every signing request by hand.
+
+## Privacy
+
+NetHop sends no telemetry and collects no personal data. It connects to the internet only:
+
+- to check for updates: a request to `api.github.com` for the list of NetHop releases, carrying only NetHop's version. It can be turned off in Settings › Updates;
+- when you ask it to: a link you open, or a rule you wrote that opens a web page or starts a Power Automate flow.
+
+Everything else (profiles, rules, network settings) stays on your PC.
+
 ## Security
 
 To report a vulnerability, please do not open a public issue: see [SECURITY.md](SECURITY.md). The security model is described in [docs/architecture.md](docs/architecture.md#security-model).

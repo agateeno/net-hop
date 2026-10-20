@@ -23,10 +23,11 @@ jobs:
     env:
       DOTNET_NOLOGO: true
       DOTNET_CLI_TELEMETRY_OPTOUT: true
-      # Code signing runs only when the Azure Trusted Signing secrets are configured (see docs/installer.md).
-      SIGNING: ${{ secrets.AZURE_SIGNING_ACCOUNT != '' }}
-      # Subject of the signing certificate (repository variable). The Windows 11 context menu package must declare it
-      # as its Publisher to be signed; without it the package is built unsigned (see docs/installer.md).
+      # Code signing (see docs/installer.md): Azure Trusted Signing when its secrets exist, else SignPath when its token
+      # does. The Version step decides whether this build is signed (SIGNING).
+      SIGNER: ${{ secrets.AZURE_SIGNING_ACCOUNT != '' && 'azure' || secrets.SIGNPATH_API_TOKEN != '' && 'signpath' || '' }}
+      # Subject of the Azure signing certificate (repository variable). The Windows 11 context menu package must declare
+      # it as its Publisher to be signed; without it the package is built unsigned (see docs/installer.md).
       PACKAGE_PUBLISHER: ${{ vars.PACKAGE_PUBLISHER }}
 
     steps:
@@ -55,7 +56,10 @@ jobs:
           "PRODUCT_VERSION=$version" >> $env:GITHUB_ENV
           # Only releases are offered updates by the app's update check.
           "BUILD_KIND=$(if ($env:RELEASE) { 'release' } else { 'development' })" >> $env:GITHUB_ENV
-          "Version $version"
+          # Azure signs every build. SignPath signs releases only: each signing request waits for a person to approve it.
+          $signing = $env:SIGNER -eq 'azure' -or ($env:SIGNER -eq 'signpath' -and $env:RELEASE)
+          "SIGNING=$($signing.ToString().ToLowerInvariant())" >> $env:GITHUB_ENV
+          "Version $version, signed by: $(if ($signing) { $env:SIGNER } else { 'nobody' })"
 
       - name: Restore
         run: dotnet restore NetHop.slnx
@@ -82,7 +86,7 @@ jobs:
             Copy-Item scripts/Install-NetHop.ps1, scripts/Uninstall-NetHop.ps1 "out/$arch/NetHop/"
             Copy-Item samples "out/$arch/NetHop/samples" -Recurse
             # Windows 11 context menu: the C++ handler and the sparse package that declares it.
-            $publisher = if ($env:SIGNING -eq 'true') { $env:PACKAGE_PUBLISHER } else { '' }
+            $publisher = if ($env:SIGNING -eq 'true' -and $env:SIGNER -eq 'azure') { $env:PACKAGE_PUBLISHER } else { '' }
             ./scripts/Build-ContextMenuPackage.ps1 -BinDirectory $bin -Architecture $arch -Version $env:PRODUCT_VERSION -Publisher $publisher
             "{0}: {1:N0} MB" -f $arch, ((Get-ChildItem $bin -Recurse | Measure-Object Length -Sum).Sum / 1MB)
           }
@@ -169,8 +173,8 @@ jobs:
         shell: pwsh
         run: |
           $include = 'NetHop*.exe', 'NetHop*.dll', 'nethop.exe', 'nethop.dll', 'Modules.NetHop.dll'
-          # The context menu package can only be signed when its Publisher is the certificate's subject.
-          if ($env:PACKAGE_PUBLISHER) { $include += 'NetHop.ContextMenu.msix' }
+          # The context menu package can only be signed when its Publisher is the certificate's subject (Azure only).
+          if ($env:SIGNER -eq 'azure' -and $env:PACKAGE_PUBLISHER) { $include += 'NetHop.ContextMenu.msix' }
           $files = Get-ChildItem out -Recurse -Include $include
           $map = @{}
           $i = 0
@@ -182,8 +186,8 @@ jobs:
           }
           $map | ConvertTo-Json | Set-Content out/sign-map.json
 
-      - name: Sign binaries
-        if: env.SIGNING == 'true'
+      - name: Sign binaries (Azure)
+        if: env.SIGNING == 'true' && env.SIGNER == 'azure'
         uses: azure/trusted-signing-action@v0
         with:
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -198,10 +202,36 @@ jobs:
           timestamp-rfc3161: http://timestamp.acs.microsoft.com
           timestamp-digest: SHA256
 
+      # SignPath signs a workflow artifact: the zip of out/sign, with the "binaries" artifact configuration.
+      - name: Upload binaries for SignPath
+        id: unsigned-binaries
+        if: env.SIGNING == 'true' && env.SIGNER == 'signpath'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-binaries
+          path: out/sign
+          retention-days: 1
+
+      - name: Sign binaries (SignPath)
+        if: env.SIGNING == 'true' && env.SIGNER == 'signpath'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG || 'net-hop' }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY || 'release-signing' }}
+          artifact-configuration-slug: binaries
+          github-artifact-id: ${{ steps.unsigned-binaries.outputs.artifact-id }}
+          wait-for-completion: true
+          # Time to approve the request in SignPath.
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: out/signed
+
       - name: Put signed binaries back
         if: env.SIGNING == 'true'
         shell: pwsh
         run: |
+          if (Test-Path out/signed) { Copy-Item out/signed/* out/sign -Force; Remove-Item out/signed -Recurse }
           $map = Get-Content out/sign-map.json | ConvertFrom-Json
           foreach ($entry in $map.PSObject.Properties) { Copy-Item $entry.Name $entry.Value -Force }
           Remove-Item out/sign, out/sign-map.json -Recurse
@@ -220,8 +250,8 @@ jobs:
         shell: pwsh
         run: ./scripts/Build-PowerAutomateModule.ps1 -SkipBuild -SkipSigning -OutputDirectory "$PWD/out/power-automate"
 
-      - name: Sign MSIs and Power Automate module
-        if: env.SIGNING == 'true'
+      - name: Sign MSIs and Power Automate module (Azure)
+        if: env.SIGNING == 'true' && env.SIGNER == 'azure'
         uses: azure/trusted-signing-action@v0
         with:
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -236,6 +266,40 @@ jobs:
           file-digest: SHA256
           timestamp-rfc3161: http://timestamp.acs.microsoft.com
           timestamp-digest: SHA256
+
+      # The artifact keeps the msi/ and power-automate/ folders, so the signed files go back where they came from.
+      - name: Upload installers for SignPath
+        id: unsigned-installers
+        if: env.SIGNING == 'true' && env.SIGNER == 'signpath'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-installers
+          path: |
+            out/msi/*.msi
+            out/power-automate/NetHop.cab
+          retention-days: 1
+
+      - name: Sign MSIs and Power Automate module (SignPath)
+        if: env.SIGNING == 'true' && env.SIGNER == 'signpath'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG || 'net-hop' }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY || 'release-signing' }}
+          artifact-configuration-slug: installers
+          github-artifact-id: ${{ steps.unsigned-installers.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: out/signed-installers
+
+      - name: Put signed installers back
+        if: env.SIGNING == 'true' && env.SIGNER == 'signpath'
+        shell: pwsh
+        run: |
+          Copy-Item out/signed-installers/* out -Recurse -Force
+          Remove-Item out/signed-installers -Recurse
+          Get-AuthenticodeSignature out/msi/*.msi, out/power-automate/NetHop.cab | Format-Table Status, SignerCertificate, Path -AutoSize
 
       - name: Upload MSIs
         uses: actions/upload-artifact@v4
