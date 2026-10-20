@@ -36,7 +36,7 @@ public static class UpdateCheck
     public static event EventHandler? Changed;
 
     /// <summary>
-    /// Local builds and CI builds of untagged commits (0.1.&lt;run&gt;): they show the latest release, but never offer
+    /// Local builds and CI builds that are not releases (0.1.&lt;run&gt;): they show the latest release, but never offer
     /// it as an update, since their version number says nothing about how recent they are.
     /// </summary>
     public static bool IsDevelopmentBuild { get; } = typeof(UpdateCheck).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
