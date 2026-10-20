@@ -8,61 +8,66 @@
     xmlns:app="using:NetHop.App">
 
     <ScrollViewer>
-        <StackPanel Margin="{StaticResource PageMargin}" MaxWidth="{StaticResource PageMaxWidth}" Spacing="{StaticResource SettingsCardSpacing}">
-            <TextBlock x:Uid="Dashboard_Title" Text="Dashboard" Style="{StaticResource PageTitleStyle}" />
+        <Grid Style="{StaticResource PageGridStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MaxWidth="{StaticResource PageMaxWidth}" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Spacing="{StaticResource SettingsCardSpacing}">
+                <TextBlock x:Uid="Dashboard_Title" Text="Dashboard" Style="{StaticResource PageTitleStyle}" />
 
-            <InfoBar x:Uid="Dashboard_SsidWarning" x:Name="SsidWarning" Severity="Warning" IsClosable="False"
-                     Title="Wi-Fi names are not available"
-                     Message="Windows only shares the SSID of the current network with apps that have location access. Rules based on Wi-Fi names will not fire until it is turned on." >
-                <InfoBar.ActionButton>
-                    <HyperlinkButton x:Uid="Dashboard_OpenLocation" Content="Open location settings" NavigateUri="ms-settings:privacy-location" />
-                </InfoBar.ActionButton>
-            </InfoBar>
+                <InfoBar x:Uid="Dashboard_SsidWarning" x:Name="SsidWarning" Severity="Warning" IsClosable="False"
+                         Title="Wi-Fi names are not available"
+                         Message="Windows only shares the SSID of the current network with apps that have location access. Rules based on Wi-Fi names will not fire until it is turned on." >
+                    <InfoBar.ActionButton>
+                        <HyperlinkButton x:Uid="Dashboard_OpenLocation" Content="Open location settings" NavigateUri="ms-settings:privacy-location" />
+                    </InfoBar.ActionButton>
+                </InfoBar>
 
-            <InfoBar x:Name="LastResult" IsClosable="True" />
+                <InfoBar x:Name="LastResult" IsClosable="True" />
 
-            <toolkit:SettingsCard x:Name="ActiveCard" Header="Active profile" Description="-">
-                <toolkit:SettingsCard.HeaderIcon>
-                    <FontIcon Glyph="&#xE80F;" />
-                </toolkit:SettingsCard.HeaderIcon>
-            </toolkit:SettingsCard>
+                <toolkit:SettingsCard x:Name="ActiveCard" Header="Active profile" Description="-">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE80F;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                </toolkit:SettingsCard>
 
-            <toolkit:SettingsCard x:Uid="Dashboard_Automations" x:Name="AutomationsCard" Header="Automations" Description="Active">
-                <toolkit:SettingsCard.HeaderIcon>
-                    <FontIcon Glyph="&#xE945;" />
-                </toolkit:SettingsCard.HeaderIcon>
-                <ToggleSwitch x:Uid="Dashboard_AutomationsSwitch" x:Name="AutomationsSwitch" OnContent="On" OffContent="Paused for 1 hour" Toggled="OnAutomationsToggled" />
-            </toolkit:SettingsCard>
+                <toolkit:SettingsCard x:Uid="Dashboard_Automations" x:Name="AutomationsCard" Header="Automations" Description="Active">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE945;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <ToggleSwitch x:Uid="Dashboard_AutomationsSwitch" x:Name="AutomationsSwitch" OnContent="On" OffContent="Paused for 1 hour" Toggled="OnAutomationsToggled" />
+                </toolkit:SettingsCard>
 
-            <TextBlock x:Uid="Dashboard_SwitchProfile" Text="Switch profile" Style="{StaticResource SectionHeaderStyle}" />
-            <GridView x:Name="ProfileGrid" SelectionMode="None" IsItemClickEnabled="True" ItemClick="OnProfileClick">
-                <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="ipc:ProfileSummary">
-                        <Grid Width="220" Height="88" Padding="16" CornerRadius="{StaticResource ControlCornerRadius}"
-                              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
-                              ColumnSpacing="12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid Width="40" Height="40" CornerRadius="8" VerticalAlignment="Center"
-                                  Background="{x:Bind app:XamlHelpers.ProfileBrush(Color)}">
-                                <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="20" Visibility="{x:Bind app:XamlHelpers.PlainGlyphVisibility(Icon, Color)}" />
-                                <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="20" Foreground="White" Visibility="{x:Bind app:XamlHelpers.WhiteGlyphVisibility(Icon, Color)}" />
-                                <Image Source="{x:Bind app:XamlHelpers.ProfileImage(Icon)}" Margin="3" Visibility="{x:Bind app:XamlHelpers.ImageVisibility(Icon)}" />
+                <TextBlock x:Uid="Dashboard_SwitchProfile" Text="Switch profile" Style="{StaticResource SectionHeaderStyle}" />
+                <GridView x:Name="ProfileGrid" SelectionMode="None" IsItemClickEnabled="True" ItemClick="OnProfileClick">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="ipc:ProfileSummary">
+                            <Grid Width="220" Height="88" Padding="16" CornerRadius="{StaticResource ControlCornerRadius}"
+                                  Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                                  ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid Width="40" Height="40" CornerRadius="8" VerticalAlignment="Center"
+                                      Background="{x:Bind app:XamlHelpers.ProfileBrush(Color)}">
+                                    <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="20" Visibility="{x:Bind app:XamlHelpers.PlainGlyphVisibility(Icon, Color)}" />
+                                    <FontIcon Glyph="{x:Bind app:XamlHelpers.GlyphOrDefault(Icon)}" FontSize="20" Foreground="White" Visibility="{x:Bind app:XamlHelpers.WhiteGlyphVisibility(Icon, Color)}" />
+                                    <Image Source="{x:Bind app:XamlHelpers.ProfileImage(Icon)}" Margin="3" Visibility="{x:Bind app:XamlHelpers.ImageVisibility(Icon)}" />
+                                </Grid>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                    <TextBlock Text="{x:Bind Name}" Style="{StaticResource BodyStrongTextBlockStyle}" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock x:Uid="Dashboard_ActiveBadge" Text="Active" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                               Style="{StaticResource CaptionTextBlockStyle}" Visibility="{x:Bind IsActive}" />
+                                </StackPanel>
                             </Grid>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock Text="{x:Bind Name}" Style="{StaticResource BodyStrongTextBlockStyle}" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Uid="Dashboard_ActiveBadge" Text="Active" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                           Style="{StaticResource CaptionTextBlockStyle}" Visibility="{x:Bind IsActive}" />
-                            </StackPanel>
-                        </Grid>
-                    </DataTemplate>
-                </GridView.ItemTemplate>
-            </GridView>
-            <TextBlock x:Uid="Dashboard_NoProfiles" x:Name="NoProfilesText" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                       Text="No profiles yet. Create one in the Profiles page, or double-click a .nethop file." TextWrapping="Wrap" />
-        </StackPanel>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                <TextBlock x:Uid="Dashboard_NoProfiles" x:Name="NoProfilesText" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           Text="No profiles yet. Create one in the Profiles page, or double-click a .nethop file." TextWrapping="Wrap" />
+            </StackPanel>
+        </Grid>
     </ScrollViewer>
 </Page>

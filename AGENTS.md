@@ -56,6 +56,7 @@ dotnet test tests/NetHop.Core.Tests
   - `LocalizationTests` fails when a language misses a key or a placeholder, so add new keys to every file. Translate them properly; do not leave English text in other languages.
   - Follow Windows' own terminology in each language and the register already used: "tu" in Italian, "vous" in French, "Sie" in German, "tú" in Spanish, "você" in Portuguese.
   - Adding a language: see the end of the Localization section in `docs/architecture.md`.
+- **Page layout**: every page's root is a `Grid` with `Style="{StaticResource PageGridStyle}"` and one `ColumnDefinition MaxWidth="{StaticResource PageMaxWidth}"`, so all pages share the same left edge and maximum width (as in Windows Settings). Do not put `MaxWidth` on the content itself: it centers it in wide windows.
 - **Docs**: a user-visible change updates the matching file in `docs/` and, when it changes what NetHop can do, the README feature list or roadmap.
 - **Tests**: Core logic changes come with tests in `tests/NetHop.Core.Tests`.
 - **Commits**: imperative subject line (≤ 72 characters), body explaining what and why.

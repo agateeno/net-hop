@@ -26,6 +26,10 @@ public sealed partial class ProfilesPage : Page
     private Guid? _editingId;
     private bool _yamlView;
     private bool _loading;
+    private bool _selecting;
+
+    // Below this page width the profile list becomes a drop-down, so the editor gets the whole width.
+    private const double WideLayoutMinWidth = 960;
 
     public ProfilesPage()
     {
@@ -36,7 +40,7 @@ public sealed partial class ProfilesPage : Page
     protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
         _connection.PropertyChanged += OnConnectionChanged;
-        ProfileList.ItemsSource = _connection.Profiles;
+        ProfileList.ItemsSource = ProfilePicker.ItemsSource = _connection.Profiles;
         await LoadAdaptersAsync();
         if (e.Parameter is ImportRequest import)
             Import(import.Path);
@@ -78,20 +82,35 @@ public sealed partial class ProfilesPage : Page
         if (e.PropertyName != nameof(ServiceConnection.Profiles))
             return;
         var selected = _editingId;
-        ProfileList.ItemsSource = _connection.Profiles;
-        ProfileList.SelectedItem = _connection.Profiles.FirstOrDefault(p => p.Id == selected);
+        ProfileList.ItemsSource = ProfilePicker.ItemsSource = _connection.Profiles;
+        SelectProfile(_connection.Profiles.FirstOrDefault(p => p.Id == selected));
+    }
+
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e) =>
+        VisualStateManager.GoToState(this, e.NewSize.Width >= WideLayoutMinWidth ? "WideLayout" : "NarrowLayout", false);
+
+    /// <summary>Selects the profile in both the list and the drop-down, whichever the layout shows.</summary>
+    private void SelectProfile(ProfileSummary? profile)
+    {
+        _selecting = true;
+        ProfileList.SelectedItem = ProfilePicker.SelectedItem = profile;
+        _selecting = false;
     }
 
     private async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (ProfileList.SelectedItem is not ProfileSummary profile || profile.Id == _editingId || !_connection.IsConnected)
+        if (_selecting)
+            return;
+        var profile = ((Microsoft.UI.Xaml.Controls.Primitives.Selector)sender).SelectedItem as ProfileSummary;
+        SelectProfile(profile);
+        if (profile is null || profile.Id == _editingId || !_connection.IsConnected)
             return;
         Show(await _connection.Service.GetProfileYamlAsync(profile.Id), profile.Id);
     }
 
     private void OnNewClick(object sender, RoutedEventArgs e)
     {
-        ProfileList.SelectedItem = null;
+        SelectProfile(null);
         Show(ProfileSerializer.Serialize(new Profile { Name = Loc.Get("Profiles_NewName"), Icon = ProfileForm.Icons[0].Glyph }), id: null);
     }
 
@@ -110,7 +129,7 @@ public sealed partial class ProfilesPage : Page
         copy.Id = Guid.NewGuid();
         copy.Name = name;
 
-        ProfileList.SelectedItem = null;
+        SelectProfile(null);
         Show(ProfileSerializer.Serialize(copy), id: null);
         ShowResult(InfoBarSeverity.Informational, Loc.Format("Profiles_Duplicated", original), Loc.Get("Profiles_ImportedHelp"));
     }
@@ -121,7 +140,7 @@ public sealed partial class ProfilesPage : Page
             return;
         var network = await _connection.Service.GetNetworkAsync();
         var adapters = network.Adapters.Where(a => !a.Info.IsVirtual).Select(a => a.Info.Id).ToArray();
-        ProfileList.SelectedItem = null;
+        SelectProfile(null);
         Show(await _connection.Service.CaptureProfileYamlAsync(Loc.Get("Profiles_CapturedName"), adapters), id: null);
     }
 

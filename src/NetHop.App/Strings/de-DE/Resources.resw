@@ -607,6 +607,9 @@
   <data name="Profiles_NotSaved" xml:space="preserve">
     <value>Nicht gespeichert</value>
   </data>
+  <data name="Profiles_Picker.PlaceholderText" xml:space="preserve">
+    <value>Profil auswählen</value>
+  </data>
   <data name="Profiles_Preview.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Anzeigen, was sich ändern würde, ohne etwas zu ändern</value>
   </data>

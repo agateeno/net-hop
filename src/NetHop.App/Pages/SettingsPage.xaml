@@ -6,63 +6,68 @@
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
 
     <ScrollViewer>
-        <StackPanel Margin="{StaticResource PageMargin}" MaxWidth="{StaticResource PageMaxWidth}" Spacing="{StaticResource SettingsCardSpacing}">
-            <TextBlock x:Uid="Settings_Title" Text="Settings" Style="{StaticResource PageTitleStyle}" />
+        <Grid Style="{StaticResource PageGridStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MaxWidth="{StaticResource PageMaxWidth}" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Spacing="{StaticResource SettingsCardSpacing}">
+                <TextBlock x:Uid="Settings_Title" Text="Settings" Style="{StaticResource PageTitleStyle}" />
 
-            <toolkit:SettingsCard x:Uid="Settings_Startup" Header="Start with Windows" Description="NetHop starts in the notification area when you sign in.">
-                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE7E8;" /></toolkit:SettingsCard.HeaderIcon>
-                <ToggleSwitch x:Name="StartupSwitch" Toggled="OnStartupToggled" />
-            </toolkit:SettingsCard>
+                <toolkit:SettingsCard x:Uid="Settings_Startup" Header="Start with Windows" Description="NetHop starts in the notification area when you sign in.">
+                    <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE7E8;" /></toolkit:SettingsCard.HeaderIcon>
+                    <ToggleSwitch x:Name="StartupSwitch" Toggled="OnStartupToggled" />
+                </toolkit:SettingsCard>
 
-            <toolkit:SettingsCard x:Uid="Settings_Language" Header="Language" Description="Restart NetHop after changing it.">
-                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xF2B7;" /></toolkit:SettingsCard.HeaderIcon>
-                <ComboBox x:Name="LanguageBox" MinWidth="200" SelectionChanged="OnLanguageChanged" />
-            </toolkit:SettingsCard>
+                <toolkit:SettingsCard x:Uid="Settings_Language" Header="Language" Description="Restart NetHop after changing it.">
+                    <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xF2B7;" /></toolkit:SettingsCard.HeaderIcon>
+                    <ComboBox x:Name="LanguageBox" MinWidth="200" SelectionChanged="OnLanguageChanged" />
+                </toolkit:SettingsCard>
 
-            <toolkit:SettingsCard x:Uid="Settings_Theme" Header="App theme" Description="Light, dark, or the same as Windows.">
-                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE790;" /></toolkit:SettingsCard.HeaderIcon>
-                <ComboBox x:Name="ThemeBox" MinWidth="200" SelectionChanged="OnThemeChanged" />
-            </toolkit:SettingsCard>
+                <toolkit:SettingsCard x:Uid="Settings_Theme" Header="App theme" Description="Light, dark, or the same as Windows.">
+                    <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE790;" /></toolkit:SettingsCard.HeaderIcon>
+                    <ComboBox x:Name="ThemeBox" MinWidth="200" SelectionChanged="OnThemeChanged" />
+                </toolkit:SettingsCard>
 
-            <toolkit:SettingsCard x:Uid="Settings_Folder" x:Name="FolderCard" Header="Profiles folder"
-                                  Description="A copy of every profile, pinned to Quick Access. Double-click a file to edit it, right-click to apply it.">
-                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE8B7;" /></toolkit:SettingsCard.HeaderIcon>
-                <Button x:Uid="Settings_FolderOpen" Content="Open folder" Click="OnOpenFolderClick" />
-            </toolkit:SettingsCard>
+                <toolkit:SettingsCard x:Uid="Settings_Folder" x:Name="FolderCard" Header="Profiles folder"
+                                      Description="A copy of every profile, pinned to Quick Access. Double-click a file to edit it, right-click to apply it.">
+                    <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE8B7;" /></toolkit:SettingsCard.HeaderIcon>
+                    <Button x:Uid="Settings_FolderOpen" Content="Open folder" Click="OnOpenFolderClick" />
+                </toolkit:SettingsCard>
 
-            <toolkit:SettingsCard x:Uid="Settings_Service" x:Name="ServiceCard" Header="NetHop service" Description="-">
-                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE912;" /></toolkit:SettingsCard.HeaderIcon>
-            </toolkit:SettingsCard>
+                <toolkit:SettingsCard x:Uid="Settings_Service" x:Name="ServiceCard" Header="NetHop service" Description="-">
+                    <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE912;" /></toolkit:SettingsCard.HeaderIcon>
+                </toolkit:SettingsCard>
 
-            <TextBlock x:Uid="Settings_Updates" Text="Updates" Style="{StaticResource SectionHeaderStyle}" />
-            <toolkit:SettingsExpander x:Name="UpdateCard" Header="-" Description="-">
-                <toolkit:SettingsExpander.HeaderIcon><FontIcon x:Name="UpdateIcon" Glyph="&#xE895;" /></toolkit:SettingsExpander.HeaderIcon>
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <ProgressRing x:Name="UpdateProgress" Width="20" Height="20" IsActive="False" />
-                    <HyperlinkButton x:Uid="Settings_UpdateReleaseNotes" x:Name="ReleaseNotesButton" Content="Release notes" Click="OnReleaseClick" Visibility="Collapsed" />
-                    <Button x:Uid="Settings_UpdateDownload" x:Name="DownloadButton" Content="Download" Style="{StaticResource AccentButtonStyle}"
-                            Click="OnReleaseClick" Visibility="Collapsed" />
-                    <Button x:Uid="Settings_UpdateCheck" x:Name="CheckButton" Content="Check for updates" Click="OnCheckForUpdatesClick" />
-                </StackPanel>
-                <toolkit:SettingsExpander.Items>
-                    <toolkit:SettingsCard x:Uid="Settings_UpdateAuto" Header="Check for updates automatically"
-                                          Description="When NetHop starts and once a day. Only GitHub is contacted, and nothing is downloaded or installed.">
-                        <ToggleSwitch x:Name="UpdateAutoSwitch" Toggled="OnUpdateAutoToggled" />
-                    </toolkit:SettingsCard>
-                    <toolkit:SettingsCard x:Uid="Settings_UpdatePrerelease" Header="Include pre-releases"
-                                          Description="Preview versions, published before a stable release. NetHop is in preview: all its releases are pre-releases for now.">
-                        <ToggleSwitch x:Name="PrereleaseSwitch" Toggled="OnPrereleaseToggled" />
-                    </toolkit:SettingsCard>
-                </toolkit:SettingsExpander.Items>
-            </toolkit:SettingsExpander>
+                <TextBlock x:Uid="Settings_Updates" Text="Updates" Style="{StaticResource SectionHeaderStyle}" />
+                <toolkit:SettingsExpander x:Name="UpdateCard" Header="-" Description="-">
+                    <toolkit:SettingsExpander.HeaderIcon><FontIcon x:Name="UpdateIcon" Glyph="&#xE895;" /></toolkit:SettingsExpander.HeaderIcon>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <ProgressRing x:Name="UpdateProgress" Width="20" Height="20" IsActive="False" />
+                        <HyperlinkButton x:Uid="Settings_UpdateReleaseNotes" x:Name="ReleaseNotesButton" Content="Release notes" Click="OnReleaseClick" Visibility="Collapsed" />
+                        <Button x:Uid="Settings_UpdateDownload" x:Name="DownloadButton" Content="Download" Style="{StaticResource AccentButtonStyle}"
+                                Click="OnReleaseClick" Visibility="Collapsed" />
+                        <Button x:Uid="Settings_UpdateCheck" x:Name="CheckButton" Content="Check for updates" Click="OnCheckForUpdatesClick" />
+                    </StackPanel>
+                    <toolkit:SettingsExpander.Items>
+                        <toolkit:SettingsCard x:Uid="Settings_UpdateAuto" Header="Check for updates automatically"
+                                              Description="When NetHop starts and once a day. Only GitHub is contacted, and nothing is downloaded or installed.">
+                            <ToggleSwitch x:Name="UpdateAutoSwitch" Toggled="OnUpdateAutoToggled" />
+                        </toolkit:SettingsCard>
+                        <toolkit:SettingsCard x:Uid="Settings_UpdatePrerelease" Header="Include pre-releases"
+                                              Description="Preview versions, published before a stable release. NetHop is in preview: all its releases are pre-releases for now.">
+                            <ToggleSwitch x:Name="PrereleaseSwitch" Toggled="OnPrereleaseToggled" />
+                        </toolkit:SettingsCard>
+                    </toolkit:SettingsExpander.Items>
+                </toolkit:SettingsExpander>
 
-            <TextBlock x:Uid="Settings_About" Text="About" Style="{StaticResource SectionHeaderStyle}" />
-            <toolkit:SettingsCard x:Name="AboutCard" Header="NetHop" Description="Network profiles for Windows">
-                <toolkit:SettingsCard.HeaderIcon>
-                    <ImageIcon Source="ms-appx:///Assets/NetHop.png" />
-                </toolkit:SettingsCard.HeaderIcon>
-                <HyperlinkButton Content="GitHub" NavigateUri="https://github.com/agateeno/net-hop" />
-            </toolkit:SettingsCard>
-        </StackPanel>
+                <TextBlock x:Uid="Settings_About" Text="About" Style="{StaticResource SectionHeaderStyle}" />
+                <toolkit:SettingsCard x:Name="AboutCard" Header="NetHop" Description="Network profiles for Windows">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <ImageIcon Source="ms-appx:///Assets/NetHop.png" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <HyperlinkButton Content="GitHub" NavigateUri="https://github.com/agateeno/net-hop" />
+                </toolkit:SettingsCard>
+            </StackPanel>
+        </Grid>
     </ScrollViewer>
 </Page>
