@@ -11,8 +11,13 @@ Each size is rendered from the source drawn for it, as Fluent icons do:
   20-32px    NetHop-small.svg  simplified shapes
   40-256px   NetHop.svg        full detail
 The .nethop file icon follows the same scheme with NetHopFile*.svg.
+
+While PREVIEW is True, the app icon gets the "PRE" badge drawn in PreBadge*.svg: one per pixel size
+up to 32px, so its letters stay sharp, and PreBadge.svg above. Set it to False and run the script
+again when NetHop leaves preview. File icons have no badge.
 """
 
+import re
 import shutil
 import struct
 import subprocess
@@ -23,6 +28,13 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ASSETS = HERE.parent.parent / "src" / "NetHop.App" / "Assets"
 LOGI_METADATA = HERE.parent.parent / "src" / "NetHop.LogiPlugin" / "package" / "metadata"
+
+PREVIEW = True
+
+
+def badge_for(size: int) -> str:
+    return f"PreBadge-{size}.svg" if size <= 32 else "PreBadge.svg"
+
 
 def sources(prefix):
     return [(16, f"{prefix}-16.svg")] + [(s, f"{prefix}-small.svg") for s in (20, 24, 32)] + \
@@ -41,6 +53,18 @@ SOURCES = [
     (128, "NetHop.svg"),
     (256, "NetHop.svg"),
 ]
+
+
+def with_badge(name: str, size: int, out: Path) -> Path:
+    """The source with the badge for this size drawn on top, as a nested SVG scaled to the source's canvas."""
+    if not PREVIEW:
+        return HERE / name
+    base = (HERE / name).read_text(encoding="utf-8")
+    canvas = re.search(r'viewBox="([^"]+)"', base).group(1).split()
+    badge = (HERE / badge_for(size)).read_text(encoding="utf-8")
+    badge = re.sub(r'width="[^"]*" height="[^"]*"', f'x="0" y="0" width="{canvas[2]}" height="{canvas[3]}"', badge, count=1)
+    out.write_text(base[: base.rindex("</svg>")] + badge + "</svg>\n", encoding="utf-8")
+    return out
 
 
 def render(svg: Path, size: int, out: Path) -> bytes:
@@ -68,7 +92,8 @@ def main() -> int:
 
     ASSETS.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
-        images = [(size, render(HERE / name, size, Path(tmp) / f"{size}.png")) for size, name in SOURCES]
+        images = [(size, render(with_badge(name, size, Path(tmp) / f"{size}.svg"), size, Path(tmp) / f"{size}.png"))
+                  for size, name in SOURCES]
         file_images = [(size, render(HERE / name, size, Path(tmp) / f"file{size}.png")) for size, name in sources("NetHopFile")]
 
     # Icon of .nethop files in Explorer.

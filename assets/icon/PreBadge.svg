@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!--
+    "PRE" badge drawn over NetHop.svg while NetHop is a pre-release, like Microsoft's preview apps.
+    build_icons.py adds it when PREVIEW is True. Letters are paths, so no font is needed.
+  -->
+  <rect x="106" y="162" width="140" height="76" rx="16" fill="#242424" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="4" />
+  <g fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linejoin="miter">
+    <path d="M124 222 V183 H134 A10.5 10.5 0 0 1 134 204 H124" />
+    <path d="M166 222 V183 H176 A10.5 10.5 0 0 1 176 204 H166 M176 204 L188 222" />
+    <path d="M231 183 H208 V217 H231 M208 200 H227" />
+  </g>
+</svg>

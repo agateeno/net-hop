@@ -1,12 +1,24 @@
 <p align="center">
-  <img src="assets/icon/NetHop.svg" width="128" height="128" alt="NetHop icon">
+  <img src="src/NetHop.App/Assets/NetHop.png" width="128" height="128" alt="NetHop icon">
 </p>
 
 <h1 align="center">NetHop</h1>
 
 **Hop between network configurations in one click.** NetHop is an open-source network profile switcher for Windows 11, in the spirit of NetSetMan, with a PowerToys-style Fluent UI.
 
-> Status: preview (v0.2). Builds are not code-signed yet: see [Releases](https://github.com/agateeno/net-hop/releases).
+> Status: preview (v0.3). Builds are not code-signed yet: see [Releases](https://github.com/agateeno/net-hop/releases).
+
+## Install
+
+With [winget](https://learn.microsoft.com/windows/package-manager/winget/), from a terminal:
+
+```powershell
+winget install agateeno.NetHop
+```
+
+Update it later with `winget upgrade agateeno.NetHop`. NetHop is being added to winget: until `winget search agateeno.NetHop` finds it, use the installer below.
+
+Or download the MSI for your PC (`x64`, or `arm64` for Windows on Arm) from [Releases](https://github.com/agateeno/net-hop/releases/latest) and run it. Windows asks for administrator rights, because NetHop installs a service. Builds are not signed yet, so SmartScreen may warn: choose **More info › Run anyway**.
 
 ## Screenshots
 
@@ -120,7 +132,7 @@ dotnet build NetHop.slnx
 dotnet test tests/NetHop.Core.Tests
 ```
 
-The app icon is drawn in SVG under [assets/icon](assets/icon): `NetHop.svg` (large sizes), `NetHop-small.svg` (20–32 px) and `NetHop-16.svg` (16 px). After editing one, run `python assets/icon/build_icons.py` (needs [resvg](https://github.com/linebender/resvg)) to regenerate the `.ico` and `.png` files.
+The app icon is drawn in SVG under [assets/icon](assets/icon): `NetHop.svg` (large sizes), `NetHop-small.svg` (20–32 px) and `NetHop-16.svg` (16 px). While NetHop is in preview, the "PRE" badge (`PreBadge*.svg`) is drawn over it (`PREVIEW` in `build_icons.py`). After editing one, run `python assets/icon/build_icons.py` (needs [resvg](https://github.com/linebender/resvg)) to regenerate the `.ico` and `.png` files.
 
 Every push builds on GitHub Actions and produces **NetHop-msi** (x64 and ARM64 installers), **NetHop-win-x64** / **NetHop-win-arm64** (the same binaries as folders) and the Power Automate module (unsigned unless signing is configured, see [docs/installer.md](docs/installer.md#code-signing)). Install the MSI, or, for a quick test without it, extract the folder and run from an elevated PowerShell:
 

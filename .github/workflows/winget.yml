@@ -1,0 +1,71 @@
+name: winget
+
+# Submits each published release to winget: wingetcreate opens a pull request on microsoft/winget-pkgs from the
+# account that owns the WINGET_TOKEN secret (see docs/installer.md). Without the secret it only warns.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Published release to submit, for example v0.3.1
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: windows-latest
+    env:
+      TAG: ${{ github.event.release.tag_name || github.event.inputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check
+        id: check
+        shell: pwsh
+        env:
+          HAS_TOKEN: ${{ secrets.WINGET_TOKEN != '' }}
+        run: |
+          if ($env:TAG -notmatch '^v(\d+\.\d+\.\d+)$') { throw "'$env:TAG' is not a vX.Y.Z release tag." }
+          "version=$($Matches[1])" >> $env:GITHUB_OUTPUT
+          if ($env:HAS_TOKEN -ne 'true') {
+            "::warning::The WINGET_TOKEN secret is not set, so $env:TAG was not submitted to winget (see docs/installer.md)."
+            "skip=true" >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Write manifests
+        if: steps.check.outputs.skip != 'true'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.check.outputs.version }}
+        run: |
+          # The manifests point at the release's own MSIs, with their hashes and product codes.
+          gh release download $env:TAG --repo $env:GITHUB_REPOSITORY --pattern '*.msi' --dir out/msi
+          if ($LASTEXITCODE -ne 0) { throw "Could not download the MSIs of $env:TAG." }
+          $msi = Get-ChildItem out/msi/*.msi
+          if ($msi.Count -ne 2) { throw "Expected the x64 and arm64 MSIs in $env:TAG, found: $($msi.Name -join ', ')" }
+          ./scripts/New-WingetManifest.ps1 -Version $env:VERSION -Msi $msi.FullName `
+            -ReleaseUrl "https://github.com/$env:GITHUB_REPOSITORY/releases/download/$env:TAG" -OutputDirectory out/winget
+
+      # Before submitting, so they can be submitted by hand if wingetcreate fails.
+      - name: Upload manifests
+        if: steps.check.outputs.skip != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: winget-manifests
+          path: out/winget
+
+      - name: Submit to winget-pkgs
+        if: steps.check.outputs.skip != 'true'
+        shell: pwsh
+        env:
+          WINGET_TOKEN: ${{ secrets.WINGET_TOKEN }}
+          VERSION: ${{ steps.check.outputs.version }}
+        run: |
+          Invoke-WebRequest https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
+          ./wingetcreate.exe submit --prtitle "New version: agateeno.NetHop version $env:VERSION" --token $env:WINGET_TOKEN `
+            "out/winget/manifests/a/agateeno/NetHop/$env:VERSION"
+          if ($LASTEXITCODE -ne 0) { throw "wingetcreate could not submit the manifests." }
