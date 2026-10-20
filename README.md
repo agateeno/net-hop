@@ -159,6 +159,15 @@ Every push builds on GitHub Actions and produces **NetHop-msi** (x64 and ARM64 i
 - [x] Update check against GitHub releases (download and install once releases are signed)
 - [ ] Verify everything on real hardware (spikes in docs/architecture.md)
 
+## Privacy
+
+NetHop sends no telemetry and collects no personal data. It connects to the internet only:
+
+- to check for updates: a request to `api.github.com` for the list of NetHop releases, carrying only NetHop's version. It can be turned off in Settings › Updates;
+- when you ask it to: a link you open, or a rule you wrote that opens a web page or starts a Power Automate flow.
+
+Everything else (profiles, rules, network settings) stays on your PC. Full policy: [PRIVACY.md](PRIVACY.md).
+
 ## Security
 
 To report a vulnerability, please do not open a public issue: see [SECURITY.md](SECURITY.md). The security model is described in [docs/architecture.md](docs/architecture.md#security-model).
@@ -166,6 +175,32 @@ To report a vulnerability, please do not open a public issue: see [SECURITY.md](
 ## Acknowledgements
 
 Thanks to [NetSetMan](https://www.netsetman.com/) by Ilja Herlein, which has made switching network settings on Windows easy for many years and inspired NetHop's profile-based approach. NetHop is an independent project: it is not affiliated with or endorsed by NetSetMan, and it shares no code with it. If you need a mature, feature-rich tool, give NetSetMan a try.
+
+## Third-party software
+
+NetHop is built on these libraries. Thanks to their authors.
+
+**Included in NetHop**
+
+| Component | Used for | License |
+|---|---|---|
+| [.NET](https://github.com/dotnet/runtime) and [Microsoft.Extensions.Hosting](https://www.nuget.org/packages/Microsoft.Extensions.Hosting) | Runtime (bundled, self-contained), Windows service host | MIT |
+| [Windows App SDK](https://github.com/microsoft/WindowsAppSDK) (WinUI 3) | The app's user interface | [Microsoft license terms](https://www.nuget.org/packages/Microsoft.WindowsAppSDK) (redistributable) |
+| [Windows Community Toolkit](https://github.com/CommunityToolkit/Windows) (Settings controls) and [MVVM Toolkit](https://github.com/CommunityToolkit/dotnet) | Settings cards, view models | MIT |
+| [H.NotifyIcon](https://github.com/HavenDV/H.NotifyIcon) | Notification area icon and flyout | MIT |
+| [YamlDotNet](https://github.com/aaubry/YamlDotNet) | Reading and writing `.nethop` profiles | MIT |
+| [StreamJsonRpc](https://github.com/microsoft/vs-streamjsonrpc) and its dependencies | JSON-RPC between the service and its clients | MIT |
+| [Microsoft.Management.Infrastructure](https://www.nuget.org/packages/Microsoft.Management.Infrastructure) | Reading and changing network settings through CIM | MIT |
+| [Power Automate Desktop Actions SDK](https://www.nuget.org/packages/Microsoft.PowerPlatform.PowerAutomate.Desktop.Actions.SDK) | Power Automate custom actions | [Microsoft license terms](https://www.nuget.org/packages/Microsoft.PowerPlatform.PowerAutomate.Desktop.Actions.SDK) |
+| [WiX Toolset](https://github.com/wixtoolset/wix) 6 (UI and Util extensions) | The MSI installer and its dialogs | MS-RL |
+| [Open Sans](https://github.com/googlefonts/opensans) | Letters of the "PRE" badge in the icon, converted to outlines | SIL Open Font License 1.1 |
+
+**Used, not included**
+
+- [Logi Actions SDK](https://logitech.github.io/actions-sdk-docs/): the Logi plugin runs against `PluginApi.dll` from Logi Options+, which NetHop does not redistribute.
+- Build and test only: [xUnit](https://github.com/xunit/xunit) (Apache 2.0), [coverlet](https://github.com/coverlet-coverage/coverlet) and the .NET test SDK (MIT), [resvg](https://github.com/linebender/resvg) for rendering the icons (Apache 2.0 or MIT).
+
+Each component remains under its own license; the links lead to the full terms.
 
 ## License
 
