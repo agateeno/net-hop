@@ -1,3 +1,4 @@
+using System.Globalization;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -64,9 +65,9 @@ internal sealed class ProfileForm
     {
         foreach (var adapter in profile.Adapters)
         {
-            if (adapter.Ipv4 is { Mode: IpMode.Unchanged, Dns: null or { Mode: DnsMode.Unchanged } })
+            if (adapter.Ipv4 is { Mode: IpMode.Unchanged, Dns: null or { Mode: DnsMode.Unchanged }, Metric: null })
                 adapter.Ipv4 = null;
-            if (adapter.Ipv6 is { Mode: IpMode.Unchanged, Dns: null or { Mode: DnsMode.Unchanged } })
+            if (adapter.Ipv6 is { Mode: IpMode.Unchanged, Dns: null or { Mode: DnsMode.Unchanged }, Metric: null })
                 adapter.Ipv6 = null;
         }
     }
@@ -351,6 +352,37 @@ internal sealed class ProfileForm
             expander.Items.Add(Card(Loc.Format("ProfileForm_DnsServers", family), new StringListEditor(current.Dns.Servers, dnsExample, RaiseChanged),
                 Loc.Get("ProfileForm_DnsHelp")));
         }
+
+        // A metric typed wrong in the YAML shows as "manual": the validator reports it.
+        var metricValid = IpConfig.TryParseMetric(current.Metric, out var metric);
+        var metricChoice = current.Metric is null ? MetricChoice.Unchanged
+            : metricValid && metric is null ? MetricChoice.Automatic
+            : MetricChoice.Manual;
+        var metricCombo = EnumCombo(metricChoice, "Metric_", choice =>
+        {
+            current.Metric = choice switch
+            {
+                MetricChoice.Automatic => IpConfig.AutomaticMetric,
+                MetricChoice.Manual => DefaultManualMetric.ToString(CultureInfo.InvariantCulture),
+                _ => null,
+            };
+            set(current);
+            Rebuild();
+        });
+        UIElement metricContent = metricChoice != MetricChoice.Manual
+            ? metricCombo
+            : WrapRow(metricCombo, NumberBox(metric ?? DefaultManualMetric, 1, IpConfig.MaxMetric,
+                value => Edit(() => current.Metric = value.ToString(CultureInfo.InvariantCulture))));
+        expander.Items.Add(Card(Loc.Format("ProfileForm_Metric", family), metricContent, Loc.Get("ProfileForm_MetricHelp"), wrapBelow: 600));
+    }
+
+    private const int DefaultManualMetric = 10;
+
+    private enum MetricChoice
+    {
+        Unchanged,
+        Automatic,
+        Manual,
     }
 
     private void Edit(Action change)

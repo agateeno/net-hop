@@ -55,6 +55,12 @@
   <data name="Adapters_Mac" xml:space="preserve">
     <value>Adresse MAC</value>
   </data>
+  <data name="Adapters_Metric" xml:space="preserve">
+    <value>Métrique {0}</value>
+  </data>
+  <data name="Adapters_MetricAutomatic" xml:space="preserve">
+    <value>{0} (automatique)</value>
+  </data>
   <data name="Adapters_NameDescription" xml:space="preserve">
     <value>Les profils continuent de fonctionner après un renommage : ils retrouvent d'abord les cartes par ID et adresse MAC.</value>
   </data>
@@ -298,6 +304,39 @@
   <data name="Form_Remove" xml:space="preserve">
     <value>Supprimer</value>
   </data>
+  <data name="History_ByHand" xml:space="preserve">
+    <value>Appliqué manuellement</value>
+  </data>
+  <data name="History_ByRule" xml:space="preserve">
+    <value>Règle « {0} »</value>
+  </data>
+  <data name="History_CannotLoad" xml:space="preserve">
+    <value>Impossible de charger l'historique</value>
+  </data>
+  <data name="History_Changes" xml:space="preserve">
+    <value>Modifications : {0}</value>
+  </data>
+  <data name="History_Description.Text" xml:space="preserve">
+    <value>Les 10 derniers changements de profil, depuis l'application, la zone de notification, les automatisations ou la ligne de commande.</value>
+  </data>
+  <data name="History_Empty.Text" xml:space="preserve">
+    <value>Aucun profil n'a encore été appliqué.</value>
+  </data>
+  <data name="History_Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="History_Failed" xml:space="preserve">
+    <value>Échec</value>
+  </data>
+  <data name="History_FailedRolledBack" xml:space="preserve">
+    <value>Échec, paramètres précédents restaurés</value>
+  </data>
+  <data name="History_Steps" xml:space="preserve">
+    <value>Modifications effectuées</value>
+  </data>
+  <data name="History_Title.Text" xml:space="preserve">
+    <value>Historique</value>
+  </data>
   <data name="Icon_Ethernet" xml:space="preserve">
     <value>Ethernet</value>
   </data>
@@ -442,6 +481,15 @@
   <data name="Main_ServiceStoppedTitle" xml:space="preserve">
     <value>Le service NetHop n'est pas en cours d'exécution</value>
   </data>
+  <data name="Metric_Automatic" xml:space="preserve">
+    <value>Automatique</value>
+  </data>
+  <data name="Metric_Manual" xml:space="preserve">
+    <value>Manuelle</value>
+  </data>
+  <data name="Metric_Unchanged" xml:space="preserve">
+    <value>Ne pas modifier</value>
+  </data>
   <data name="Mode_Dhcp" xml:space="preserve">
     <value>Automatique</value>
   </data>
@@ -459,6 +507,9 @@
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
     <value>Tableau de bord</value>
+  </data>
+  <data name="Nav_History.Content" xml:space="preserve">
+    <value>Historique</value>
   </data>
   <data name="Nav_Integrations.Content" xml:space="preserve">
     <value>Intégrations</value>
@@ -513,6 +564,12 @@
   </data>
   <data name="ProfileForm_MatchName" xml:space="preserve">
     <value>Nom de la carte</value>
+  </data>
+  <data name="ProfileForm_Metric" xml:space="preserve">
+    <value>Métrique {0}</value>
+  </data>
+  <data name="ProfileForm_MetricHelp" xml:space="preserve">
+    <value>Lorsque plusieurs cartes atteignent le même réseau, Windows utilise celle dont la métrique est la plus basse.</value>
   </data>
   <data name="ProfileForm_Name" xml:space="preserve">
     <value>Nom</value>

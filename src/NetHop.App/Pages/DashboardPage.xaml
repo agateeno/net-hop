@@ -39,7 +39,9 @@
                 </toolkit:SettingsCard>
 
                 <TextBlock x:Uid="Dashboard_SwitchProfile" Text="Switch profile" Style="{StaticResource SectionHeaderStyle}" />
-                <GridView x:Name="ProfileGrid" SelectionMode="None" IsItemClickEnabled="True" ItemClick="OnProfileClick">
+                <!-- Click applies a profile; dragging rearranges them (same order in the Profiles page and the tray). -->
+                <GridView x:Name="ProfileGrid" SelectionMode="None" IsItemClickEnabled="True" ItemClick="OnProfileClick"
+                          CanDragItems="True" CanReorderItems="True" AllowDrop="True" DragItemsCompleted="OnProfilesReordered">
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="ipc:ProfileSummary">
                             <Grid Width="220" Height="88" Padding="16" CornerRadius="{StaticResource ControlCornerRadius}"

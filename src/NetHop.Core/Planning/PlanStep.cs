@@ -63,6 +63,14 @@ public sealed record SetDnsStep(AdapterInfo Adapter, AddressFamily Family, IRead
         : Text.Format("Step_DnsSet", FamilyName(Family), Adapter.Name, string.Join(", ", Servers));
 }
 
+/// <summary>Sets the interface metric; null returns it to automatic.</summary>
+public sealed record SetMetricStep(AdapterInfo Adapter, AddressFamily Family, int? Metric) : PlanStep(Adapter)
+{
+    public override string Describe() => Metric is { } metric
+        ? Text.Format("Step_MetricSet", FamilyName(Family), Adapter.Name, metric)
+        : Text.Format("Step_MetricAuto", FamilyName(Family), Adapter.Name);
+}
+
 public sealed record ApplyPlan(IReadOnlyList<PlanStep> Steps, IReadOnlyList<Issue> Issues, int MissingAdapters = 0)
 {
     /// <summary>The network already matches the profile.</summary>

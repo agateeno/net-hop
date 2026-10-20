@@ -44,7 +44,7 @@ public sealed class CimNetworkBackend : INetworkBackend, IDisposable
         var adapters = Query("SELECT * FROM MSFT_NetAdapter")
             .Where(a => Get<bool?>(a, "Hidden") != true)
             .ToList();
-        var ipInterfaces = Query("SELECT InterfaceIndex, AddressFamily, Dhcp FROM MSFT_NetIPInterface").ToList();
+        var ipInterfaces = Query("SELECT InterfaceIndex, AddressFamily, Dhcp, AutomaticMetric, InterfaceMetric FROM MSFT_NetIPInterface").ToList();
         var addresses = Query("SELECT InterfaceIndex, AddressFamily, IPAddress, PrefixLength, PrefixOrigin FROM MSFT_NetIPAddress").ToList();
         var routes = Query("SELECT InterfaceIndex, AddressFamily, DestinationPrefix, NextHop, Protocol FROM MSFT_NetRoute WHERE DestinationPrefix = '0.0.0.0/0' OR DestinationPrefix = '::/0'").ToList();
         var effectiveDns = NetworkInterface.GetAllNetworkInterfaces()
@@ -105,12 +105,15 @@ public sealed class CimNetworkBackend : INetworkBackend, IDisposable
                 .ToList();
 
         var addressFamily = family == FamilyIPv4 ? AddressFamily.InterNetwork : AddressFamily.InterNetworkV6;
+        var metric = (int)Get<uint>(ipInterface, "InterfaceMetric");
         return new FamilySnapshot
         {
             Dhcp = dhcp,
             ManualAddresses = manual,
             ManualGateways = gateways,
             StaticDnsServers = DnsSettings.GetStaticServers(info.Id, addressFamily),
+            ManualMetric = Get<uint>(ipInterface, "AutomaticMetric") == 1 ? null : metric,
+            InterfaceMetric = metric,
             AllAddresses = all,
             EffectiveDnsServers = (effectiveDns ?? []).Where(d => d.AddressFamily == addressFamily).ToList(),
         };
@@ -154,6 +157,15 @@ public sealed class CimNetworkBackend : INetworkBackend, IDisposable
             case SetDnsStep s:
                 DnsSettings.SetServers(s.Adapter.Id, s.Family, s.Servers);
                 break;
+            case SetMetricStep s:
+                // Like Set-NetIPInterface: a fixed metric turns automatic metric off, "automatic" turns it back on.
+                ModifyIpInterface(s.Adapter.Id, s.Family, instance =>
+                {
+                    instance.CimInstanceProperties["AutomaticMetric"].Value = (byte)(s.Metric is null ? 1 : 0);
+                    if (s.Metric is { } metric)
+                        instance.CimInstanceProperties["InterfaceMetric"].Value = (uint)metric;
+                });
+                break;
             default:
                 throw new NotSupportedException($"Unknown step {step.GetType().Name}.");
         }
@@ -171,7 +183,11 @@ public sealed class CimNetworkBackend : INetworkBackend, IDisposable
         CheckReturn(_session.InvokeMethod(Namespace, FindAdapter(adapterId), "Rename", parameters), "Rename");
     }
 
-    private void SetDhcp(Guid adapterId, AddressFamily family, bool enabled)
+    private void SetDhcp(Guid adapterId, AddressFamily family, bool enabled) =>
+        ModifyIpInterface(adapterId, family, instance => instance.CimInstanceProperties["Dhcp"].Value = (byte)(enabled ? 1 : 0));
+
+    /// <summary>Changes the adapter's IP interface of one family, in both the active and the persistent store.</summary>
+    private void ModifyIpInterface(Guid adapterId, AddressFamily family, Action<CimInstance> change)
     {
         var cimFamily = family == AddressFamily.InterNetwork ? FamilyIPv4 : FamilyIPv6;
         foreach (var store in PolicyStores)
@@ -181,7 +197,7 @@ public sealed class CimNetworkBackend : INetworkBackend, IDisposable
                 $"SELECT * FROM MSFT_NetIPInterface WHERE InterfaceIndex = {CurrentIndex(adapterId)} AND AddressFamily = {cimFamily}", options);
             foreach (var instance in instances)
             {
-                instance.CimInstanceProperties["Dhcp"].Value = (byte)(enabled ? 1 : 0);
+                change(instance);
                 _session.ModifyInstance(Namespace, instance, options);
             }
         }

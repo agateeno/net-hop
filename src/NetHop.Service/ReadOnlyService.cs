@@ -44,6 +44,10 @@ public sealed class ReadOnlyService(INetHopService inner) : INetHopService
     public Task<ApplyResult> ApplyProfileAsync(string profile, bool dryRun = false, CancellationToken cancellationToken = default) =>
         dryRun ? inner.ApplyProfileAsync(profile, dryRun: true, cancellationToken) : throw Refused();
 
+    public Task SetProfileOrderAsync(Guid[] profileIds, CancellationToken cancellationToken = default) => throw Refused();
+
+    public Task<HistoryEntry[]> GetHistoryAsync(CancellationToken cancellationToken = default) => inner.GetHistoryAsync(cancellationToken);
+
     public Task RenameAdapterAsync(Guid adapterId, string newName, CancellationToken cancellationToken = default) => throw Refused();
 
     public Task SetAdapterEnabledAsync(Guid adapterId, bool enabled, CancellationToken cancellationToken = default) => throw Refused();

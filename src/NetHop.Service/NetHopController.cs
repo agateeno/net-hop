@@ -22,6 +22,7 @@ public sealed class NetHopController : INetHopService
     private readonly ProfileStore _profiles;
     private readonly RuleStore _ruleStore;
     private readonly StateStore _stateStore;
+    private readonly HistoryStore _history;
     private readonly ServicePaths _paths;
     private readonly ILogger<NetHopController> _logger;
 
@@ -30,13 +31,14 @@ public sealed class NetHopController : INetHopService
     private NetworkSnapshot? _snapshot;
 
     public NetHopController(CimNetworkBackend backend, ProfileApplier applier, ProfileStore profiles, RuleStore ruleStore,
-        StateStore stateStore, ServicePaths paths, ILogger<NetHopController> logger)
+        StateStore stateStore, HistoryStore history, ServicePaths paths, ILogger<NetHopController> logger)
     {
         _backend = backend;
         _applier = applier;
         _profiles = profiles;
         _ruleStore = ruleStore;
         _stateStore = stateStore;
+        _history = history;
         _paths = paths;
         _logger = logger;
         _rules = new RuleEngine(ruleStore.Load());
@@ -123,6 +125,16 @@ public sealed class NetHopController : INetHopService
             ? Task.FromResult(new ApplyResult { Error = $"Profile '{profile}' not found.", DryRun = dryRun })
             : ApplyAsync(found, dryRun, ruleName: null, cancellationToken);
     }
+
+    public Task SetProfileOrderAsync(Guid[] profileIds, CancellationToken cancellationToken = default)
+    {
+        _profiles.SetOrder(profileIds);
+        Raise(StatusChangeKind.ProfilesChanged);
+        return Task.CompletedTask;
+    }
+
+    public Task<HistoryEntry[]> GetHistoryAsync(CancellationToken cancellationToken = default) =>
+        Task.FromResult(_history.All());
 
     public async Task RenameAdapterAsync(Guid adapterId, string newName, CancellationToken cancellationToken = default)
     {
@@ -309,6 +321,17 @@ public sealed class NetHopController : INetHopService
         {
             if (!outcome.Success)
                 _logger.LogError("Profile '{Profile}' failed: {Error} (rolled back: {RolledBack})", profile.Name, outcome.Error, outcome.RolledBack);
+            _history.Add(new HistoryEntry
+            {
+                At = DateTimeOffset.Now,
+                ProfileId = profile.Id,
+                ProfileName = profile.Name,
+                Success = result.Success,
+                Error = result.Error,
+                RolledBack = result.RolledBack,
+                Steps = result.Steps,
+                RuleName = ruleName,
+            });
             Raise(StatusChangeKind.ProfileApplied, result, ruleName);
         }
         return result;

@@ -43,6 +43,15 @@ public partial interface INetHopService
     /// <param name="dryRun">Only plan, change nothing.</param>
     Task<ApplyResult> ApplyProfileAsync(string profile, bool dryRun = false, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Sets the order profiles are listed in (app, tray, CLI). Profiles left out follow, by name. When several profiles
+    /// match the network, the first one in this order is reported as active.
+    /// </summary>
+    Task SetProfileOrderAsync(Guid[] profileIds, CancellationToken cancellationToken = default);
+
+    /// <summary>The last profiles applied (not previews), newest first: at most <see cref="HistoryEntry.MaxEntries"/>.</summary>
+    Task<HistoryEntry[]> GetHistoryAsync(CancellationToken cancellationToken = default);
+
     // Adapters
 
     Task RenameAdapterAsync(Guid adapterId, string newName, CancellationToken cancellationToken = default);
@@ -114,6 +123,31 @@ public sealed record ApplyResult
     public bool RolledBack { get; init; }
 
     public TimeSpan Duration { get; init; }
+}
+
+/// <summary>One profile change, kept by the service across restarts.</summary>
+public sealed record HistoryEntry
+{
+    public const int MaxEntries = 10;
+
+    public DateTimeOffset At { get; init; }
+
+    public Guid ProfileId { get; init; }
+
+    public string ProfileName { get; init; } = "";
+
+    public bool Success { get; init; }
+
+    public string? Error { get; init; }
+
+    /// <summary>A step failed and the previous configuration was restored.</summary>
+    public bool RolledBack { get; init; }
+
+    /// <summary>Human-readable steps executed, in order; empty when the network already matched.</summary>
+    public string[] Steps { get; init; } = [];
+
+    /// <summary>The automation rule that applied the profile; null when someone applied it (app, tray, command line...).</summary>
+    public string? RuleName { get; init; }
 }
 
 public enum StatusChangeKind

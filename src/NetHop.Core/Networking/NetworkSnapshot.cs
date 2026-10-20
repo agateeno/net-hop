@@ -69,6 +69,12 @@ public sealed record FamilySnapshot
     /// <summary>Statically configured DNS servers; empty means DNS comes from DHCP.</summary>
     public IReadOnlyList<IPAddress> StaticDnsServers { get; init; } = [];
 
+    /// <summary>Interface metric set by hand; null when Windows chooses it (automatic metric).</summary>
+    public int? ManualMetric { get; init; }
+
+    /// <summary>The metric in use, automatic or not, for display only.</summary>
+    public int InterfaceMetric { get; init; }
+
     /// <summary>Every address currently on the interface, for display only.</summary>
     public IReadOnlyList<IpCidr> AllAddresses { get; init; } = [];
 

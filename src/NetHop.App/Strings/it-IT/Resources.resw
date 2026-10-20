@@ -55,6 +55,12 @@
   <data name="Adapters_Mac" xml:space="preserve">
     <value>Indirizzo MAC</value>
   </data>
+  <data name="Adapters_Metric" xml:space="preserve">
+    <value>Metrica {0}</value>
+  </data>
+  <data name="Adapters_MetricAutomatic" xml:space="preserve">
+    <value>{0} (automatica)</value>
+  </data>
   <data name="Adapters_NameDescription" xml:space="preserve">
     <value>I profili continuano a funzionare dopo la rinomina: trovano le schede prima per ID e MAC.</value>
   </data>
@@ -298,6 +304,39 @@
   <data name="Form_Remove" xml:space="preserve">
     <value>Rimuovi</value>
   </data>
+  <data name="History_ByHand" xml:space="preserve">
+    <value>Applicato manualmente</value>
+  </data>
+  <data name="History_ByRule" xml:space="preserve">
+    <value>Regola '{0}'</value>
+  </data>
+  <data name="History_CannotLoad" xml:space="preserve">
+    <value>Impossibile caricare la cronologia</value>
+  </data>
+  <data name="History_Changes" xml:space="preserve">
+    <value>Modifiche: {0}</value>
+  </data>
+  <data name="History_Description.Text" xml:space="preserve">
+    <value>Gli ultimi 10 cambi di profilo, fatti dall'app, dall'area di notifica, dalle automazioni o dalla riga di comando.</value>
+  </data>
+  <data name="History_Empty.Text" xml:space="preserve">
+    <value>Non è ancora stato applicato nessun profilo.</value>
+  </data>
+  <data name="History_Error" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="History_Failed" xml:space="preserve">
+    <value>Non riuscito</value>
+  </data>
+  <data name="History_FailedRolledBack" xml:space="preserve">
+    <value>Non riuscito, impostazioni precedenti ripristinate</value>
+  </data>
+  <data name="History_Steps" xml:space="preserve">
+    <value>Modifiche apportate</value>
+  </data>
+  <data name="History_Title.Text" xml:space="preserve">
+    <value>Cronologia</value>
+  </data>
   <data name="Icon_Ethernet" xml:space="preserve">
     <value>Ethernet</value>
   </data>
@@ -442,6 +481,15 @@
   <data name="Main_ServiceStoppedTitle" xml:space="preserve">
     <value>Il servizio NetHop non è in esecuzione</value>
   </data>
+  <data name="Metric_Automatic" xml:space="preserve">
+    <value>Automatica</value>
+  </data>
+  <data name="Metric_Manual" xml:space="preserve">
+    <value>Manuale</value>
+  </data>
+  <data name="Metric_Unchanged" xml:space="preserve">
+    <value>Lascia com'è</value>
+  </data>
   <data name="Mode_Dhcp" xml:space="preserve">
     <value>Automatico</value>
   </data>
@@ -459,6 +507,9 @@
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
     <value>Dashboard</value>
+  </data>
+  <data name="Nav_History.Content" xml:space="preserve">
+    <value>Cronologia</value>
   </data>
   <data name="Nav_Integrations.Content" xml:space="preserve">
     <value>Integrazioni</value>
@@ -513,6 +564,12 @@
   </data>
   <data name="ProfileForm_MatchName" xml:space="preserve">
     <value>Nome della scheda</value>
+  </data>
+  <data name="ProfileForm_Metric" xml:space="preserve">
+    <value>Metrica {0}</value>
+  </data>
+  <data name="ProfileForm_MetricHelp" xml:space="preserve">
+    <value>Quando più schede raggiungono la stessa rete, Windows usa quella con la metrica più bassa.</value>
   </data>
   <data name="ProfileForm_Name" xml:space="preserve">
     <value>Nome</value>

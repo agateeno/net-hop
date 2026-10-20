@@ -122,7 +122,10 @@ public static partial class ProfileValidator
                 issues.Add(Issue.Warning($"{path}.dns", Text.Get("Profile_StaticIpv4NoDhcpDns")));
         }
 
-        if (config.Mode == IpMode.Unchanged && config.Dns is null)
+        if (config.Metric is not null && !IpConfig.TryParseMetric(config.Metric, out _))
+            issues.Add(Issue.Error($"{path}.metric", Text.Format("Profile_MetricInvalid", config.Metric, IpConfig.MaxMetric)));
+
+        if (config.Mode == IpMode.Unchanged && config.Dns is null && config.Metric is null)
             issues.Add(Issue.Warning(path, Text.Format("Profile_FamilyChangesNothing", familyName)));
     }
 

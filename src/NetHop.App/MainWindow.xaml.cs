@@ -17,6 +17,7 @@ public sealed partial class MainWindow : Window
         ["Profiles"] = typeof(ProfilesPage),
         ["Adapters"] = typeof(AdaptersPage),
         ["Automations"] = typeof(AutomationsPage),
+        ["History"] = typeof(HistoryPage),
         ["Integrations"] = typeof(IntegrationsPage),
     };
 

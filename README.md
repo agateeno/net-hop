@@ -43,10 +43,11 @@ Or download the MSI for your PC (`x64`, or `arm64` for Windows on Arm) from [Rel
 
 ## Features
 
-- **Profiles** enable/disable adapters and set IPv4 **and** IPv6: DHCP or static, with multiple addresses, gateways and DNS servers.
+- **Profiles** enable/disable adapters and set IPv4 **and** IPv6: DHCP or static, with multiple addresses, gateways and DNS servers, and the interface metric (which adapter Windows prefers).
 - **Minimal changes**: NetHop compares the profile with the live configuration and only changes what differs. A failed step rolls back the adapters it touched.
 - **Plain files**: profiles are YAML documents with the `.nethop` extension. Double-click one to import it.
-- **Profile editor** with a form view and a YAML view: start from scratch, from the current configuration, or by duplicating a profile.
+- **Profile editor** with a form view and a YAML view: start from scratch, from the current configuration, or by duplicating a profile. Drag profiles in the dashboard or the profile list to put them in your order; the tray follows it.
+- **History**: the last 10 profile changes, with who made them (you or which rule), what changed, and any error.
 - **Tray flyout**: left-click the notification-area icon to see the active profile and switch with one click.
 - **Built-in automations**: rules such as "when I join the Wi-Fi `CORP-WiFi` on a weekday, apply *Office*", with no extra software. Loop protection, cooldowns and a pause switch are included.
 - **Power Automate**: a *NetHop* group of custom actions in Power Automate Desktop, a PowerShell module, and a CLI with JSON output. NetHop rules can also start flows.

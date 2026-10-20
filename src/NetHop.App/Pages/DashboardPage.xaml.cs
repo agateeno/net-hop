@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -11,6 +12,7 @@ public sealed partial class DashboardPage : Page
 {
     private readonly ServiceConnection _connection = App.Current!.Connection;
     private bool _updating;
+    private ProfileSummary[]? _shownProfiles;
 
     public DashboardPage()
     {
@@ -37,7 +39,13 @@ public sealed partial class DashboardPage : Page
         _updating = true;
         var status = _connection.Status;
 
-        ProfileGrid.ItemsSource = _connection.Profiles;
+        // Only when the list itself changed: replacing it on every status update would cancel a drag in progress.
+        if (!ReferenceEquals(_shownProfiles, _connection.Profiles))
+        {
+            _shownProfiles = _connection.Profiles;
+            ProfileGrid.ItemsSource = new ObservableCollection<ProfileSummary>(_shownProfiles); // reordering needs a collection it can change
+        }
+        ProfileGrid.CanReorderItems = ProfileGrid.CanDragItems = _connection.CanEdit;
         NoProfilesText.Visibility = _connection.IsConnected && _connection.Profiles.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
 
         ActiveCard.Header = status?.ActiveProfileName ?? Loc.Get("Dashboard_NoActiveProfile");
@@ -73,6 +81,9 @@ public sealed partial class DashboardPage : Page
         if (e.ClickedItem is ProfileSummary profile)
             await _connection.ApplyAsync(profile.Id.ToString());
     }
+
+    private async void OnProfilesReordered(ListViewBase sender, DragItemsCompletedEventArgs args) =>
+        await _connection.SaveOrderAsync((ObservableCollection<ProfileSummary>)ProfileGrid.ItemsSource);
 
     private async void OnAutomationsToggled(object sender, RoutedEventArgs e)
     {

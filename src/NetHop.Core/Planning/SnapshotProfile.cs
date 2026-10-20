@@ -41,6 +41,7 @@ public static class SnapshotProfile
             Dns = family.StaticDnsServers.Count > 0
                 ? new DnsConfig { Mode = DnsMode.Static, Servers = family.StaticDnsServers.Select(s => s.ToString()).ToList() }
                 : new DnsConfig { Mode = DnsMode.Dhcp },
+            Metric = family.ManualMetric?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? IpConfig.AutomaticMetric,
         };
     }
 }

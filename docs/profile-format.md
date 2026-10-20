@@ -40,9 +40,11 @@ ipv4:
   dns:
     mode: static               # dhcp | static | unchanged (default)
     servers: [192.168.10.1, 1.1.1.1]   # order matters: the first is preferred
+  metric: 10                   # optional: automatic, or 1-9999; omitted leaves it as it is
 ```
 
 - `dhcp` means automatic configuration: DHCP for IPv4, router advertisements/DHCPv6 for IPv6.
+- `metric` is the interface metric: when several adapters reach the same network, Windows uses the one with the lowest metric. `automatic` lets Windows choose it from the link speed. A block may set only the metric (no `mode`). Profiles captured from the current configuration include it, so a captured profile is active only when the metrics match too.
 - When `dns` is omitted, `mode: dhcp` also makes DNS automatic, while `mode: static` leaves DNS as it is.
 - IPv6 gateways may be link-local (`fe80::1`).
 - Switching to `static` removes manual addresses and gateways that are not listed; switching to `dhcp` removes all of them.
@@ -51,7 +53,7 @@ ipv4:
 
 | Severity | Examples |
 |---|---|
-| Error | missing name, address without prefix, wrong address family, static mode without addresses, addresses in DHCP mode, duplicate addresses, two entries for the same adapter |
+| Error | missing name, address without prefix, wrong address family, static mode without addresses, addresses in DHCP mode, duplicate addresses, two entries for the same adapter, a metric that is not `automatic` or 1-9999 |
 | Warning | gateway outside every configured subnet, network/broadcast address, IP settings on a disabled adapter, an entry that changes nothing |
 
 Profiles with errors cannot be saved or applied. Check a file with `nethop validate file.nethop`.

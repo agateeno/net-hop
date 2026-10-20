@@ -5,6 +5,7 @@ using NetHop.Core;
 using NetHop.Core.Profiles;
 using NetHop.Core.Rules;
 using NetHop.Core.Serialization;
+using NetHop.Ipc;
 
 namespace NetHop.Service;
 
@@ -17,6 +18,8 @@ public sealed class ServicePaths
         Profiles = Path.Combine(Root, "profiles");
         Rules = Path.Combine(Root, NetHopConstants.RulesFileName);
         State = Path.Combine(Root, "state.json");
+        ProfileOrder = Path.Combine(Root, "profile-order.json");
+        History = Path.Combine(Root, "history.json");
 
         CreateProtected(Root);
         Directory.CreateDirectory(Profiles);
@@ -29,6 +32,10 @@ public sealed class ServicePaths
     public string Rules { get; }
 
     public string State { get; }
+
+    public string ProfileOrder { get; }
+
+    public string History { get; }
 
     private static readonly SecurityIdentifier SystemSid = new(WellKnownSidType.LocalSystemSid, null);
     private static readonly SecurityIdentifier AdministratorsSid = new(WellKnownSidType.BuiltinAdministratorsSid, null);
@@ -109,16 +116,45 @@ public sealed class ServicePaths
         security.GetOwner(typeof(SecurityIdentifier)) is SecurityIdentifier owner && (owner == SystemSid || owner == AdministratorsSid);
 }
 
-/// <summary>The <c>.nethop</c> files in the profiles folder, indexed by profile id.</summary>
+/// <summary>The <c>.nethop</c> files in the profiles folder, indexed by profile id, in the order the user gave them.</summary>
 public sealed class ProfileStore(ServicePaths paths, ILogger<ProfileStore> logger)
 {
     private readonly Lock _lock = new();
     private Dictionary<Guid, (Profile Profile, string Path)>? _cache;
+    private Guid[]? _order;
 
     public IReadOnlyList<Profile> All()
     {
         lock (_lock)
-            return Load().Values.Select(v => v.Profile).OrderBy(p => p.Name, StringComparer.CurrentCultureIgnoreCase).ToList();
+            return ProfileOrder.Sort(Load().Values.Select(v => v.Profile), LoadOrder());
+    }
+
+    public void SetOrder(Guid[] ids)
+    {
+        lock (_lock)
+        {
+            var temp = paths.ProfileOrder + ".tmp";
+            File.WriteAllText(temp, JsonSerializer.Serialize(ids));
+            File.Move(temp, paths.ProfileOrder, overwrite: true);
+            _order = ids;
+        }
+    }
+
+    // The order is a separate file, not a key in the profiles: reordering must not rewrite (or re-sync) every profile.
+    private Guid[] LoadOrder()
+    {
+        if (_order is not null)
+            return _order;
+        try
+        {
+            _order = File.Exists(paths.ProfileOrder) ? JsonSerializer.Deserialize<Guid[]>(File.ReadAllText(paths.ProfileOrder)) ?? [] : [];
+        }
+        catch (Exception ex) when (ex is JsonException or IOException)
+        {
+            logger.LogWarning(ex, "Ignoring unreadable profile order {Path}", paths.ProfileOrder);
+            _order = [];
+        }
+        return _order;
     }
 
     public Profile? Find(string idOrName)
@@ -245,4 +281,55 @@ public sealed class StateStore(ServicePaths paths)
     }
 
     public void Save(State state) => File.WriteAllText(paths.State, JsonSerializer.Serialize(state));
+}
+
+/// <summary>The last <see cref="HistoryEntry.MaxEntries"/> profile changes, newest first.</summary>
+public sealed class HistoryStore(ServicePaths paths, ILogger<HistoryStore> logger)
+{
+    private readonly Lock _lock = new();
+    private List<HistoryEntry>? _entries;
+
+    public HistoryEntry[] All()
+    {
+        lock (_lock)
+            return [.. Load()];
+    }
+
+    public void Add(HistoryEntry entry)
+    {
+        lock (_lock)
+        {
+            var entries = Load();
+            entries.Insert(0, entry);
+            if (entries.Count > HistoryEntry.MaxEntries)
+                entries.RemoveRange(HistoryEntry.MaxEntries, entries.Count - HistoryEntry.MaxEntries);
+            try
+            {
+                var temp = paths.History + ".tmp";
+                File.WriteAllText(temp, JsonSerializer.Serialize(entries));
+                File.Move(temp, paths.History, overwrite: true);
+            }
+            catch (IOException ex)
+            {
+                // The history is a convenience: losing it must never fail a profile change.
+                logger.LogWarning(ex, "Could not save the history to {Path}", paths.History);
+            }
+        }
+    }
+
+    private List<HistoryEntry> Load()
+    {
+        if (_entries is not null)
+            return _entries;
+        try
+        {
+            _entries = File.Exists(paths.History) ? JsonSerializer.Deserialize<List<HistoryEntry>>(File.ReadAllText(paths.History)) ?? [] : [];
+        }
+        catch (Exception ex) when (ex is JsonException or IOException)
+        {
+            logger.LogWarning(ex, "Ignoring unreadable history {Path}", paths.History);
+            _entries = [];
+        }
+        return _entries;
+    }
 }

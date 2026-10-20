@@ -55,6 +55,12 @@
   <data name="Adapters_Mac" xml:space="preserve">
     <value>Endereço MAC</value>
   </data>
+  <data name="Adapters_Metric" xml:space="preserve">
+    <value>Métrica {0}</value>
+  </data>
+  <data name="Adapters_MetricAutomatic" xml:space="preserve">
+    <value>{0} (automática)</value>
+  </data>
   <data name="Adapters_NameDescription" xml:space="preserve">
     <value>Os perfis continuam funcionando depois de renomear: eles encontram os adaptadores primeiro pelo ID e pelo endereço MAC.</value>
   </data>
@@ -298,6 +304,39 @@
   <data name="Form_Remove" xml:space="preserve">
     <value>Remover</value>
   </data>
+  <data name="History_ByHand" xml:space="preserve">
+    <value>Aplicado manualmente</value>
+  </data>
+  <data name="History_ByRule" xml:space="preserve">
+    <value>Regra "{0}"</value>
+  </data>
+  <data name="History_CannotLoad" xml:space="preserve">
+    <value>Não foi possível carregar o histórico</value>
+  </data>
+  <data name="History_Changes" xml:space="preserve">
+    <value>Alterações: {0}</value>
+  </data>
+  <data name="History_Description.Text" xml:space="preserve">
+    <value>As últimas 10 trocas de perfil, feitas pelo aplicativo, pela área de notificação, por automações ou pela linha de comando.</value>
+  </data>
+  <data name="History_Empty.Text" xml:space="preserve">
+    <value>Nenhum perfil foi aplicado ainda.</value>
+  </data>
+  <data name="History_Error" xml:space="preserve">
+    <value>Erro</value>
+  </data>
+  <data name="History_Failed" xml:space="preserve">
+    <value>Falhou</value>
+  </data>
+  <data name="History_FailedRolledBack" xml:space="preserve">
+    <value>Falhou, configurações anteriores restauradas</value>
+  </data>
+  <data name="History_Steps" xml:space="preserve">
+    <value>Alterações feitas</value>
+  </data>
+  <data name="History_Title.Text" xml:space="preserve">
+    <value>Histórico</value>
+  </data>
   <data name="Icon_Ethernet" xml:space="preserve">
     <value>Ethernet</value>
   </data>
@@ -442,6 +481,15 @@
   <data name="Main_ServiceStoppedTitle" xml:space="preserve">
     <value>O serviço NetHop não está em execução</value>
   </data>
+  <data name="Metric_Automatic" xml:space="preserve">
+    <value>Automática</value>
+  </data>
+  <data name="Metric_Manual" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="Metric_Unchanged" xml:space="preserve">
+    <value>Deixar como está</value>
+  </data>
   <data name="Mode_Dhcp" xml:space="preserve">
     <value>Automático</value>
   </data>
@@ -459,6 +507,9 @@
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
     <value>Painel</value>
+  </data>
+  <data name="Nav_History.Content" xml:space="preserve">
+    <value>Histórico</value>
   </data>
   <data name="Nav_Integrations.Content" xml:space="preserve">
     <value>Integrações</value>
@@ -513,6 +564,12 @@
   </data>
   <data name="ProfileForm_MatchName" xml:space="preserve">
     <value>Nome do adaptador</value>
+  </data>
+  <data name="ProfileForm_Metric" xml:space="preserve">
+    <value>Métrica {0}</value>
+  </data>
+  <data name="ProfileForm_MetricHelp" xml:space="preserve">
+    <value>Quando vários adaptadores alcançam a mesma rede, o Windows usa o que tem a menor métrica.</value>
   </data>
   <data name="ProfileForm_Name" xml:space="preserve">
     <value>Nome</value>

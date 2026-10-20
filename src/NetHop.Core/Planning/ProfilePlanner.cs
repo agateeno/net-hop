@@ -112,6 +112,10 @@ public static class ProfilePlanner
                 break;
         }
 
+        if (desired.Metric is not null && IpConfig.TryParseMetric(desired.Metric, out var metric)
+            && (current is null || current.ManualMetric != metric))
+            steps.Add(new SetMetricStep(adapter, family, metric));
+
         var dnsMode = desired.Dns?.Mode ?? (desired.Mode == IpMode.Dhcp ? DnsMode.Dhcp : DnsMode.Unchanged);
         var currentDns = current?.StaticDnsServers ?? [];
         switch (dnsMode)

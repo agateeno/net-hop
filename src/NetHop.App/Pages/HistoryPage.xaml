@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NetHop.App.Pages.HistoryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <Grid Style="{StaticResource PageGridStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MaxWidth="{StaticResource PageMaxWidth}" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Spacing="{StaticResource SettingsCardSpacing}">
+                <TextBlock x:Uid="History_Title" Text="History" Style="{StaticResource PageTitleStyle}" />
+                <TextBlock x:Uid="History_Description" Margin="1,0,0,12" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           Text="The last 10 profile changes, from the app, the tray, automations or the command line." />
+
+                <InfoBar x:Name="ErrorInfo" Severity="Error" IsClosable="True" />
+                <TextBlock x:Uid="History_Empty" x:Name="EmptyText" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           Text="No profile has been applied yet." TextWrapping="Wrap" />
+                <StackPanel x:Name="EntryList" Spacing="{StaticResource SettingsCardSpacing}" />
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

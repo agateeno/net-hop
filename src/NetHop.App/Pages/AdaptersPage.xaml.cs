@@ -117,6 +117,8 @@ public sealed partial class AdaptersPage : Page
             AddRow(expander, Loc.Format("Adapters_Gateway", label), string.Join(Environment.NewLine, family.ManualGateways));
         if (family.EffectiveDnsServers.Count > 0)
             AddRow(expander, Loc.Format(family.StaticDnsServers.Count > 0 ? "Adapters_DnsStatic" : "Adapters_Dns", label), string.Join(Environment.NewLine, family.EffectiveDnsServers));
+        AddRow(expander, Loc.Format("Adapters_Metric", label),
+            family.ManualMetric is null ? Loc.Format("Adapters_MetricAutomatic", family.InterfaceMetric) : family.InterfaceMetric.ToString());
     }
 
     private static void AddRow(SettingsExpander expander, string header, string value) =>

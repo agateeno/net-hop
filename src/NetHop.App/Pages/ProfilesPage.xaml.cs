@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -38,6 +39,7 @@ public sealed partial class ProfilesPage : Page
     private const double TwoAdapterColumnsMinWidth = 860;
 
     private ProfileForm? _form;
+    private ObservableCollection<ProfileSummary> _shownProfiles = [];
     private int _adapterColumns = 1;
 
     public ProfilesPage()
@@ -49,7 +51,7 @@ public sealed partial class ProfilesPage : Page
     protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
         _connection.PropertyChanged += OnConnectionChanged;
-        ProfileList.ItemsSource = ProfilePicker.ItemsSource = _connection.Profiles;
+        ShowProfiles();
         await LoadAdaptersAsync();
         if (e.Parameter is ImportRequest import)
             Import(import.Path);
@@ -88,12 +90,28 @@ public sealed partial class ProfilesPage : Page
 
     private void OnConnectionChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
+        if (e.PropertyName is nameof(ServiceConnection.CanEdit))
+            ProfileList.CanReorderItems = ProfileList.CanDragItems = _connection.CanEdit;
         if (e.PropertyName != nameof(ServiceConnection.Profiles))
             return;
-        var selected = _editingId;
-        ProfileList.ItemsSource = ProfilePicker.ItemsSource = _connection.Profiles;
-        SelectProfile(_connection.Profiles.FirstOrDefault(p => p.Id == selected));
+        ShowProfiles();
     }
+
+    /// <summary>Shows the service's profiles in the list and the drop-down, keeping the one being edited selected.</summary>
+    private void ShowProfiles()
+    {
+        var selected = _editingId;
+        // A collection the list can change: reordering by dragging needs one.
+        _shownProfiles = new ObservableCollection<ProfileSummary>(_connection.Profiles);
+        _selecting = true;
+        ProfileList.ItemsSource = ProfilePicker.ItemsSource = _shownProfiles;
+        _selecting = false;
+        ProfileList.CanReorderItems = ProfileList.CanDragItems = _connection.CanEdit;
+        SelectProfile(_shownProfiles.FirstOrDefault(p => p.Id == selected));
+    }
+
+    private async void OnProfilesReordered(ListViewBase sender, DragItemsCompletedEventArgs args) =>
+        await _connection.SaveOrderAsync(_shownProfiles);
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {

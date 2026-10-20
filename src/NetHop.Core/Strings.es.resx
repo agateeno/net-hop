@@ -130,11 +130,20 @@
   <data name="Profile_IpInvalid" xml:space="preserve">
     <value>«{0}» no es una dirección IP válida.</value>
   </data>
+  <data name="Profile_MetricInvalid" xml:space="preserve">
+    <value>«{0}» no es una métrica válida: usa automatic o un número del 1 al {1}.</value>
+  </data>
   <data name="Profile_SameAdapter" xml:space="preserve">
     <value>El mismo adaptador que adapters[{0}].</value>
   </data>
   <data name="Step_Enable" xml:space="preserve">
     <value>Habilitar el adaptador «{0}»</value>
+  </data>
+  <data name="Step_MetricAuto" xml:space="preserve">
+    <value>Usar la métrica {0} automática en «{1}»</value>
+  </data>
+  <data name="Step_MetricSet" xml:space="preserve">
+    <value>Establecer la métrica {0} de «{1}» en {2}</value>
   </data>
   <data name="Step_Wait" xml:space="preserve">
     <value>Esperar a que el adaptador «{0}» esté listo</value>

@@ -85,6 +85,26 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
         }
     }
 
+    /// <summary>
+    /// Saves the order of a list the user rearranged by dragging (dashboard, Profiles page). The service then reports
+    /// the profiles changed, so every list, the tray included, shows the new order.
+    /// </summary>
+    public async Task SaveOrderAsync(IEnumerable<ProfileSummary> reordered)
+    {
+        var ids = reordered.Select(p => p.Id).ToArray();
+        if (!CanEdit || ids.SequenceEqual(Profiles.Select(p => p.Id)))
+            return;
+        try
+        {
+            await Service.SetProfileOrderAsync(ids);
+        }
+        catch (Exception ex) when (ex is StreamJsonRpc.RemoteInvocationException or StreamJsonRpc.ConnectionLostException)
+        {
+            // Not saved (an older service, say): show the order the service still has.
+            await RefreshAsync();
+        }
+    }
+
     public async Task RefreshAsync()
     {
         if (_client is null)

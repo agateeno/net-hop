@@ -130,11 +130,20 @@
   <data name="Profile_IpInvalid" xml:space="preserve">
     <value>'{0}' is not a valid IP address.</value>
   </data>
+  <data name="Profile_MetricInvalid" xml:space="preserve">
+    <value>'{0}' is not a valid metric: use automatic or a number from 1 to {1}.</value>
+  </data>
   <data name="Profile_SameAdapter" xml:space="preserve">
     <value>Same adapter as adapters[{0}].</value>
   </data>
   <data name="Step_Enable" xml:space="preserve">
     <value>Enable adapter '{0}'</value>
+  </data>
+  <data name="Step_MetricAuto" xml:space="preserve">
+    <value>Use automatic {0} metric on '{1}'</value>
+  </data>
+  <data name="Step_MetricSet" xml:space="preserve">
+    <value>Set {0} metric on '{1}' to {2}</value>
   </data>
   <data name="Step_Wait" xml:space="preserve">
     <value>Wait for adapter '{0}' to come up</value>

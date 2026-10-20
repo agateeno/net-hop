@@ -194,6 +194,35 @@ public class ProfilePlannerTests
         Assert.Contains(plan.Steps, s => s is SetDnsStep d && d.Adapter == Ethernet && d.Servers.Count == 1);
     }
 
+    private static Profile EthernetMetric(string metric) => new()
+    {
+        Name = "Metric",
+        Adapters = [new AdapterConfig { Match = new AdapterMatch { Name = "Ethernet" }, Ipv4 = new IpConfig { Metric = metric } }],
+    };
+
+    [Fact]
+    public void Metric_is_set_only_when_it_differs()
+    {
+        var automatic = Snapshot(Up(Ethernet));
+        var manual = Snapshot(Up(Ethernet, Dhcp() with { ManualMetric = 25 }));
+
+        Assert.Equal(new SetMetricStep(Ethernet, AddressFamily.InterNetwork, 25), Assert.Single(ProfilePlanner.Plan(EthernetMetric("25"), automatic).Steps));
+        Assert.True(ProfilePlanner.IsSatisfied(EthernetMetric("25"), manual));
+        Assert.Equal(new SetMetricStep(Ethernet, AddressFamily.InterNetwork, null), Assert.Single(ProfilePlanner.Plan(EthernetMetric("automatic"), manual).Steps));
+        Assert.True(ProfilePlanner.IsSatisfied(EthernetMetric("automatic"), automatic));
+    }
+
+    [Fact]
+    public void Snapshot_profile_restores_the_metric()
+    {
+        var before = Snapshot(Up(Ethernet, Dhcp() with { ManualMetric = 5 }));
+        var rollback = SnapshotProfile.Create(before, [Ethernet.Id], "Rollback");
+
+        var plan = ProfilePlanner.Plan(rollback, Snapshot(Up(Ethernet)));
+
+        Assert.Contains(plan.Steps, s => s is SetMetricStep { Metric: 5, Family: AddressFamily.InterNetwork });
+    }
+
     [Fact]
     public void Office_sample_plans_cleanly_against_a_dhcp_machine()
     {

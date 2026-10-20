@@ -130,11 +130,20 @@
   <data name="Profile_IpInvalid" xml:space="preserve">
     <value>« {0} » n'est pas une adresse IP valide.</value>
   </data>
+  <data name="Profile_MetricInvalid" xml:space="preserve">
+    <value>« {0} » n'est pas une métrique valide : utilisez automatic ou un nombre de 1 à {1}.</value>
+  </data>
   <data name="Profile_SameAdapter" xml:space="preserve">
     <value>Même carte que adapters[{0}].</value>
   </data>
   <data name="Step_Enable" xml:space="preserve">
     <value>Activer la carte « {0} »</value>
+  </data>
+  <data name="Step_MetricAuto" xml:space="preserve">
+    <value>Utiliser la métrique {0} automatique sur « {1} »</value>
+  </data>
+  <data name="Step_MetricSet" xml:space="preserve">
+    <value>Définir la métrique {0} de « {1} » sur {2}</value>
   </data>
   <data name="Step_Wait" xml:space="preserve">
     <value>Attendre que la carte « {0} » soit opérationnelle</value>

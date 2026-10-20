@@ -84,6 +84,29 @@ public sealed class IpConfig
     /// while <see cref="IpMode.Static"/> leaves DNS as it is.
     /// </summary>
     public DnsConfig? Dns { get; set; }
+
+    /// <summary>
+    /// Interface metric: <see cref="AutomaticMetric"/>, or a number from 1 to <see cref="MaxMetric"/>. When several
+    /// adapters reach the same network, Windows prefers the lowest metric. Null leaves it as it is.
+    /// </summary>
+    public string? Metric { get; set; }
+
+    public const string AutomaticMetric = "automatic";
+
+    public const int MaxMetric = 9999;
+
+    /// <summary>Reads a <see cref="Metric"/> value: <paramref name="metric"/> is null for automatic.</summary>
+    public static bool TryParseMetric(string? value, out int? metric)
+    {
+        metric = null;
+        if (string.Equals(value?.Trim(), AutomaticMetric, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (!int.TryParse(value, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var number)
+            || number is < 1 or > MaxMetric)
+            return false;
+        metric = number;
+        return true;
+    }
 }
 
 public enum IpMode

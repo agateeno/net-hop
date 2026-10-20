@@ -66,6 +66,25 @@ public class ProfileSerializerTests
     }
 
     [Fact]
+    public void Metric_is_a_number_or_automatic_and_round_trips()
+    {
+        const string yaml = """
+            name: Metric
+            adapters:
+              - match: { name: Ethernet }
+                ipv4: { metric: 25 }
+                ipv6: { metric: automatic }
+            """;
+
+        var profile = ProfileSerializer.Deserialize(yaml);
+        var copy = ProfileSerializer.Deserialize(ProfileSerializer.Serialize(profile));
+
+        Assert.Equal("25", copy.Adapters[0].Ipv4!.Metric);
+        Assert.Equal(IpConfig.AutomaticMetric, copy.Adapters[0].Ipv6!.Metric);
+        Assert.Empty(ProfileValidator.Validate(copy));
+    }
+
+    [Fact]
     public void Invalid_enum_value_is_rejected()
     {
         const string yaml = """

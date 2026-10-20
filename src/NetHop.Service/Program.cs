@@ -14,6 +14,7 @@ builder.Services.AddSingleton<ProfileApplier>();
 builder.Services.AddSingleton<ProfileStore>();
 builder.Services.AddSingleton<RuleStore>();
 builder.Services.AddSingleton<StateStore>();
+builder.Services.AddSingleton<HistoryStore>();
 builder.Services.AddSingleton<NetHopController>();
 builder.Services.AddHostedService<PipeServer>();
 builder.Services.AddHostedService<NetworkMonitor>();

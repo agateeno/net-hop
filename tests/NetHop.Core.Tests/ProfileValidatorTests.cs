@@ -72,6 +72,24 @@ public class ProfileValidatorTests
         Assert.Contains(Errors(p), i => i.Path == "adapters[0].ipv4.addresses[0]");
     }
 
+    [Theory]
+    [InlineData("1", true)]
+    [InlineData("9999", true)]
+    [InlineData("automatic", true)]
+    [InlineData("Automatic", true)]
+    [InlineData("0", false)]
+    [InlineData("10000", false)]
+    [InlineData("-5", false)]
+    [InlineData("auto", false)]
+    public void Metric_is_automatic_or_between_1_and_9999(string metric, bool valid)
+    {
+        var p = WithIpv4(new IpConfig { Metric = metric });
+
+        Assert.Equal(valid, !Errors(p).Any(i => i.Path == "adapters[0].ipv4.metric"));
+        // A block that only sets the metric still changes something.
+        Assert.DoesNotContain(Warnings(p), i => i.Path == "adapters[0].ipv4");
+    }
+
     [Fact]
     public void Static_without_addresses_is_an_error()
     {

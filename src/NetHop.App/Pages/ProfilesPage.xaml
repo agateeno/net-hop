@@ -125,7 +125,9 @@
                         </StackPanel>
                     </Button>
                 </Grid>
-                <ListView x:Name="ProfileList" Grid.Row="1" ItemTemplate="{StaticResource ProfileItemTemplate}" SelectionChanged="OnSelectionChanged" />
+                <!-- Dragging rearranges the profiles: the same order as the dashboard and the tray. -->
+                <ListView x:Name="ProfileList" Grid.Row="1" ItemTemplate="{StaticResource ProfileItemTemplate}" SelectionChanged="OnSelectionChanged"
+                          CanDragItems="True" CanReorderItems="True" AllowDrop="True" DragItemsCompleted="OnProfilesReordered" />
             </Grid>
 
             <!-- Separator between the list and the editor -->
