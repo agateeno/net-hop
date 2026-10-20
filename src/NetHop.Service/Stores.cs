@@ -30,26 +30,83 @@ public sealed class ServicePaths
 
     public string State { get; }
 
+    private static readonly SecurityIdentifier SystemSid = new(WellKnownSidType.LocalSystemSid, null);
+    private static readonly SecurityIdentifier AdministratorsSid = new(WellKnownSidType.BuiltinAdministratorsSid, null);
+
+    /// <summary>
+    /// Creates the folder, or takes over an existing one, so that only SYSTEM and Administrators can change it.
+    /// Standard users may create folders in %ProgramData%: one could create NetHop before the service does (as a
+    /// junction, or owning files inside) and so write the rules and profiles the service runs.
+    /// </summary>
     private static void CreateProtected(string path)
     {
+        var directory = new DirectoryInfo(path);
+        if (directory.Exists && directory.LinkTarget is not null)
+        {
+            directory.Delete(); // removes the link itself, never its target
+            directory.Refresh();
+        }
+        else if (directory.Exists && !HasTrustedOwner(directory.GetAccessControl()))
+        {
+            // Not created by NetHop or an administrator: keep it for inspection, start from a clean folder.
+            directory.MoveTo($"{path}.untrusted-{DateTime.UtcNow:yyyyMMddHHmmss}");
+            directory = new DirectoryInfo(path);
+        }
+
         var security = new DirectorySecurity();
+        security.SetOwner(AdministratorsSid);
         security.SetAccessRuleProtection(isProtected: true, preserveInheritance: false);
-        foreach (var sid in new[] { WellKnownSidType.LocalSystemSid, WellKnownSidType.BuiltinAdministratorsSid })
+        foreach (var sid in new[] { SystemSid, AdministratorsSid })
         {
             security.AddAccessRule(new FileSystemAccessRule(
-                new SecurityIdentifier(sid, null),
+                sid,
                 FileSystemRights.FullControl,
                 InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
                 PropagationFlags.None,
                 AccessControlType.Allow));
         }
 
-        var directory = new DirectoryInfo(path);
-        if (directory.Exists)
-            directory.SetAccessControl(security);
-        else
+        if (!directory.Exists)
+        {
             directory.Create(security);
+            return;
+        }
+
+        directory.SetAccessControl(security);
+        RepairContents(directory);
     }
+
+    /// <summary>Removes links and gives every file and folder inside the folder's own owner and permissions.</summary>
+    private static void RepairContents(DirectoryInfo root)
+    {
+        foreach (var entry in root.EnumerateFileSystemInfos("*", new EnumerationOptions { AttributesToSkip = 0 }))
+        {
+            if (entry.LinkTarget is not null || entry.Attributes.HasFlag(FileAttributes.ReparsePoint))
+            {
+                entry.Delete();
+                continue;
+            }
+
+            if (entry is DirectoryInfo folder)
+            {
+                var security = new DirectorySecurity();
+                security.SetOwner(AdministratorsSid);
+                security.SetAccessRuleProtection(isProtected: false, preserveInheritance: false);
+                folder.SetAccessControl(security);
+                RepairContents(folder);
+            }
+            else
+            {
+                var security = new FileSecurity();
+                security.SetOwner(AdministratorsSid);
+                security.SetAccessRuleProtection(isProtected: false, preserveInheritance: false);
+                ((FileInfo)entry).SetAccessControl(security);
+            }
+        }
+    }
+
+    private static bool HasTrustedOwner(DirectorySecurity security) =>
+        security.GetOwner(typeof(SecurityIdentifier)) is SecurityIdentifier owner && (owner == SystemSid || owner == AdministratorsSid);
 }
 
 /// <summary>The <c>.nethop</c> files in the profiles folder, indexed by profile id.</summary>

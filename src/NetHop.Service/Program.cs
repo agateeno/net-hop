@@ -1,10 +1,11 @@
 using NetHop.Core.Planning;
 using NetHop.Engine;
+using NetHop.Ipc;
 using NetHop.Service;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddWindowsService(options => options.ServiceName = "NetHop");
+builder.Services.AddWindowsService(options => options.ServiceName = NetHopPipe.ServiceName);
 
 builder.Services.AddSingleton(new ServicePaths(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)));
 builder.Services.AddSingleton<CimNetworkBackend>();

@@ -133,4 +133,15 @@ public sealed class RuleAction
     /// <summary>Actions that run in the user's session (UI agent) rather than in the service.</summary>
     public bool RunsInUserSession => Type is RuleActionType.Notify or RuleActionType.RunCommand
         or RuleActionType.OpenUrl or RuleActionType.RunPowerAutomateFlow;
+
+    /// <summary>
+    /// <see cref="RuleActionType.OpenUrl"/> opens web pages only: the shell runs whatever a file:// (or other) URL
+    /// points to, which would make it a second, less visible <see cref="RuleActionType.RunCommand"/>.
+    /// </summary>
+    public static bool IsWebAddress(string? url) =>
+        Uri.TryCreate(url, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == Uri.UriSchemeHttp);
+
+    /// <summary>A Power Automate Desktop run URL (<c>ms-powerautomate:</c>).</summary>
+    public static bool IsFlowAddress(string? url) =>
+        Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.Scheme.Equals("ms-powerautomate", StringComparison.OrdinalIgnoreCase);
 }

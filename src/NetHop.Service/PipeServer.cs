@@ -8,11 +8,25 @@ namespace NetHop.Service;
 /// <summary>Accepts JSON-RPC clients on the NetHop pipe. Each connection gets its own JsonRpc over the shared controller.</summary>
 public sealed class PipeServer(NetHopController controller, ILogger<PipeServer> logger) : BackgroundService
 {
+    // Any interactive user may connect (non-administrators read-only): cap the connections a SYSTEM service keeps.
+    private const int MaxClients = 32;
+
+    private readonly SemaphoreSlim _slots = new(MaxClients, MaxClients);
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var first = true;
         while (!stoppingToken.IsCancellationRequested)
         {
+            try
+            {
+                await _slots.WaitAsync(stoppingToken);
+            }
+            catch (OperationCanceledException)
+            {
+                break;
+            }
+
             NamedPipeServerStream pipe;
             try
             {
@@ -36,7 +50,7 @@ public sealed class PipeServer(NetHopController controller, ILogger<PipeServer> 
                 break;
             }
 
-            _ = HandleClientAsync(pipe, stoppingToken);
+            _ = HandleClientAsync(pipe, stoppingToken).ContinueWith(_ => _slots.Release(), TaskScheduler.Default);
         }
     }
 
@@ -52,6 +66,11 @@ public sealed class PipeServer(NetHopController controller, ILogger<PipeServer> 
                 // fails (ERROR_CANNOT_IMPERSONATE) until data has been read from the pipe.
                 using var identity = ClientAuthorization.GetClientIdentity(pipe);
                 user = identity.Name;
+                if (ClientAuthorization.IsBelowMediumIntegrity(identity))
+                {
+                    logger.LogWarning("Refused a sandboxed (low integrity) client running as {User}", user);
+                    return;
+                }
                 administrator = ClientAuthorization.IsAdministratorAccount(identity);
             }
             catch (Exception ex)

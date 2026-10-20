@@ -47,7 +47,7 @@
     <value>Indiquez la commande à exécuter.</value>
   </data>
   <data name="Rules_UrlRequired" xml:space="preserve">
-    <value>Indiquez une URL absolue.</value>
+    <value>Indiquez une adresse web (http:// ou https://).</value>
   </data>
   <data name="Rules_FlowUrlRequired" xml:space="preserve">
     <value>Collez l'URL d'exécution du flux (elle commence par ms-powerautomate:).</value>

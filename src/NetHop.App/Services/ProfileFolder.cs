@@ -220,9 +220,15 @@ public static class ProfileFolder
         try
         {
             var path = System.IO.Path.Combine(Path, IndexFileName);
-            return File.Exists(path)
+            var index = File.Exists(path)
                 ? JsonSerializer.Deserialize<Dictionary<Guid, string>>(File.ReadAllText(path)) ?? []
                 : [];
+            // Names from the index are deleted later: accept only plain .nethop file names, never paths.
+            return index
+                .Where(e => e.Value == System.IO.Path.GetFileName(e.Value)
+                    && e.Value.EndsWith(NetHopConstants.ProfileExtension, StringComparison.OrdinalIgnoreCase)
+                    && e.Value.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) < 0)
+                .ToDictionary(e => e.Key, e => e.Value);
         }
         catch (JsonException)
         {

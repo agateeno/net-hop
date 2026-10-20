@@ -94,6 +94,9 @@
   <data name="Adapters_WifiNetwork" xml:space="preserve">
     <value>Rete Wi-Fi</value>
   </data>
+  <data name="Apply_ReviewFirst" xml:space="preserve">
+    <value>'{0}' non è ancora un profilo salvato</value>
+  </data>
   <data name="Automations_AddRule.Text" xml:space="preserve">
     <value>Aggiungi regola</value>
   </data>

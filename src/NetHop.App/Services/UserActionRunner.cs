@@ -145,9 +145,13 @@ public static class UserActionRunner
                 case RuleActionType.RunCommand:
                     Process.Start(new ProcessStartInfo(action.Command!, action.Arguments ?? "") { UseShellExecute = true });
                     break;
-                case RuleActionType.OpenUrl or RuleActionType.RunPowerAutomateFlow:
+                // Checked again here, not only when the rules are saved: the shell runs whatever a URL points to.
+                case RuleActionType.OpenUrl when RuleAction.IsWebAddress(action.Url):
+                case RuleActionType.RunPowerAutomateFlow when RuleAction.IsFlowAddress(action.Url):
                     Process.Start(new ProcessStartInfo(action.Url!) { UseShellExecute = true });
                     break;
+                case RuleActionType.OpenUrl or RuleActionType.RunPowerAutomateFlow:
+                    throw new InvalidOperationException($"Refused to open '{action.Url}': not a web or Power Automate address.");
             }
         }
         catch (Exception ex)

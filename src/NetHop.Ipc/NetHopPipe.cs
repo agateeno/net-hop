@@ -15,6 +15,9 @@ public static class NetHopPipe
 
     public const string PipeName = "NetHop.Service.v1";
 
+    /// <summary>The Windows service that must own the pipe (see <see cref="PipeServerCheck"/>).</summary>
+    public const string ServiceName = "NetHop";
+
     /// <summary>Builds the JSON-RPC connection used by both ends of the pipe.</summary>
     public static JsonRpc CreateRpc(Stream stream)
     {
@@ -51,7 +54,8 @@ public sealed class NetHopClient : IAsyncDisposable
     public Task Completion => _rpc.Completion;
 
     /// <exception cref="TimeoutException">The service is not running.</exception>
-    /// <exception cref="UnauthorizedAccessException">The current user is not an administrator.</exception>
+    /// <exception cref="UnauthorizedAccessException">The pipe refused the connection.</exception>
+    /// <exception cref="UntrustedPipeServerException">The pipe is not served by the NetHop service.</exception>
     public static async Task<NetHopClient> ConnectAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
     {
         // Identification lets the service read our token to check group membership, nothing more.
@@ -60,6 +64,7 @@ public sealed class NetHopClient : IAsyncDisposable
         try
         {
             await pipe.ConnectAsync(timeout, cancellationToken).ConfigureAwait(false);
+            PipeServerCheck.EnsureServedByService(pipe);
         }
         catch
         {

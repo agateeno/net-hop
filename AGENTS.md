@@ -65,6 +65,7 @@ dotnet test tests/NetHop.Core.Tests
 - The WinUI app crashes at start (`0xc000027b` in `Microsoft.UI.Xaml.dll`) without its `.pri` file: unpackaged builds need `EnableMsixTooling`. CI checks the `.pri` exists; `%LOCALAPPDATA%\NetHop\crash.log` records unhandled exceptions.
 - Use the Windows App SDK pickers (`Microsoft.Windows.Storage.Pickers`), not `Windows.Storage.Pickers`: the latter fail when NetHop runs as administrator.
 - `ImpersonateNamedPipeClient` fails until data has been read; the service reads the client process token instead.
+- Security model and its limits: `docs/architecture.md` › Security model. Keep these: clients verify the pipe server is the NetHop service (`PipeServerCheck`); the service takes over `%ProgramData%\NetHop` (`ServicePaths`); `openUrl` stays http/https only; unknown `.nethop` files are reviewed, never applied blind.
 - App notifications may not register for an unpackaged app; `UserActionRunner.Notify` falls back to the tray icon.
 - In PowerShell strings write `"${arch}:"`, not `"$arch:"` (parsed as a drive-qualified variable).
 - XML comments must not contain `--` (WiX and MSBuild files).

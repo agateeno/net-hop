@@ -146,4 +146,29 @@ public class RuleEngineTests
         Assert.Contains("rules[0].trigger.at", paths);
         Assert.Contains("rules[0].actions[0].url", paths);
     }
+
+    [Theory]
+    [InlineData("https://intranet.example.com/status", true)]
+    [InlineData("http://192.168.1.1", true)]
+    [InlineData("file:///C:/Windows/System32/calc.exe", false)]
+    [InlineData("C:\\Windows\\System32\\calc.exe", false)]
+    [InlineData("ms-settings:network", false)]
+    [InlineData("javascript:alert(1)", false)]
+    public void Open_link_accepts_only_web_addresses(string url, bool valid)
+    {
+        var set = new RuleSet
+        {
+            Rules =
+            [
+                new Rule
+                {
+                    Name = "Link",
+                    Trigger = new Trigger { Type = TriggerType.NetworkChanged },
+                    Actions = [new RuleAction { Type = RuleActionType.OpenUrl, Url = url }],
+                },
+            ],
+        };
+
+        Assert.Equal(valid, !RuleSetSerializer.Validate(set).Any(i => i.Path == "rules[0].actions[0].url"));
+    }
 }
