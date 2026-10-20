@@ -44,16 +44,35 @@ internal static class FormControls
     /// <summary>Editable list of choices: the user can pick one or type a different value.</summary>
     public static ComboBox EditableCombo(string? text, IEnumerable<string> choices, string placeholder, Action<string> changed)
     {
-        var combo = new ComboBox { IsEditable = true, MinWidth = 240, PlaceholderText = placeholder, Text = text ?? "" };
-        foreach (var choice in choices)
+        var combo = new ComboBox { IsEditable = true, MinWidth = 240, PlaceholderText = placeholder };
+        var list = choices.ToList();
+        foreach (var choice in list)
             combo.Items.Add(choice);
+
+        // An editable ComboBox drops a Text set before it is loaded: select the matching choice instead, and set a
+        // free text (a profile that no longer exists, say) once loaded. Done before subscribing, so nothing is "changed".
+        var current = text ?? "";
+        if (list.FirstOrDefault(c => string.Equals(c, current, StringComparison.CurrentCultureIgnoreCase)) is { } match)
+            combo.SelectedItem = match;
+        else if (current.Length > 0)
+            combo.Loaded += (_, _) => combo.Text = current;
+
+        void Changed(string value)
+        {
+            // Losing focus with an unchanged (or not yet shown) text must not overwrite the value.
+            if (value == current)
+                return;
+            current = value;
+            changed(value);
+        }
+
         combo.SelectionChanged += (_, _) =>
         {
             if (combo.SelectedItem is string choice)
-                changed(choice);
+                Changed(choice);
         };
-        combo.TextSubmitted += (_, e) => changed(e.Text);
-        combo.LostFocus += (_, _) => changed(combo.Text);
+        combo.TextSubmitted += (_, e) => Changed(e.Text);
+        combo.LostFocus += (_, _) => Changed(combo.Text);
         return combo;
     }
 

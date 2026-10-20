@@ -67,7 +67,9 @@
                 <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE962;" /></toolkit:SettingsCard.HeaderIcon>
             </toolkit:SettingsCard>
             <toolkit:SettingsCard x:Uid="Integrations_Mouse" Header="Mouse buttons"
-                                  Description="Any mouse button that can open a file or a link works too: point it at a .nethop file or a nethop:// shortcut." />
+                                  Description="Any mouse button that can open a file or a link works too: point it at a .nethop file or a nethop:// shortcut.">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE7C9;" /></toolkit:SettingsCard.HeaderIcon>
+            </toolkit:SettingsCard>
         </StackPanel>
     </ScrollViewer>
 </Page>

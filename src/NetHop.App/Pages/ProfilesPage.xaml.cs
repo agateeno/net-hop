@@ -95,6 +95,26 @@ public sealed partial class ProfilesPage : Page
         Show(ProfileSerializer.Serialize(new Profile { Name = Loc.Get("Profiles_NewName"), Icon = ProfileForm.Icons[0].Glyph }), id: null);
     }
 
+    /// <summary>Opens a copy of the profile being edited as a new, unsaved profile: new id, "Name (copy)".</summary>
+    private void OnDuplicateClick(object sender, RoutedEventArgs e)
+    {
+        var original = _profile?.Name;
+        if (!TryParse(CurrentYaml(), out var copy))
+            return;
+        original ??= copy.Name;
+
+        var taken = _connection.Profiles.Select(p => p.Name).ToHashSet(StringComparer.CurrentCultureIgnoreCase);
+        var name = Loc.Format("Profiles_CopyName", original);
+        for (var i = 2; taken.Contains(name); i++)
+            name = Loc.Format("Profiles_CopyNameNumbered", original, i);
+        copy.Id = Guid.NewGuid();
+        copy.Name = name;
+
+        ProfileList.SelectedItem = null;
+        Show(ProfileSerializer.Serialize(copy), id: null);
+        ShowResult(InfoBarSeverity.Informational, Loc.Format("Profiles_Duplicated", original), Loc.Get("Profiles_ImportedHelp"));
+    }
+
     private async void OnCaptureClick(object sender, RoutedEventArgs e)
     {
         if (!_connection.IsConnected)
@@ -292,9 +312,9 @@ public sealed partial class ProfilesPage : Page
         var connected = _connection.IsConnected;
         var canEdit = _connection.CanEdit;
         SaveButton.IsEnabled = canEdit && hasContent;
-        ApplyButton.IsEnabled = DeleteButton.IsEnabled = canEdit && _editingId is not null;
+        ApplyButton.IsEnabled = DeleteItem.IsEnabled = canEdit && _editingId is not null;
         DryRunButton.IsEnabled = connected && _editingId is not null; // a preview changes nothing: allowed read-only
-        ExportButton.IsEnabled = hasContent;
+        ExportItem.IsEnabled = DuplicateItem.IsEnabled = hasContent;
     }
 
     private void Report(ApplyResult result)

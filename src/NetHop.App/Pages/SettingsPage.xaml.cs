@@ -39,6 +39,9 @@ public sealed partial class SettingsPage : Page
     {
         _loading = true;
         StartupSwitch.IsOn = ShellIntegration.StartsWithWindows;
+        // Without these, WinUI shows "On"/"Off" in Windows' language rather than NetHop's.
+        StartupSwitch.OnContent = Loc.Get("RuleForm_On");
+        StartupSwitch.OffContent = Loc.Get("RuleForm_Off");
         // Language names are shown in their own language, as Windows does.
         LanguageBox.ItemsSource = Languages.Select(l => l.Tag == AppLanguage.SystemDefault ? Loc.Get(l.Label) : l.Label).ToList();
         LanguageBox.SelectedIndex = Math.Max(0, Array.FindIndex(Languages, l => l.Tag == AppLanguage.Saved));

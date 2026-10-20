@@ -547,6 +547,12 @@
   <data name="Profiles_Check" xml:space="preserve">
     <value>Comprobar el perfil</value>
   </data>
+  <data name="Profiles_CopyName" xml:space="preserve">
+    <value>{0} (copia)</value>
+  </data>
+  <data name="Profiles_CopyNameNumbered" xml:space="preserve">
+    <value>{0} (copia {1})</value>
+  </data>
   <data name="Profiles_Delete.Text" xml:space="preserve">
     <value>Eliminar</value>
   </data>
@@ -558,6 +564,12 @@
   </data>
   <data name="Profiles_DeleteTitle" xml:space="preserve">
     <value>¿Eliminar «{0}»?</value>
+  </data>
+  <data name="Profiles_Duplicate.Text" xml:space="preserve">
+    <value>Duplicar</value>
+  </data>
+  <data name="Profiles_Duplicated" xml:space="preserve">
+    <value>Copia de «{0}»</value>
   </data>
   <data name="Profiles_Empty.Text" xml:space="preserve">
     <value>Selecciona un perfil o crea uno nuevo.</value>
@@ -576,6 +588,12 @@
   </data>
   <data name="Profiles_ImportedHelp" xml:space="preserve">
     <value>Revisa el perfil y luego haz clic en Guardar para agregarlo.</value>
+  </data>
+  <data name="Profiles_More.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Más acciones</value>
+  </data>
+  <data name="Profiles_More.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Más acciones</value>
   </data>
   <data name="Profiles_New.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Nuevo perfil vacío</value>
