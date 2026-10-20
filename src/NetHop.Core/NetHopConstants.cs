@@ -12,6 +12,9 @@ public static class NetHopConstants
     /// <summary>URI scheme used for activation, e.g. <c>nethop://apply/Office</c>.</summary>
     public const string UriScheme = "nethop";
 
+    /// <summary>Home of the project: releases, issues and documentation.</summary>
+    public const string RepositoryUrl = "https://github.com/agateeno/net-hop";
+
     /// <summary>Highest profile/rules schema version this build understands.</summary>
     public const int CurrentSchemaVersion = 1;
 }

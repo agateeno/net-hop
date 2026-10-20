@@ -787,6 +787,57 @@
   <data name="Settings_Title.Text" xml:space="preserve">
     <value>Configuración</value>
   </data>
+  <data name="Settings_UpdateAuto.Description" xml:space="preserve">
+    <value>Al iniciar NetHop y una vez al día. Solo se contacta con GitHub, y no se descarga ni se instala nada.</value>
+  </data>
+  <data name="Settings_UpdateAuto.Header" xml:space="preserve">
+    <value>Buscar actualizaciones automáticamente</value>
+  </data>
+  <data name="Settings_UpdateAvailable" xml:space="preserve">
+    <value>NetHop {0} está disponible</value>
+  </data>
+  <data name="Settings_UpdateCheck.Content" xml:space="preserve">
+    <value>Buscar actualizaciones</value>
+  </data>
+  <data name="Settings_UpdateChecking" xml:space="preserve">
+    <value>Buscando actualizaciones…</value>
+  </data>
+  <data name="Settings_UpdateDevelopment" xml:space="preserve">
+    <value>Compilación de desarrollo: no se ofrecen actualizaciones</value>
+  </data>
+  <data name="Settings_UpdateDownload.Content" xml:space="preserve">
+    <value>Descargar</value>
+  </data>
+  <data name="Settings_UpdateFailed" xml:space="preserve">
+    <value>No se pudieron buscar actualizaciones</value>
+  </data>
+  <data name="Settings_UpdateInstalled" xml:space="preserve">
+    <value>Versión instalada: {0}</value>
+  </data>
+  <data name="Settings_UpdateLastChecked" xml:space="preserve">
+    <value>última comprobación a las {0}</value>
+  </data>
+  <data name="Settings_UpdateLatestRelease" xml:space="preserve">
+    <value>última versión publicada: {0}</value>
+  </data>
+  <data name="Settings_UpdateNotChecked" xml:space="preserve">
+    <value>Aún no se han buscado actualizaciones</value>
+  </data>
+  <data name="Settings_UpdatePrerelease.Description" xml:space="preserve">
+    <value>Versiones de vista previa, publicadas antes de una versión estable. NetHop está en vista previa: por ahora, todas sus versiones son preliminares.</value>
+  </data>
+  <data name="Settings_UpdatePrerelease.Header" xml:space="preserve">
+    <value>Incluir versiones preliminares</value>
+  </data>
+  <data name="Settings_UpdateReleaseNotes.Content" xml:space="preserve">
+    <value>Notas de la versión</value>
+  </data>
+  <data name="Settings_UpdateUpToDate" xml:space="preserve">
+    <value>NetHop está actualizado</value>
+  </data>
+  <data name="Settings_Updates.Text" xml:space="preserve">
+    <value>Actualizaciones</value>
+  </data>
   <data name="Settings_Version" xml:space="preserve">
     <value>Versión {0}</value>
   </data>
@@ -822,6 +873,9 @@
   </data>
   <data name="Toast_ServiceBack" xml:space="preserve">
     <value>Conectado de nuevo al servicio NetHop</value>
+  </data>
+  <data name="Toast_UpdateAvailable" xml:space="preserve">
+    <value>Abre Configuración para ver las novedades y descargarla.</value>
   </data>
   <data name="Tray_Exit" xml:space="preserve">
     <value>Salir</value>

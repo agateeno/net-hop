@@ -32,8 +32,11 @@ jobs:
       - name: Version
         shell: pwsh
         run: |
-          $version = if ($env:GITHUB_REF -match '^refs/tags/v(\d+\.\d+\.\d+)$') { $Matches[1] } else { "0.1.$env:GITHUB_RUN_NUMBER" }
+          $release = $env:GITHUB_REF -match '^refs/tags/v(\d+\.\d+\.\d+)$'
+          $version = if ($release) { $Matches[1] } else { "0.1.$env:GITHUB_RUN_NUMBER" }
           "PRODUCT_VERSION=$version" >> $env:GITHUB_ENV
+          # Only releases are offered updates by the app's update check.
+          "BUILD_KIND=$(if ($release) { 'release' } else { 'development' })" >> $env:GITHUB_ENV
           "Version $version"
 
       - name: Restore
@@ -54,7 +57,7 @@ jobs:
             $platform = if ($arch -eq 'arm64') { 'ARM64' } else { 'x64' }
             dotnet publish src/NetHop.Service -c Release -r win-$arch --self-contained -p:Version=$env:PRODUCT_VERSION -o $bin
             dotnet publish src/NetHop.Cli -c Release -r win-$arch --self-contained -p:Version=$env:PRODUCT_VERSION -o $bin
-            dotnet publish src/NetHop.App -c Release -r win-$arch -p:Platform=$platform --self-contained -p:Version=$env:PRODUCT_VERSION -o $bin
+            dotnet publish src/NetHop.App -c Release -r win-$arch -p:Platform=$platform --self-contained -p:Version=$env:PRODUCT_VERSION -p:NetHopBuildKind=$env:BUILD_KIND -o $bin
             if ($LASTEXITCODE -ne 0) { throw "Publish failed for $arch" }
             New-Item "out/$arch/NetHop/powershell" -ItemType Directory -Force | Out-Null
             Copy-Item src/NetHop.PowerShell/* "out/$arch/NetHop/powershell/"
