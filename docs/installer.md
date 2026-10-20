@@ -49,28 +49,7 @@ MSIs are built for **x64 and ARM64** (`-p:InstallerPlatform=arm64` with binaries
 
 ## Code signing
 
-Unsigned MSIs trigger SmartScreen warnings, and Power Automate refuses unsigned custom actions. CI signs with one of two services, picked from the repository secrets (*Settings › Secrets and variables › Actions*); without either it builds everything unsigned. Only NetHop's own files are signed (`NetHop*.exe/dll`, `nethop.exe`, `Modules.NetHop.dll`, the MSIs and `NetHop.cab`); the .NET and Windows App SDK files already carry Microsoft's signature.
-
-Signing alone does not silence SmartScreen at once: it warns until the certificate has built a reputation from downloads, whatever the certificate. Always signing with the same identity lets that reputation grow.
-
-### SignPath (free for open source)
-
-[SignPath Foundation](https://signpath.org/) signs open-source projects for free, with its own certificate: the publisher shown by Windows is *SignPath Foundation*. CI uses it for **releases only** (*Run workflow* with a version), and each signing request waits for a person to approve it in SignPath.
-
-1. Apply at <https://signpath.org/apply>. The project must meet their terms: an OSI license (MIT), builds on GitHub-hosted runners, and the *Code signing policy* and *Privacy* sections of the README.
-2. Once approved, in the SignPath project:
-   - project slug `net-hop`, linked to this repository through the trusted build system *GitHub.com*;
-   - two artifact configurations, `binaries` and `installers`, with the content of [`.signpath/artifact-configurations`](../.signpath/artifact-configurations);
-   - a signing policy `release-signing`, with you as approver;
-   - an API token for a CI user that may submit signing requests to that policy.
-3. In the repository: the secret `SIGNPATH_API_TOKEN` and the variable `SIGNPATH_ORGANIZATION_ID`. The variables `SIGNPATH_PROJECT_SLUG` and `SIGNPATH_SIGNING_POLICY` override `net-hop` and `release-signing`.
-4. Releasing: *Run workflow* as usual. CI sends two signing requests, first the binaries (before they go into the MSIs), then the MSIs and `NetHop.cab`. Approve each in SignPath (it emails you); CI waits up to an hour for each, then drafts the release with the signed files.
-
-The Windows 11 context menu package stays unsigned with SignPath: leave `PACKAGE_PUBLISHER` unset.
-
-### Azure Trusted Signing
-
-[Azure Trusted Signing](https://learn.microsoft.com/azure/trusted-signing/) signs with a certificate in your own name, on every build. It costs a few euros a month and needs an Azure subscription and an identity validation; check that it accepts your country and kind of publisher (individual or organization). It takes precedence over SignPath when its secrets exist:
+Unsigned MSIs trigger SmartScreen warnings, and Power Automate refuses unsigned custom actions. CI signs everything with [Azure Trusted Signing](https://learn.microsoft.com/azure/trusted-signing/) as soon as these repository secrets exist (*Settings › Secrets and variables › Actions*):
 
 | Secret | Value |
 |---|---|
@@ -79,7 +58,9 @@ The Windows 11 context menu package stays unsigned with SignPath: leave `PACKAGE
 | `AZURE_SIGNING_ACCOUNT` | The Trusted Signing account name |
 | `AZURE_SIGNING_PROFILE` | The certificate profile name |
 
-Any other code-signing certificate works with `signtool` too, for example through `scripts/Build-PowerAutomateModule.ps1 -CertificatePath`.
+Without them CI still builds everything, unsigned. Only NetHop's own files are signed (`NetHop*.exe/dll`, `nethop.exe`, `Modules.NetHop.dll`, the MSIs and `NetHop.cab`); the .NET and Windows App SDK files already carry Microsoft's signature.
+
+Trusted Signing needs an Azure subscription and identity validation (individual developers included); it costs a few euros a month. Any other code-signing certificate works with `signtool` too, for example through `scripts/Build-PowerAutomateModule.ps1 -CertificatePath`.
 
 ## Releases and winget
 

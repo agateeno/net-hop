@@ -159,15 +159,6 @@ Every push builds on GitHub Actions and produces **NetHop-msi** (x64 and ARM64 i
 - [x] Update check against GitHub releases (download and install once releases are signed)
 - [ ] Verify everything on real hardware (spikes in docs/architecture.md)
 
-## Code signing policy
-
-Free code signing provided by [SignPath.io](https://about.signpath.io/), certificate by [SignPath Foundation](https://signpath.org/).
-
-> **Status: application pending.** NetHop has applied to SignPath Foundation's open-source program. Until it is accepted, releases are not signed yet.
-
-- Only files built from this repository's source by its GitHub Actions workflow are signed.
-- Committers and reviewers: [agateeno](https://github.com/agateeno). Approver: [agateeno](https://github.com/agateeno) approves every signing request by hand.
-
 ## Privacy
 
 NetHop sends no telemetry and collects no personal data. It connects to the internet only:
@@ -184,8 +175,6 @@ To report a vulnerability, please do not open a public issue: see [SECURITY.md](
 ## Acknowledgements
 
 Thanks to [NetSetMan](https://www.netsetman.com/) by Ilja Herlein, which has made switching network settings on Windows easy for many years and inspired NetHop's profile-based approach. NetHop is an independent project: it is not affiliated with or endorsed by NetSetMan, and it shares no code with it. If you need a mature, feature-rich tool, give NetSetMan a try.
-
-Thanks to [SignPath.io](https://about.signpath.io/) and [SignPath Foundation](https://signpath.org/), whose free code signing for open-source projects NetHop has applied for (request pending).
 
 ## Third-party software
 
