@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Text;
 
 namespace NetHop.Engine.Native;
@@ -9,7 +8,6 @@ namespace NetHop.Engine.Native;
 /// Since Windows 11 24H2 this requires location access; when it is denied the call fails
 /// and <see cref="LastCallDenied"/> becomes true so the UI can ask the user to enable it.
 /// </summary>
-[SupportedOSPlatform("windows")]
 internal static partial class WlanApi
 {
     private const uint ClientVersion = 2;

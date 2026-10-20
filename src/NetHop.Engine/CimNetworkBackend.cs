@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Runtime.Versioning;
 using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Options;
 using NetHop.Core.Networking;
@@ -14,7 +13,6 @@ namespace NetHop.Engine;
 /// Network backend built on the same CIM classes as the NetAdapter/NetTCPIP PowerShell modules
 /// (<c>root\StandardCimv2</c>). Must run elevated: NetHop runs it inside the Windows service.
 /// </summary>
-[SupportedOSPlatform("windows")]
 public sealed class CimNetworkBackend : INetworkBackend, IDisposable
 {
     private const string Namespace = @"root\StandardCimv2";
