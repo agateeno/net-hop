@@ -14,6 +14,13 @@
             <Thickness x:Key="PageMargin">36,24,36,36</Thickness>
             <x:Double x:Key="PageMaxWidth">1000</x:Double>
 
+            <!-- Root of every page: the page margin, with one column at most PageMaxWidth wide (ColumnDefinition
+                 MaxWidth="{StaticResource PageMaxWidth}"). The column keeps the content at the left edge, as in
+                 Windows Settings, at any window width; MaxWidth on the content itself would center it instead. -->
+            <Style x:Key="PageGridStyle" TargetType="Grid">
+                <Setter Property="Margin" Value="{StaticResource PageMargin}" />
+            </Style>
+
             <Style x:Key="PageTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource TitleTextBlockStyle}">
                 <Setter Property="Margin" Value="0,0,0,16" />
             </Style>
