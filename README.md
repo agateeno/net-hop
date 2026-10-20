@@ -6,7 +6,28 @@
 
 **Hop between network configurations in one click.** NetHop is an open-source network profile switcher for Windows 11, in the spirit of NetSetMan, with a PowerToys-style Fluent UI.
 
-> Status: early development (v0.1). Not tested on real hardware yet.
+> Status: preview (v0.2). Builds are not code-signed yet: see [Releases](https://github.com/agateeno/net-hop/releases).
+
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" width="760" alt="Dashboard: the active profile, the automations switch and one-click profile cards">
+</p>
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/profiles-form.png" width="400" alt="Profile editor, form view: name, description, icon and color"><br><sub>Profile editor: name, icon and color</sub></td>
+    <td align="center"><img src="docs/screenshots/profiles-adapter.png" width="400" alt="Profile editor: per-adapter state, IPv4 and IPv6 settings"><br><sub>Per-adapter settings: state, IPv4, IPv6, DNS</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/profiles-yaml.png" width="400" alt="Profile editor, YAML view of a .nethop profile"><br><sub>The same profile as YAML (<code>.nethop</code>)</sub></td>
+    <td align="center"><img src="docs/screenshots/network-adapters.png" width="400" alt="Network adapters page with enable switches and details"><br><sub>Network adapters: enable, inspect, rename</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/automations.png" width="400" alt="Automations: a rule that applies a profile when a Wi-Fi network connects"><br><sub>Automations: when, only if, then</sub></td>
+    <td align="center"><img src="docs/screenshots/integrations.png" width="400" alt="Integrations: profile files, links, command line, Power Automate, PowerShell, Logitech"><br><sub>Integrations: CLI, Power Automate, PowerShell, Logitech</sub></td>
+  </tr>
+</table>
 
 ## Features
 
