@@ -57,7 +57,7 @@ Everything except step 1 and the execution of individual steps is pure code in `
 
 - A newer release shows in Settings with a **Download** button that opens its page on github.com, and a notification once per version; clicking it opens Settings.
 - Settings: **Check for updates automatically** (`HKCU\Software\NetHop\CheckForUpdates`, on by default) and **Include pre-releases** (`IncludePrereleases`, on by default while every release is a pre-release). The last notified tag is kept in `UpdateNotified`.
-- Only tagged CI builds are releases (`NetHopBuildKind=release`, an assembly metadata value). Other builds (`0.1.<run>`, local builds) show the latest release but are never offered it, since their version number says nothing about how recent they are.
+- Only CI release builds (*Run workflow* with a version, see `docs/installer.md`) are releases (`NetHopBuildKind=release`, an assembly metadata value). Other builds (`0.1.<run>`, local builds) show the latest release but are never offered it, since their version number says nothing about how recent they are.
 - The request carries only a `NetHop/<version>` User-Agent. Without authentication GitHub allows 60 requests an hour per IP address.
 - Nothing is downloaded or installed: the builds are not code-signed yet, so there is nothing to verify a download against. Once they are, *Download and install* can verify the MSI's Authenticode signature before running it.
 

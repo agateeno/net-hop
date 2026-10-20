@@ -35,7 +35,7 @@ dotnet test tests/NetHop.Core.Tests
 
 - .NET 10 SDK (`global.json`). Central package versions in `Directory.Packages.props`.
 - **On macOS/Linux** Core, Ipc, Engine, Service, CLI and the tests build (`EnableWindowsTargeting`); the WinUI app, the C++ shell extension and the MSI need Windows. Run the tests there; Windows-only code is verified by CI.
-- **CI** (`.github/workflows/ci.yml`, `windows-latest`) is the reference: build, tests, publish x64 + ARM64, a resource check, smoke tests on the runner (service install, CIM read, profile import and dry run, app start, context menu package registration), MSIs, optional signing. It runs on pushes to `main`, on PRs, and on demand (`workflow_dispatch`).
+- **CI** (`.github/workflows/ci.yml`, `windows-latest`) is the reference: build, tests, publish x64 + ARM64, a resource check, smoke tests on the runner (service install, CIM read, profile import and dry run, app start, context menu package registration), MSIs, optional signing. It runs on pushes to `main`, on PRs, and on demand (`workflow_dispatch`); run on demand with a version, it builds that release and drafts it with the files attached (releases are immutable once published, see `docs/installer.md`).
 - Publish exactly as CI does (see the "Publish" step): service, CLI and app go into **one folder** sharing one self-contained runtime.
 
 ## Architecture rules that are easy to break

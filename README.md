@@ -39,7 +39,7 @@
 - **Built-in automations**: rules such as "when I join the Wi-Fi `CORP-WiFi` on a weekday, apply *Office*", with no extra software. Loop protection, cooldowns and a pause switch are included.
 - **Power Automate**: a *NetHop* group of custom actions in Power Automate Desktop, a PowerShell module, and a CLI with JSON output. NetHop rules can also start flows.
 - **Logitech**: a Logi Actions plugin for the MX Creative Console and the Actions Ring, with keys that show the active profile.
-- **Installer**: per-machine MSIs for x64 and ARM64 with the service, `PATH`, file types, an "Apply with NetHop" context menu entry and a Start menu entry. Tagged releases also produce winget manifests.
+- **Installer**: per-machine MSIs for x64 and ARM64 with the service, `PATH`, file types, an "Apply with NetHop" context menu entry and a Start menu entry. Releases also produce winget manifests.
 - **Update check**: Settings shows when a newer release is out (stable releases, and optionally pre-releases), and a notification says so once per version. NetHop only asks GitHub for the list of releases: nothing is sent about your PC, and nothing is downloaded or installed for you. It can be turned off in Settings.
 - **Six languages**: English, Deutsch, Español, Français, Italiano and Português (Brasil). The app follows the Windows display language, or the one picked in Settings.
 - **Rename adapters** without breaking profiles: profiles find adapters by GUID, then MAC, then name.
