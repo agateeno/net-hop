@@ -64,7 +64,7 @@ Trusted Signing needs an Azure subscription and identity validation (individual 
 
 ## Releases and winget
 
-Pushing a tag such as `v0.2.0` builds version 0.2.0, creates a GitHub release with both MSIs and `NetHop.cab` (a pre-release with a warning note while code signing is not configured), and produces the **winget-manifests** artifact (`scripts/New-WingetManifest.ps1`). To publish on winget, submit that folder to [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs), for example with `wingetcreate submit`. After the first approval, users install NetHop with:
+Releases are written by hand: on GitHub, *Releases › Draft a new release*, create the tag (`v0.2.0` builds version 0.2.0) on `main`, write the notes and publish. The tag starts CI, which attaches both MSIs and `NetHop.cab` to that release without touching its text or its pre-release flag (mark unsigned releases as pre-releases yourself), and produces the **winget-manifests** artifact (`scripts/New-WingetManifest.ps1`). To publish on winget, submit that folder to [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs), for example with `wingetcreate submit`. After the first approval, users install NetHop with:
 
 ```powershell
 winget install agateeno.NetHop
