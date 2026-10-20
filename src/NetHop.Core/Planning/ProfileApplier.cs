@@ -63,6 +63,8 @@ public sealed class ProfileApplier(INetworkBackend backend)
         try
         {
             var restore = SnapshotProfile.Create(before, plan.AffectedAdapters.Select(a => a.Id), "Rollback");
+            if (plan.ChangesSharing)
+                restore.Sharing = SnapshotProfile.CreateSharing(before);
             var rollbackPlan = ProfilePlanner.Plan(restore, backend.GetSnapshot());
             var ok = true;
             foreach (var step in rollbackPlan.Steps)

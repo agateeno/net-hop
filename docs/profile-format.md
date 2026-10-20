@@ -9,7 +9,8 @@ name: Office                   # required, unique, max 64 characters
 description: Docking station   # optional
 icon: ""                 # optional: a Segoe Fluent Icons glyph, or a custom image as "data:image/png;base64,..." (PNG, max 48 KB; the app scales it to 64×64)
 color: "#0078D4"               # optional accent color, any #RRGGBB
-adapters: [...]                # at least one entry
+adapters: [...]                # at least one entry, unless the profile only sets sharing
+sharing: { ... }               # optional: mobile hotspot / Internet Connection Sharing
 ```
 
 ## Adapter entries
@@ -49,11 +50,44 @@ ipv4:
 - IPv6 gateways may be link-local (`fe80::1`).
 - Switching to `static` removes manual addresses and gateways that are not listed; switching to `dhcp` removes all of them.
 
+## Internet sharing (`sharing`)
+
+Shares one connection's internet with other devices. It is machine-wide (Windows shares one connection at a time), so it sits at the profile level, not in an adapter entry. When `sharing` is omitted, the hotspot and sharing are left as they are.
+
+```yaml
+sharing:
+  mode: hotspot                # hotspot | adapter | disabled | unchanged (default)
+  from:                        # the connection whose internet is shared; same keys as an adapter match
+    name: CloudflareWARP
+  to:                          # adapter mode only: the adapter that receives the connection
+    name: Ethernet 2
+```
+
+| `mode` | What it does |
+|---|---|
+| `hotspot` | Turns on the Windows **mobile hotspot**, sharing `from`. Without `from`, it shares the connection Windows uses for the internet. The hotspot's name, password and band are the ones set in Settings › Network & internet › Mobile hotspot. |
+| `adapter` | **Internet Connection Sharing** from `from` to `to`, like the Sharing tab of an adapter's properties: devices on `to` get the connection, and Windows gives `to` the address `192.168.137.1`. Turns the hotspot off, since it uses the same sharing slot. |
+| `disabled` | Turns the hotspot off and stops Internet Connection Sharing. |
+
+Example: share Cloudflare WARP through the mobile hotspot, in a profile that changes nothing else:
+
+```yaml
+schema: 1
+name: WARP hotspot
+sharing:
+  mode: hotspot
+  from: { name: CloudflareWARP }
+```
+
+- A profile is active only when sharing matches too: the hotspot is on and shares `from`, or the pair is `from` → `to`.
+- Windows tethers some connections directly; for the others (most VPN adapters) NetHop starts the hotspot from the internet connection and then points sharing at `from`, as you would do by hand.
+- Profiles captured from the current configuration do not include sharing.
+
 ## Validation
 
 | Severity | Examples |
 |---|---|
-| Error | missing name, address without prefix, wrong address family, static mode without addresses, addresses in DHCP mode, duplicate addresses, two entries for the same adapter, a metric that is not `automatic` or 1-9999 |
+| Error | missing name, address without prefix, wrong address family, static mode without addresses, addresses in DHCP mode, duplicate addresses, two entries for the same adapter, a metric that is not `automatic` or 1-9999, sharing `adapter` without `from` or `to` (or with the same adapter twice), `to` with the hotspot, `from`/`to` with `disabled` |
 | Warning | gateway outside every configured subnet, network/broadcast address, IP settings on a disabled adapter, an entry that changes nothing |
 
 Profiles with errors cannot be saved or applied. Check a file with `nethop validate file.nethop`.

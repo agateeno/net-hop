@@ -583,6 +583,36 @@
   <data name="ProfileForm_Optional" xml:space="preserve">
     <value>Opcional</value>
   </data>
+  <data name="ProfileForm_Sharing" xml:space="preserve">
+    <value>Compartilhamento de Internet</value>
+  </data>
+  <data name="ProfileForm_SharingChoose" xml:space="preserve">
+    <value>Escolha um adaptador</value>
+  </data>
+  <data name="ProfileForm_SharingFrom" xml:space="preserve">
+    <value>Conexão a compartilhar</value>
+  </data>
+  <data name="ProfileForm_SharingFromDefault" xml:space="preserve">
+    <value>A conexão que o Windows usa para a Internet</value>
+  </data>
+  <data name="ProfileForm_SharingFromHelp" xml:space="preserve">
+    <value>O adaptador que tem a conexão com a Internet, por exemplo CloudflareWARP.</value>
+  </data>
+  <data name="ProfileForm_SharingFromHotspotHelp" xml:space="preserve">
+    <value>Por exemplo, CloudflareWARP. Deixe em branco para compartilhar a conexão que o Windows usa para a Internet.</value>
+  </data>
+  <data name="ProfileForm_SharingHelp" xml:space="preserve">
+    <value>Compartilhe a conexão com a Internet de uma conexão, por exemplo uma VPN como o Cloudflare WARP, pelo hotspot móvel ou com outro adaptador. O nome e a senha do hotspot são definidos em Configurações do Windows › Rede e Internet › Hotspot móvel.</value>
+  </data>
+  <data name="ProfileForm_SharingMode" xml:space="preserve">
+    <value>Compartilhar uma conexão com a Internet</value>
+  </data>
+  <data name="ProfileForm_SharingTo" xml:space="preserve">
+    <value>Compartilhar com</value>
+  </data>
+  <data name="ProfileForm_SharingToHelp" xml:space="preserve">
+    <value>O adaptador dos dispositivos que recebem a conexão, por exemplo uma porta Ethernet. O Windows atribui a ele o endereço 192.168.137.1.</value>
+  </data>
   <data name="Profiles_Apply.Text" xml:space="preserve">
     <value>Aplicar</value>
   </data>
@@ -979,5 +1009,17 @@ Ela contém as cópias dos seus perfis e todos os arquivos que você salvou lá.
   </data>
   <data name="Uninstall_Title" xml:space="preserve">
     <value>Desinstalar o NetHop</value>
+  </data>
+  <data name="Sharing_Adapter" xml:space="preserve">
+    <value>Com outro adaptador</value>
+  </data>
+  <data name="Sharing_Disabled" xml:space="preserve">
+    <value>Desativado</value>
+  </data>
+  <data name="Sharing_Hotspot" xml:space="preserve">
+    <value>Hotspot móvel</value>
+  </data>
+  <data name="Sharing_Unchanged" xml:space="preserve">
+    <value>Deixar como está</value>
   </data>
 </root>

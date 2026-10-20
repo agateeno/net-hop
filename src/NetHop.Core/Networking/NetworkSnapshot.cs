@@ -82,9 +82,27 @@ public sealed record FamilySnapshot
     public IReadOnlyList<IPAddress> EffectiveDnsServers { get; init; } = [];
 }
 
+/// <summary>
+/// Internet connection sharing, machine-wide. The mobile hotspot uses Internet Connection Sharing too: while it is on,
+/// <see cref="SharedFrom"/> is the connection it shares and <see cref="SharedTo"/> its own virtual Wi-Fi adapter.
+/// </summary>
+public sealed record SharingSnapshot
+{
+    public bool HotspotOn { get; init; }
+
+    /// <summary>The adapter whose internet is shared (ICS "public" connection), if any.</summary>
+    public Guid? SharedFrom { get; init; }
+
+    /// <summary>The adapter that receives it (ICS "private" connection), if any.</summary>
+    public Guid? SharedTo { get; init; }
+}
+
 public sealed record NetworkSnapshot
 {
     public IReadOnlyList<AdapterSnapshot> Adapters { get; init; } = [];
+
+    /// <summary>Null when it could not be read: plans then emit every sharing step.</summary>
+    public SharingSnapshot? Sharing { get; init; }
 
     public DateTimeOffset TakenAt { get; init; } = DateTimeOffset.Now;
 

@@ -202,4 +202,34 @@
   <data name="Issue_Warning" xml:space="preserve">
     <value>warning</value>
   </data>
+  <data name="Step_HotspotOn" xml:space="preserve">
+    <value>Turn on the mobile hotspot</value>
+  </data>
+  <data name="Step_HotspotShare" xml:space="preserve">
+    <value>Turn on the mobile hotspot, sharing the internet connection of '{0}'</value>
+  </data>
+  <data name="Step_HotspotOff" xml:space="preserve">
+    <value>Turn off the mobile hotspot</value>
+  </data>
+  <data name="Step_ShareAdapter" xml:space="preserve">
+    <value>Share the internet connection of '{0}' with '{1}'</value>
+  </data>
+  <data name="Step_SharingOff" xml:space="preserve">
+    <value>Stop internet connection sharing</value>
+  </data>
+  <data name="Profile_SharingAdaptersOnlyWhenOn" xml:space="preserve">
+    <value>'from' and 'to' are used only with mode hotspot or adapter.</value>
+  </data>
+  <data name="Profile_SharingHotspotNoTarget" xml:space="preserve">
+    <value>The mobile hotspot shares the connection with the devices that join it: remove 'to'.</value>
+  </data>
+  <data name="Profile_SharingNeedsFrom" xml:space="preserve">
+    <value>Set the adapter whose internet connection is shared ('from').</value>
+  </data>
+  <data name="Profile_SharingNeedsTo" xml:space="preserve">
+    <value>Set the adapter that receives the connection ('to').</value>
+  </data>
+  <data name="Profile_SharingSameAdapter" xml:space="preserve">
+    <value>An adapter cannot share its connection with itself.</value>
+  </data>
 </root>

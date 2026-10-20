@@ -202,4 +202,34 @@
   <data name="Issue_Warning" xml:space="preserve">
     <value>advertencia</value>
   </data>
+  <data name="Step_HotspotOn" xml:space="preserve">
+    <value>Activar la zona con cobertura inalámbrica móvil</value>
+  </data>
+  <data name="Step_HotspotShare" xml:space="preserve">
+    <value>Activar la zona con cobertura inalámbrica móvil y compartir la conexión a Internet de «{0}»</value>
+  </data>
+  <data name="Step_HotspotOff" xml:space="preserve">
+    <value>Desactivar la zona con cobertura inalámbrica móvil</value>
+  </data>
+  <data name="Step_ShareAdapter" xml:space="preserve">
+    <value>Compartir la conexión a Internet de «{0}» con «{1}»</value>
+  </data>
+  <data name="Step_SharingOff" xml:space="preserve">
+    <value>Dejar de compartir la conexión a Internet</value>
+  </data>
+  <data name="Profile_SharingAdaptersOnlyWhenOn" xml:space="preserve">
+    <value>«from» y «to» solo se usan con el modo hotspot o adapter.</value>
+  </data>
+  <data name="Profile_SharingHotspotNoTarget" xml:space="preserve">
+    <value>La zona con cobertura inalámbrica móvil comparte la conexión con los dispositivos que se conectan a ella: quita «to».</value>
+  </data>
+  <data name="Profile_SharingNeedsFrom" xml:space="preserve">
+    <value>Indica el adaptador cuya conexión a Internet se comparte («from»).</value>
+  </data>
+  <data name="Profile_SharingNeedsTo" xml:space="preserve">
+    <value>Indica el adaptador que recibe la conexión («to»).</value>
+  </data>
+  <data name="Profile_SharingSameAdapter" xml:space="preserve">
+    <value>Un adaptador no puede compartir su conexión consigo mismo.</value>
+  </data>
 </root>
