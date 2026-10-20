@@ -72,10 +72,21 @@ Releases are immutable once published (the repository setting), so their files m
 
 Do not create the release or its tag by hand first: CI could no longer attach the files.
 
-To publish on winget, submit the **winget-manifests** folder to [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs), for example with `wingetcreate submit`. After the first approval, users install NetHop with:
+### winget
+
+Publishing a release starts the **winget** workflow (`.github/workflows/winget.yml`): it downloads the release's MSIs, writes the manifests (`scripts/New-WingetManifest.ps1`) and submits them with `wingetcreate`, which opens a pull request on [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs). Pre-releases are submitted too: winget has no pre-release channel.
+
+It needs the **WINGET_TOKEN** repository secret (*Settings › Secrets and variables › Actions*): a classic personal access token with the `public_repo` scope. wingetcreate forks winget-pkgs into the token owner's account and opens the pull request from there. Without the secret the workflow only warns.
+
+- The first pull request asks its author to sign Microsoft's CLA, then goes through automatic checks and a moderator's review. Later versions are usually merged automatically.
+- To submit a release again, or one published before the secret was set: *Actions › winget › Run workflow* with its tag (`v0.3.1`).
+- Each run keeps the manifests as the **winget-manifests** artifact, to submit by hand if needed (`wingetcreate submit <folder>`). CI release builds produce the same artifact.
+
+Once the package is approved, users install and update NetHop with:
 
 ```powershell
 winget install agateeno.NetHop
+winget upgrade agateeno.NetHop
 ```
 
 ## Windows 11 context menu
