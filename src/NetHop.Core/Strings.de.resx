@@ -47,7 +47,7 @@
     <value>Geben Sie den auszuführenden Befehl an.</value>
   </data>
   <data name="Rules_UrlRequired" xml:space="preserve">
-    <value>Geben Sie eine absolute URL an.</value>
+    <value>Geben Sie eine Webadresse an (http:// oder https://).</value>
   </data>
   <data name="Rules_FlowUrlRequired" xml:space="preserve">
     <value>Fügen Sie die Ausführungs-URL des Flows ein (sie beginnt mit ms-powerautomate:).</value>

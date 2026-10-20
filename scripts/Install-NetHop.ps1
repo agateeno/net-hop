@@ -31,6 +31,20 @@ Get-Process NetHop.App -ErrorAction SilentlyContinue | Stop-Process -Force
 
 Write-Host "Copying files to $Destination..."
 New-Item $Destination -ItemType Directory -Force | Out-Null
+# The service runs as SYSTEM from this folder: only administrators may change it, as in Program Files.
+# A folder elsewhere (C:\NetHop, for example) would otherwise inherit "Users: Modify" and let anyone swap the binaries.
+# Set before copying, so the files inherit it.
+$acl = New-Object System.Security.AccessControl.DirectorySecurity
+$acl.SetAccessRuleProtection($true, $false)
+$inherit = [System.Security.AccessControl.InheritanceFlags]'ContainerInherit, ObjectInherit'
+foreach ($rule in @(@('S-1-5-18', 'FullControl'), @('S-1-5-32-544', 'FullControl'), @('S-1-5-32-545', 'ReadAndExecute'))) {
+    # SYSTEM, Administrators, Users
+    $sid = New-Object System.Security.Principal.SecurityIdentifier($rule[0])
+    $acl.AddAccessRule((New-Object System.Security.AccessControl.FileSystemAccessRule($sid, $rule[1], $inherit, 'None', 'Allow')))
+}
+$acl.SetOwner((New-Object System.Security.Principal.SecurityIdentifier('S-1-5-32-544')))
+Set-Acl -Path $Destination -AclObject $acl
+
 Copy-Item (Join-Path $Source 'bin\*') $Destination -Recurse -Force
 
 $serviceExe = Join-Path $Destination 'NetHop.Service.exe'

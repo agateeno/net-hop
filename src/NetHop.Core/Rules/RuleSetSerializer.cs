@@ -80,10 +80,10 @@ public static class RuleSetSerializer
             case RuleActionType.RunCommand when string.IsNullOrWhiteSpace(action.Command):
                 issues.Add(Issue.Error($"{path}.command", Text.Get("Rules_CommandRequired")));
                 break;
-            case RuleActionType.OpenUrl when !Uri.TryCreate(action.Url, UriKind.Absolute, out _):
+            case RuleActionType.OpenUrl when !RuleAction.IsWebAddress(action.Url):
                 issues.Add(Issue.Error($"{path}.url", Text.Get("Rules_UrlRequired")));
                 break;
-            case RuleActionType.RunPowerAutomateFlow when action.Url is null || !action.Url.StartsWith("ms-powerautomate:", StringComparison.OrdinalIgnoreCase):
+            case RuleActionType.RunPowerAutomateFlow when !RuleAction.IsFlowAddress(action.Url):
                 issues.Add(Issue.Error($"{path}.url", Text.Get("Rules_FlowUrlRequired")));
                 break;
             case RuleActionType.Delay when action.Seconds is < 1 or > 600:

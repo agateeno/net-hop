@@ -94,6 +94,9 @@
   <data name="Adapters_WifiNetwork" xml:space="preserve">
     <value>WLAN-Netzwerk</value>
   </data>
+  <data name="Apply_ReviewFirst" xml:space="preserve">
+    <value>„{0}“ ist noch kein gespeichertes Profil</value>
+  </data>
   <data name="Automations_AddRule.Text" xml:space="preserve">
     <value>Regel hinzufügen</value>
   </data>

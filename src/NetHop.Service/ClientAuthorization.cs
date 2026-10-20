@@ -19,6 +19,8 @@ namespace NetHop.Service;
 internal static partial class ClientAuthorization
 {
     private const int TokenGroupsClass = 2;
+    private const int TokenIntegrityLevelClass = 25;
+    private const int SecurityMandatoryMediumRid = 0x2000;
     private const uint ProcessQueryLimitedInformation = 0x1000;
     private const uint TokenQuery = 0x0008;
     // IsInRole duplicates the token into an impersonation token for CheckTokenMembership.
@@ -63,6 +65,33 @@ internal static partial class ClientAuthorization
 
         using (token)
             return new WindowsIdentity(token.DangerousGetHandle());
+    }
+
+    /// <summary>
+    /// Sandboxed processes (browser renderers, low-integrity apps) run below medium integrity, yet in an
+    /// administrator's session their token still lists Administrators. The pipe's default integrity label already
+    /// keeps them out; this check does not rely on it.
+    /// </summary>
+    public static bool IsBelowMediumIntegrity(WindowsIdentity identity)
+    {
+        GetTokenInformation(identity.Token, TokenIntegrityLevelClass, IntPtr.Zero, 0, out var length);
+        if (length <= 0)
+            return true;
+
+        var buffer = Marshal.AllocHGlobal(length);
+        try
+        {
+            if (!GetTokenInformation(identity.Token, TokenIntegrityLevelClass, buffer, length, out _))
+                return true;
+            // TOKEN_MANDATORY_LABEL: a SID_AND_ATTRIBUTES whose SID is S-1-16-<level>.
+            var label = new SecurityIdentifier(Marshal.PtrToStructure<SidAndAttributes>(buffer).Sid);
+            var level = int.Parse(label.Value[(label.Value.LastIndexOf('-') + 1)..], System.Globalization.CultureInfo.InvariantCulture);
+            return level < SecurityMandatoryMediumRid;
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(buffer);
+        }
     }
 
     public static bool IsAdministratorAccount(WindowsIdentity identity)

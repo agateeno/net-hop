@@ -92,7 +92,11 @@ public partial class App : Application
         }
     }
 
-    /// <summary>Applies a .nethop file: the saved profile with the same id, or the file imported first.</summary>
+    /// <summary>
+    /// Applies a .nethop file that is one of the saved profiles (the copies in the profiles folder), using the saved
+    /// version. Any other file opens in the editor instead: a downloaded profile could, for example, point DNS at
+    /// an attacker's server, so it is never saved and applied without the user seeing it first.
+    /// </summary>
     private async void ApplyFile(string path)
     {
         try
@@ -106,18 +110,15 @@ public partial class App : Application
                 return;
             }
 
-            var yaml = await File.ReadAllTextAsync(path);
-            var profile = Core.Profiles.ProfileSerializer.Deserialize(yaml);
+            var profile = Core.Profiles.ProfileSerializer.Deserialize(await File.ReadAllTextAsync(path));
             if (Connection.Profiles.All(p => p.Id != profile.Id))
             {
-                var saved = await Connection.Service.SaveProfileYamlAsync(yaml);
-                if (!saved.Saved)
-                {
-                    UserActionRunner.Notify(Loc.Format("Common_ProfileFailed", profile.Name), string.Join(Environment.NewLine, saved.Issues.Select(i => i.ToString())));
-                    return;
-                }
+                ShowMainWindow();
+                _mainWindow!.ImportProfileFile(path);
+                UserActionRunner.Notify(Loc.Format("Apply_ReviewFirst", profile.Name), Loc.Get("Profiles_ImportedHelp"));
+                return;
             }
-            await Connection.ApplyAsync(profile.Id.ToString()); // the result arrives as a toast
+            await Connection.ApplyAsync(profile.Id.ToString()); // the saved profile, not the file; the result arrives as a toast
         }
         catch (Exception ex) when (ex is IOException or Core.Serialization.NetHopFormatException or UnauthorizedAccessException)
         {

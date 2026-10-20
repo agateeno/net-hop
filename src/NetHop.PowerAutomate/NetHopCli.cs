@@ -107,10 +107,33 @@ namespace Modules.NetHop
             return text.Length > 0 ? text : $"nethop.exe exited with code {exitCode}.";
         }
 
-        private static string Quote(string argument) =>
-            argument.Length > 0 && argument.IndexOfAny(new[] { ' ', '\t', '"' }) < 0
-                ? argument
-                : "\"" + argument.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+        /// <summary>
+        /// Quotes one argument the way CommandLineToArgvW reads it back: backslashes are literal except before a
+        /// quote, so only those runs are doubled. A profile name can then never split into extra arguments.
+        /// </summary>
+        private static string Quote(string argument)
+        {
+            if (argument.Length > 0 && argument.IndexOfAny(new[] { ' ', '\t', '\n', '\v', '"' }) < 0)
+                return argument;
+
+            var quoted = new StringBuilder("\"");
+            var backslashes = 0;
+            foreach (var c in argument)
+            {
+                if (c == '\\')
+                {
+                    backslashes++;
+                    continue;
+                }
+                // Backslashes before a quote are doubled, and the quote itself escaped.
+                quoted.Append('\\', c == '"' ? backslashes * 2 + 1 : backslashes);
+                quoted.Append(c);
+                backslashes = 0;
+            }
+            // Backslashes before the closing quote are doubled too.
+            quoted.Append('\\', backslashes * 2);
+            return quoted.Append('"').ToString();
+        }
     }
 
     // JSON shapes printed by nethop.exe --json (camelCase).
