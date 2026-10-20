@@ -259,6 +259,14 @@ jobs:
             out/msi/*.msi
             out/power-automate/NetHop.cab
           generate_release_notes: true
+          # Unsigned builds are published as pre-releases, with a note on what that means.
+          prerelease: ${{ env.SIGNING != 'true' }}
+          body: ${{ env.SIGNING != 'true' && env.UNSIGNED_NOTE || '' }}
+        env:
+          UNSIGNED_NOTE: |
+            > **Unsigned pre-release.** Windows SmartScreen will warn before installing (More info › Run anyway).
+            > Power Automate Desktop does not load the unsigned `NetHop.cab`, and the Windows 11 context menu entry
+            > appears only where Windows accepts unsigned packages; "Apply with NetHop" under *Show more options* works everywhere.
 
       - name: Winget manifests
         if: startsWith(github.ref, 'refs/tags/v')
