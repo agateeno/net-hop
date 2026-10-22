@@ -39,6 +39,9 @@ Or download the MSI for your PC (`x64`, or `arm64` for Windows on Arm) from [Rel
     <td align="center"><img src="docs/screenshots/automations.png" width="400" alt="Automations: a rule that applies a profile when a Wi-Fi network connects"><br><sub>Automations: when, only if, then</sub></td>
     <td align="center"><img src="docs/screenshots/integrations.png" width="400" alt="Integrations: profile files, links, command line, Power Automate, PowerShell, Logitech"><br><sub>Integrations: CLI, Power Automate, PowerShell, Logitech</sub></td>
   </tr>
+  <tr>
+    <td align="center" colspan="2"><img src="docs/screenshots/tray-flyout.png" width="300" alt="Tray flyout above the notification area: the active profile, the profile list and the pause automations button"><br><sub>Tray flyout: the active profile and one-click switching from the notification area</sub></td>
+  </tr>
 </table>
 
 ## Features
