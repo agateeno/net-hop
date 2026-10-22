@@ -40,8 +40,8 @@ public class NetHopPlugin : Plugin
                 this.OnPluginStatusChanged(PluginStatus.Normal, null);
                 break;
             case LinkState.ServiceNotRunning:
-                this.OnPluginStatusChanged(PluginStatus.Error, "The NetHop service is not running.",
-                    "https://github.com/agateeno/net-hop#building", "How to install NetHop");
+                this.OnPluginStatusChanged(PluginStatus.Error, "The NetHop service is not running. Turn it on in NetHop > Settings > NetHop service.",
+                    "https://github.com/agateeno/net-hop#install", "How to install NetHop");
                 break;
             case LinkState.AccessDenied:
                 this.OnPluginStatusChanged(PluginStatus.Error, "NetHop requires an administrator account.");

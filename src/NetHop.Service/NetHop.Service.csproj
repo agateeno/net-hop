@@ -16,7 +16,6 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NetHop.Engine\NetHop.Engine.csproj" />
-    <ProjectReference Include="..\NetHop.Ipc\NetHop.Ipc.csproj" />
+    <ProjectReference Include="..\NetHop.Host\NetHop.Host.csproj" />
   </ItemGroup>
 </Project>

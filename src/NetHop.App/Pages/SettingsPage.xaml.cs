@@ -16,7 +16,12 @@ public sealed partial class SettingsPage : Page
         InitializeComponent();
         AboutCard.Description = Loc.Format("Settings_Version", Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion);
         UpdateCheck.Changed += OnUpdateCheckChanged;
-        Unloaded += (_, _) => UpdateCheck.Changed -= OnUpdateCheckChanged;
+        _connection.PropertyChanged += OnConnectionChanged;
+        Unloaded += (_, _) =>
+        {
+            UpdateCheck.Changed -= OnUpdateCheckChanged;
+            _connection.PropertyChanged -= OnConnectionChanged;
+        };
     }
 
     private static readonly (string Tag, string Label)[] Languages =
@@ -46,7 +51,7 @@ public sealed partial class SettingsPage : Page
         StartupSwitch.OffContent = Loc.Get("RuleForm_Off");
         UpdateAutoSwitch.IsOn = UpdateCheck.CheckAutomatically;
         PrereleaseSwitch.IsOn = UpdateCheck.IncludePrereleases;
-        foreach (var toggle in new[] { UpdateAutoSwitch, PrereleaseSwitch })
+        foreach (var toggle in new[] { UpdateAutoSwitch, PrereleaseSwitch, ServiceSwitch })
             (toggle.OnContent, toggle.OffContent) = (Loc.Get("RuleForm_On"), Loc.Get("RuleForm_Off"));
         // Language names are shown in their own language, as Windows does.
         LanguageBox.ItemsSource = Languages.Select(l => l.Tag == AppLanguage.SystemDefault ? Loc.Get(l.Label) : l.Label).ToList();
@@ -55,20 +60,84 @@ public sealed partial class SettingsPage : Page
         ThemeBox.SelectedIndex = Math.Max(0, Array.FindIndex(Themes, t => t.Theme == AppTheme.Saved));
         _loading = false;
         ShowUpdateState();
+        await ShowServiceStateAsync();
+    }
 
-        ServiceCard.Description = _connection.State switch
+    // The service turned on or off: the connection moves over a few seconds later.
+    private async void OnConnectionChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(ServiceConnection.State) or nameof(ServiceConnection.IsLocal))
+            await ShowServiceStateAsync();
+    }
+
+    private async Task ShowServiceStateAsync()
+    {
+        _loading = true;
+        ServiceSwitch.IsOn = ServiceSetup.IsInstalled;
+        _loading = false;
+
+        var state = _connection.State switch
         {
+            _ when !ServiceSetup.IsInstalled => Loc.Get("Settings_ServiceOff"),
             ConnectionState.Connected => Loc.Get("Settings_ServiceRunning"),
             ConnectionState.ServiceNotRunning => Loc.Get("Settings_ServiceStopped"),
             ConnectionState.AccessDenied => Loc.Get("Settings_ServiceNotAdmin"),
             _ => Loc.Get("Common_Connecting"),
         };
-
-        if (_connection.IsConnected)
+        if (_connection.IsConnected && !_connection.IsLocal)
         {
-            var info = await _connection.Service.GetInfoAsync();
-            ServiceCard.Description = Loc.Format("Settings_ServiceDetails", info.Version, info.ProfilesFolder)
-                + (info.ReadOnly ? " · " + Loc.Get("Settings_ServiceReadOnly") : "");
+            try
+            {
+                var info = await _connection.Service.GetInfoAsync();
+                state = Loc.Format("Settings_ServiceDetails", info.Version, info.ProfilesFolder)
+                    + (info.ReadOnly ? " · " + Loc.Get("Settings_ServiceReadOnly") : "");
+            }
+            catch (Exception ex) when (ex is StreamJsonRpc.ConnectionLostException or InvalidOperationException)
+            {
+                // Disconnected meanwhile: the state change that follows shows it.
+            }
+        }
+        ServiceCard.Description = state + Environment.NewLine + Loc.Get("Settings_ServiceNeededFor");
+    }
+
+    private async void OnServiceToggled(object sender, RoutedEventArgs e)
+    {
+        if (_loading || ServiceSwitch.IsOn == ServiceSetup.IsInstalled || App.Current is not { } app)
+            return;
+
+        if (!ServiceSwitch.IsOn)
+        {
+            var dialog = new ContentDialog
+            {
+                XamlRoot = XamlRoot,
+                Title = Loc.Get("Settings_ServiceOffTitle"),
+                Content = new TextBlock { Text = Loc.Get("Settings_ServiceOffQuestion"), TextWrapping = TextWrapping.Wrap },
+                PrimaryButtonText = Loc.Get("Settings_ServiceOffConfirm"),
+                CloseButtonText = Loc.Get("Common_Cancel"),
+                DefaultButton = ContentDialogButton.Close,
+            };
+            if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+            {
+                await ShowServiceStateAsync();
+                return;
+            }
+        }
+
+        ServiceSwitch.IsEnabled = false;
+        ServiceProgress.IsActive = true;
+        try
+        {
+            // Not elevated, this restarts NetHop through UAC and this page closes with it.
+            await app.SetServiceEnabledAsync(ServiceSwitch.IsOn);
+            _loading = true;
+            StartupSwitch.IsOn = ShellIntegration.StartsWithWindows;
+            _loading = false;
+        }
+        finally
+        {
+            ServiceProgress.IsActive = false;
+            ServiceSwitch.IsEnabled = true;
+            await ShowServiceStateAsync();
         }
     }
 
@@ -132,9 +201,23 @@ public sealed partial class SettingsPage : Page
 
     private void OnOpenFolderClick(object sender, RoutedEventArgs e) => ProfileFolder.Open();
 
+    private void OnGitHubClick(object sender, RoutedEventArgs e) => ShellIntegration.OpenUrl(Core.NetHopConstants.RepositoryUrl);
+
     private void OnStartupToggled(object sender, RoutedEventArgs e)
     {
-        if (!_loading)
+        if (_loading)
+            return;
+        try
+        {
             ShellIntegration.StartsWithWindows = StartupSwitch.IsOn;
+        }
+        catch (Exception ex) when (ex is UnauthorizedAccessException or IOException or System.ComponentModel.Win32Exception)
+        {
+            // Without the service, the startup task needs NetHop to run as administrator.
+            UserActionRunner.Notify(Loc.Get("Settings_StartupFailed"), ex.Message);
+            _loading = true;
+            StartupSwitch.IsOn = ShellIntegration.StartsWithWindows;
+            _loading = false;
+        }
     }
 }

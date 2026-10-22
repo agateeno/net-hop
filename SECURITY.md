@@ -40,7 +40,7 @@ Please give us reasonable time to release a fix before disclosing the issue publ
 
 The security model, its trust boundaries and the protections in place are described in [docs/architecture.md › Security model](docs/architecture.md#security-model). Reports are especially welcome for:
 
-- privilege escalation through the NetHop service (the `NetHop.Service.v1` pipe, the JSON-RPC API, the read-only mode for standard users);
+- privilege escalation through the NetHop service (the `NetHop.Service.v1` pipe, the JSON-RPC API, the read-only mode for standard users), or through the app when it runs elevated without the service, registers the service or creates its startup task;
 - tampering with `%ProgramData%\NetHop`, the install folder or the service binaries;
 - code execution through profiles, rules, `.nethop` files, `nethop://` links or the Windows 11 context menu handler;
 - writing to the hosts file outside NetHop's block, or redirecting a protected domain;

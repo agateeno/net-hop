@@ -12,6 +12,14 @@
             </Grid.ColumnDefinitions>
             <StackPanel Spacing="{StaticResource SettingsCardSpacing}">
                 <TextBlock x:Uid="Integrations_Title" Text="Integrations" Style="{StaticResource PageTitleStyle}" />
+                <!-- Everything below except files and links talks to the service. -->
+                <InfoBar x:Uid="Integrations_NoService" x:Name="NoServiceInfo" Severity="Warning" IsClosable="False" IsOpen="False"
+                         Title="These integrations need the NetHop service"
+                         Message="The command line, PowerShell, Power Automate and the Logi plugin connect to the NetHop service, which is off. Profile files and nethop:// links work without it.">
+                    <InfoBar.ActionButton>
+                        <Button x:Uid="Automations_NoServiceSettings" Content="Open Settings" Click="OnOpenSettingsClick" />
+                    </InfoBar.ActionButton>
+                </InfoBar>
 
                 <TextBlock x:Uid="Integrations_Windows" Text="Windows" Style="{StaticResource SectionHeaderStyle}" Margin="1,0,0,6" />
                 <toolkit:SettingsCard x:Uid="Integrations_Files" Header="Profile files (.nethop)"

@@ -28,7 +28,7 @@ namespace Modules.NetHop
                 case 1 when stdout.TrimStart().StartsWith("{", StringComparison.Ordinal) || stdout.TrimStart().StartsWith("[", StringComparison.Ordinal):
                     return Deserialize<T>(stdout);
                 case 3:
-                    throw new ActionException(ServiceUnavailableError, "The NetHop service is not running.");
+                    throw new ActionException(ServiceUnavailableError, "The NetHop service is not running. Turn it on in NetHop > Settings > NetHop service.");
                 case 4:
                     throw new ActionException(AccessDeniedError, "NetHop requires an administrator account.");
                 default:
@@ -40,7 +40,7 @@ namespace Modules.NetHop
         {
             var (exitCode, stdout, stderr) = Execute(arguments);
             if (exitCode == 3)
-                throw new ActionException(ServiceUnavailableError, "The NetHop service is not running.");
+                throw new ActionException(ServiceUnavailableError, "The NetHop service is not running. Turn it on in NetHop > Settings > NetHop service.");
             if (exitCode == 4)
                 throw new ActionException(AccessDeniedError, "NetHop requires an administrator account.");
             if (exitCode != 0)

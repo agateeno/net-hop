@@ -43,11 +43,21 @@ public partial class App : Application
                 _ = ProfileFolder.SyncAsync(Connection.Service, Connection.Profiles);
         };
         UserActionRunner.Initialize(Connection);
-        Connection.Start();
+        _ = StartConnectionAsync();
         UpdateCheck.Start();
 
         _tray = new TrayIconManager(Connection, ShowMainWindow, ExitApp);
         HandleActivation(_launchActivation, isLaunch: true);
+    }
+
+    private async Task StartConnectionAsync()
+    {
+        // Settings › NetHop service, chosen in an instance that was not elevated: first turn it on or off, so that
+        // the connection starts with the right one.
+        var arguments = Environment.GetCommandLineArgs();
+        if (arguments.Contains(Program.EnableServiceArgument) || arguments.Contains(Program.DisableServiceArgument))
+            await SetServiceEnabledAsync(arguments.Contains(Program.EnableServiceArgument));
+        Connection.Start();
     }
 
     /// <summary>Handles the first launch and activations redirected from later launches.</summary>
@@ -87,6 +97,8 @@ public partial class App : Application
                     ShowMainWindow();
                     _mainWindow!.ImportProfileFile(file);
                 }
+                else if (arguments.Contains(Program.EnableServiceArgument) || arguments.Contains(Program.DisableServiceArgument))
+                    ShowSettings(); // restarted elevated from Settings to turn the service on or off
                 else if (!(isLaunch && arguments.Contains("--tray")))
                     ShowMainWindow(); // started at logon with --tray: stay in the tray
                 break;
@@ -171,22 +183,48 @@ public partial class App : Application
     /// Starts NetHop again through UAC (which asks for an administrator's credentials) and closes this instance.
     /// The new instance waits for this one to exit before taking over the single-instance key and the tray.
     /// </summary>
-    public void RestartAsAdministrator()
+    public void RestartAsAdministrator(params string[] arguments)
     {
+        // UAC prompt cancelled: keep running as before
+        if (Program.RestartElevated(arguments))
+            ExitApp();
+    }
+
+    /// <summary>
+    /// Turns the NetHop service on or off (Settings). Elevated, here; otherwise in a new elevated instance. The
+    /// connection then moves to the service, or to the engine in the app.
+    /// </summary>
+    /// <returns>The error, or null.</returns>
+    public async Task<string?> SetServiceEnabledAsync(bool enabled)
+    {
+        if (!ServiceSetup.IsElevated)
+        {
+            RestartAsAdministrator(enabled ? Program.EnableServiceArgument : Program.DisableServiceArgument);
+            return null;
+        }
+
         try
         {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(Environment.ProcessPath!)
+            await Task.Run(() =>
             {
-                UseShellExecute = true,
-                Verb = "runas",
-                Arguments = $"{Program.RestartedFromArgument} {Environment.ProcessId}",
+                if (enabled)
+                    ServiceSetup.Install();
+                else
+                    ServiceSetup.Remove();
             });
+            return null;
         }
-        catch (System.ComponentModel.Win32Exception)
+        catch (Exception ex) when (ex is InvalidOperationException or IOException or UnauthorizedAccessException
+            or System.ComponentModel.Win32Exception)
         {
-            return; // UAC prompt cancelled: keep running read-only
+            UserActionRunner.Notify(Loc.Get(enabled ? "Service_EnableFailed" : "Service_DisableFailed"), ex.Message);
+            return ex.Message;
         }
-        ExitApp();
+        finally
+        {
+            // A Run entry with the service, a scheduled task without it.
+            ShellIntegration.UpdateStartupMechanism();
+        }
     }
 
     private async void ExitApp()

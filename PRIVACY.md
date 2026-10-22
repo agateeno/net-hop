@@ -1,6 +1,6 @@
 # Privacy policy
 
-*Effective date: 20 October 2026*
+*Effective date: 22 October 2026*
 
 This policy covers NetHop: the app, the Windows service, the `nethop` command line, the PowerShell module, the Power Automate actions, the Logi Actions plugin and the installer. NetHop is an open-source project maintained by [agateeno](https://github.com/agateeno); its source code is at <https://github.com/agateeno/net-hop>, where anyone can check what this policy says.
 
@@ -25,7 +25,7 @@ Like any web server, GitHub sees the IP address that a request comes from. GitHu
 
 To turn off the automatic update check: **Settings › Updates › Check for updates automatically**. NetHop then contacts GitHub only when you press **Check for updates**.
 
-Changing your network configuration (IP addresses, gateways, DNS servers, adapters) is done locally by the NetHop service through Windows. It does not involve any NetHop server; there is none.
+Changing your network configuration (IP addresses, gateways, DNS servers, adapters) is done locally through Windows, by the NetHop app or, when it is turned on, the NetHop service. It does not involve any NetHop server; there is none.
 
 ## Data stored on your PC
 
@@ -36,9 +36,9 @@ NetHop stores these files and settings on your computer only:
 | Profiles and automation rules | `%ProgramData%\NetHop` (readable and writable by administrators and the system only) |
 | A copy of your profiles, for Explorer | `%USERPROFILE%\NetHop Profiles` |
 | App settings (language, theme, update check, the last version you were notified about) | The registry, `HKEY_CURRENT_USER\Software\NetHop` |
-| Start with Windows, when turned on | The registry, `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run` |
+| Start with Windows, when turned on | The registry, `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run` with the NetHop service; without it, a scheduled task named `NetHop Startup` followed by your account's identifier |
 | Details of app crashes, to help you report a problem | `%LOCALAPPDATA%\NetHop\crash.log` |
-| Service messages and errors | The Windows Application event log |
+| Messages and errors of the service (or of the app, without the service) | The Windows Application event log |
 
 Profiles can contain network details such as IP addresses, DNS servers, adapter names and MAC addresses, and Wi-Fi network names used in rules. None of this leaves your PC unless you export or share a profile file yourself.
 

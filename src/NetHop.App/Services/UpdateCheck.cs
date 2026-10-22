@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text.Json;
@@ -93,7 +92,7 @@ public static class UpdateCheck
     public static void OpenReleasePage()
     {
         if (Latest is not null)
-            Process.Start(new ProcessStartInfo(Latest.PageUrl) { UseShellExecute = true });
+            ShellIntegration.OpenUrl(Latest.PageUrl);
     }
 
     private static async Task RunScheduleAsync()

@@ -10,11 +10,15 @@ public enum ConnectionState
     Connected,
     ServiceNotRunning,
     AccessDenied,
+
+    /// <summary>The service is off and the app is not elevated: without the service, the app needs to be.</summary>
+    NeedsElevation,
 }
 
 /// <summary>
-/// Keeps a connection to the NetHop service alive (reconnecting after restarts) and
-/// re-raises service events on the UI thread.
+/// Keeps a connection to NetHop alive and re-raises its events on the UI thread. With the service installed, that is
+/// a pipe connection to it (reconnecting after restarts); without it, the engine runs in the app
+/// (<see cref="LocalService"/>), and automations do not run.
 /// </summary>
 public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposable
 {
@@ -22,6 +26,7 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
 
     private readonly CancellationTokenSource _stop = new();
     private NetHopClient? _client;
+    private INetHopService? _service;
 
     public ServiceConnection()
     {
@@ -45,6 +50,10 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
     [ObservableProperty]
     public partial bool IsReadOnly { get; private set; }
 
+    /// <summary>NetHop runs without its service: the app changes the network itself, and automations do not run.</summary>
+    [ObservableProperty]
+    public partial bool IsLocal { get; private set; }
+
     public bool IsConnected => State == ConnectionState.Connected;
 
     /// <summary>Connected with full access: profiles, rules and adapters can be changed.</summary>
@@ -59,7 +68,7 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
     public event EventHandler<UserActionRequestedEventArgs>? UserActionRequested;
 
     /// <exception cref="InvalidOperationException">Not connected.</exception>
-    public INetHopService Service => _client?.Service ?? throw new InvalidOperationException("NetHop service is not connected.");
+    public INetHopService Service => _service ?? throw new InvalidOperationException("NetHop service is not connected.");
 
     partial void OnStateChanged(ConnectionState value)
     {
@@ -79,7 +88,8 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
         {
             return await Service.ApplyProfileAsync(profile);
         }
-        catch (Exception ex) when (ex is StreamJsonRpc.RemoteInvocationException or StreamJsonRpc.ConnectionLostException)
+        catch (Exception ex) when (ex is StreamJsonRpc.RemoteInvocationException or StreamJsonRpc.ConnectionLostException
+            or InvalidOperationException or UnauthorizedAccessException or IOException)
         {
             return new ApplyResult { Error = ex.Message, ProfileName = profile };
         }
@@ -107,10 +117,10 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
 
     public async Task RefreshAsync()
     {
-        if (_client is null)
+        if (_service is not { } service)
             return;
-        var status = await _client.Service.GetStatusAsync();
-        var profiles = await _client.Service.ListProfilesAsync();
+        var status = await service.GetStatusAsync();
+        var profiles = await service.ListProfilesAsync();
         OnUi(() =>
         {
             Status = status;
@@ -122,11 +132,19 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
     {
         while (!stop.IsCancellationRequested)
         {
+            if (!ServiceSetup.IsInstalled)
+            {
+                if (!await RunLocalAsync(stop))
+                    return;
+                continue;
+            }
+
             var established = false;
             try
             {
                 OnUi(() => State = ConnectionState.Connecting);
                 _client = await NetHopClient.ConnectAsync(TimeSpan.FromSeconds(3), stop);
+                _service = _client.Service;
                 _client.Service.StatusChanged += OnStatusChanged;
                 _client.Service.UserActionRequested += OnUserActionRequested;
 
@@ -156,6 +174,7 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
             }
             finally
             {
+                _service = null;
                 if (_client is not null)
                 {
                     await _client.DisposeAsync();
@@ -163,14 +182,81 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
                 }
             }
 
-            try
-            {
-                await Task.Delay(RetryDelay, stop);
-            }
-            catch (OperationCanceledException)
-            {
+            // Turned off from Settings: no need to wait before running NetHop in the app.
+            if (!ServiceSetup.IsInstalled)
+                continue;
+            if (!await DelayAsync(RetryDelay, stop))
                 return;
+        }
+    }
+
+    /// <summary>
+    /// Runs NetHop in the app until the service is turned on (or, without elevation, waits a moment).
+    /// Returns false when stopped.
+    /// </summary>
+    private async Task<bool> RunLocalAsync(CancellationToken stop)
+    {
+        if (!ServiceSetup.IsElevated)
+        {
+            OnUi(() => State = ConnectionState.NeedsElevation);
+            return await DelayAsync(RetryDelay, stop);
+        }
+
+        LocalService? local = null;
+        try
+        {
+            local = await Task.Run(() => new LocalService(), stop);
+            local.StatusChanged += OnStatusChanged;
+            _service = local;
+            await RefreshAsync();
+            OnUi(() =>
+            {
+                IsReadOnly = false;
+                IsLocal = true;
+                State = ConnectionState.Connected;
+            });
+
+            // Turning the service on from Settings installs it: hand over to it.
+            while (!ServiceSetup.IsInstalled)
+            {
+                if (!await DelayAsync(RetryDelay, stop))
+                    return false;
             }
+            return true;
+        }
+        catch (OperationCanceledException) when (stop.IsCancellationRequested)
+        {
+            return false;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException
+            or Microsoft.Management.Infrastructure.CimException or StreamJsonRpc.RemoteInvocationException)
+        {
+            CrashLog.Write("Local mode", ex);
+            OnUi(() => State = ConnectionState.ServiceNotRunning);
+            return await DelayAsync(RetryDelay, stop);
+        }
+        finally
+        {
+            _service = null;
+            if (local is not null)
+            {
+                local.StatusChanged -= OnStatusChanged;
+                local.Dispose();
+            }
+            OnUi(() => IsLocal = false);
+        }
+    }
+
+    private static async Task<bool> DelayAsync(TimeSpan delay, CancellationToken stop)
+    {
+        try
+        {
+            await Task.Delay(delay, stop);
+            return true;
+        }
+        catch (OperationCanceledException)
+        {
+            return false;
         }
     }
 
@@ -178,7 +264,7 @@ public sealed partial class ServiceConnection : ObservableObject, IAsyncDisposab
     {
         Status = e.Status;
         if (e.Kind is StatusChangeKind.ProfilesChanged or StatusChangeKind.ProfileApplied or StatusChangeKind.NetworkChanged)
-            Profiles = _client is null ? Profiles : await _client.Service.ListProfilesAsync();
+            Profiles = _service is null ? Profiles : await _service.ListProfilesAsync();
 
         StatusChanged?.Invoke(this, e);
         if (e is { Kind: StatusChangeKind.ProfileApplied, ApplyResult: { DryRun: false } result })

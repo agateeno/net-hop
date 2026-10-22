@@ -110,7 +110,7 @@ jobs:
 
           try {
             & "$root/bin/nethop.exe" validate samples/Office.nethop; Check 'validate'
-            & "$root/Install-NetHop.ps1" -Source $root -Destination $target
+            & "$root/Install-NetHop.ps1" -Source $root -Destination $target -Service
             Start-Sleep -Seconds 3
             & $cli status; Check 'status'
             & $cli adapters; Check 'adapters'
@@ -155,12 +155,31 @@ jobs:
           if ($package.Version -ne "$env:PRODUCT_VERSION.0") { throw "Registered version $($package.Version), expected $env:PRODUCT_VERSION.0" }
           $package | Remove-AppxPackage
 
+      # NetHop's default since 0.6: no service, the app runs the engine itself (the runner's account is elevated).
+      # Informational, like the other app steps.
+      - name: Smoke test (app without the service)
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          Stop-Service NetHop -Force -ErrorAction SilentlyContinue
+          sc.exe delete NetHop | Out-Null
+          $log = Join-Path $env:LOCALAPPDATA 'NetHop\crash.log'
+          Remove-Item $log -ErrorAction SilentlyContinue
+          $app = Start-Process (Join-Path $env:RUNNER_TEMP 'NetHop\NetHop.App.exe') -ArgumentList '--tray' -PassThru
+          Start-Sleep -Seconds 15
+          $crash = Get-Content $log -Raw -ErrorAction SilentlyContinue
+          if ($crash) { $crash }
+          if ($app.HasExited) { throw "NetHop.App.exe exited after start with code $($app.ExitCode)" }
+          Stop-Process $app -Force
+          if ($crash) { throw 'The app logged an error (see above).' }
+          "NetHop.App.exe ran without the service (pid $($app.Id))"
+
       - name: Remove smoke test install
         if: always()
         shell: pwsh
         run: |
           $target = Join-Path $env:RUNNER_TEMP 'NetHop'
-          if (Get-Service NetHop -ErrorAction SilentlyContinue) { & out/x64/NetHop/Uninstall-NetHop.ps1 -Destination $target -RemoveData }
+          if (Test-Path $target) { & out/x64/NetHop/Uninstall-NetHop.ps1 -Destination $target -RemoveData }
 
       # Only NetHop's own binaries are signed; the .NET and Windows App SDK files are already signed by Microsoft.
       # They are staged in one folder for the signing action, then copied back.

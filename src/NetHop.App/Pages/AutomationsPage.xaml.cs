@@ -71,8 +71,10 @@ public sealed partial class AutomationsPage : Page
     private void UpdateSwitch()
     {
         _updating = true;
-        RunSwitch.IsEnabled = SaveButton.IsEnabled = _connection.CanEdit;
-        RunSwitch.IsOn = _connection.Status?.AutomationsPausedUntil is null;
+        NoServiceInfo.IsOpen = _connection.IsLocal;
+        RunSwitch.IsEnabled = _connection.CanEdit && !_connection.IsLocal;
+        SaveButton.IsEnabled = _connection.CanEdit;
+        RunSwitch.IsOn = !_connection.IsLocal && _connection.Status?.AutomationsPausedUntil is null;
         RunSwitch.OnContent = Loc.Get("RuleForm_On"); // without it, WinUI shows "On" in Windows' language
         RunSwitch.OffContent = _connection.Status?.AutomationsPausedUntil is { } until
             ? Loc.Format("Common_PausedUntil", until.LocalDateTime)
@@ -85,6 +87,8 @@ public sealed partial class AutomationsPage : Page
         if (!_updating && _connection.CanEdit)
             await _connection.Service.PauseAutomationsAsync(RunSwitch.IsOn ? 0 : 60);
     }
+
+    private void OnOpenSettingsClick(object sender, RoutedEventArgs e) => App.Current?.ShowSettings();
 
     private async void OnAddRuleClick(object sender, RoutedEventArgs e)
     {

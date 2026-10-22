@@ -16,6 +16,9 @@
     <Project Path="src/NetHop.Engine/NetHop.Engine.csproj">
       <Platform Solution="*|x64" Project="x64" />
     </Project>
+    <Project Path="src/NetHop.Host/NetHop.Host.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
     <Project Path="src/NetHop.Ipc/NetHop.Ipc.csproj">
       <Platform Solution="*|x64" Project="x64" />
     </Project>

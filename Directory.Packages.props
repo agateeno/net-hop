@@ -7,6 +7,9 @@
     <PackageVersion Include="Microsoft.Management.Infrastructure" Version="3.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.13" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.13" />
+    <!-- Host (the engine, in the service or the app) / App -->
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.EventLog" Version="10.0.13" />
     <!-- Power Automate Desktop actions -->
     <PackageVersion Include="Microsoft.PowerPlatform.PowerAutomate.Desktop.Actions.SDK" Version="1.5.255.25087" />
     <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />

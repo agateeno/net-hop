@@ -33,7 +33,7 @@
     </StandardDirectory>
     <StandardDirectory Id="ProgramMenuFolder" />
 
-    <Feature Id="Main" Title="NetHop" Description="App, service and command line." Level="1" AllowAbsent="no">
+    <Feature Id="Main" Title="NetHop" Description="App and command line. The NetHop service is installed off: turn it on in NetHop's Settings for automations." Level="1" AllowAbsent="no">
       <ComponentGroupRef Id="Binaries" />
       <ComponentRef Id="Service" />
       <ComponentRef Id="PathEnvironment" />
@@ -62,11 +62,30 @@
     <CustomAction Id="UninstallUserCleanupQuiet" Directory="INSTALLFOLDER"
                   ExeCommand="&quot;[INSTALLFOLDER]NetHop.App.exe&quot; --uninstall --quiet"
                   Execute="immediate" Impersonate="yes" Return="ignore" />
+
+    <!-- The NetHop service is off by default: the app registers it when it is turned on in Settings, so the MSI does
+         not own it. Found before the previous version is removed (which stops it, and up to 0.5 also removed it),
+         it is registered again and started once the new files are in place. -->
+    <Property Id="SERVICEINSTALLED" Secure="yes">
+      <RegistrySearch Id="ServiceImagePath" Root="HKLM" Key="SYSTEM\CurrentControlSet\Services\NetHop" Name="ImagePath"
+                      Type="raw" Bitness="always64" />
+    </Property>
+    <CustomAction Id="RestoreService" Directory="INSTALLFOLDER"
+                  ExeCommand="&quot;[INSTALLFOLDER]NetHop.App.exe&quot; --install-service"
+                  Execute="deferred" Impersonate="no" Return="ignore" />
+    <!-- Uninstall (not upgrades): the service and every user's startup task (a scheduled task without the service). -->
+    <CustomAction Id="UninstallMachineCleanup" Directory="INSTALLFOLDER"
+                  ExeCommand="&quot;[INSTALLFOLDER]NetHop.App.exe&quot; --uninstall-machine"
+                  Execute="deferred" Impersonate="no" Return="ignore" />
     <InstallExecuteSequence>
       <Custom Action="UninstallUserCleanup" Before="InstallInitialize"
               Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND UILevel &lt;&gt; 2" />
       <Custom Action="UninstallUserCleanupQuiet" Before="InstallInitialize"
               Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND UILevel = 2" />
+      <Custom Action="UninstallMachineCleanup" Before="RemoveFiles"
+              Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE" />
+      <Custom Action="RestoreService" Before="InstallFinalize"
+              Condition="SERVICEINSTALLED AND NOT REMOVE~=&quot;ALL&quot;" />
     </InstallExecuteSequence>
 
     <UI>
@@ -79,7 +98,7 @@
 
   <Fragment>
     <!-- Everything published into one folder (one shared .NET runtime), except the service executable,
-         which must be the key file of the component that installs the service. -->
+         which is the key file of the component that stops the service while its files are replaced. -->
     <ComponentGroup Id="Binaries" Directory="INSTALLFOLDER">
       <Files Include="$(BinDir)\**">
         <Exclude Files="$(BinDir)\NetHop.Service.exe" />
@@ -87,24 +106,11 @@
       </Files>
     </ComponentGroup>
 
+    <!-- Registered by the app (Settings, NetHop service), not here: see SERVICEINSTALLED. Stopping a service that does
+         not exist does nothing. -->
     <Component Id="Service" Directory="INSTALLFOLDER">
       <File Id="ServiceExe" Source="$(BinDir)\NetHop.Service.exe" KeyPath="yes" />
-      <ServiceInstall Id="NetHopService"
-                      Name="NetHop"
-                      DisplayName="NetHop"
-                      Description="Applies NetHop network profiles and runs NetHop automations."
-                      Type="ownProcess"
-                      Start="auto"
-                      Account="LocalSystem"
-                      ErrorControl="normal"
-                      Vital="yes">
-        <util:ServiceConfig FirstFailureActionType="restart"
-                            SecondFailureActionType="restart"
-                            ThirdFailureActionType="restart"
-                            RestartServiceDelayInSeconds="5"
-                            ResetPeriodInDays="1" />
-      </ServiceInstall>
-      <ServiceControl Id="NetHopServiceControl" Name="NetHop" Start="install" Stop="both" Remove="uninstall" Wait="yes" />
+      <ServiceControl Id="NetHopServiceControl" Name="NetHop" Stop="both" Wait="yes" />
     </Component>
 
     <!-- nethop.exe on the system PATH. -->

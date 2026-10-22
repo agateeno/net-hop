@@ -8,7 +8,7 @@ using NetHop.Core.Serialization;
 using NetHop.Engine;
 using NetHop.Ipc;
 
-namespace NetHop.Service;
+namespace NetHop.Host;
 
 /// <summary>The service's single brain: implements the RPC API and runs automation rules.</summary>
 public sealed class NetHopController : INetHopService
@@ -23,7 +23,7 @@ public sealed class NetHopController : INetHopService
     private readonly RuleStore _ruleStore;
     private readonly StateStore _stateStore;
     private readonly HistoryStore _history;
-    private readonly ServicePaths _paths;
+    private readonly DataPaths _paths;
     private readonly ILogger<NetHopController> _logger;
 
     private RuleEngine _rules;
@@ -31,7 +31,7 @@ public sealed class NetHopController : INetHopService
     private NetworkSnapshot? _snapshot;
 
     public NetHopController(CimNetworkBackend backend, ProfileApplier applier, ProfileStore profiles, RuleStore ruleStore,
-        StateStore stateStore, HistoryStore history, ServicePaths paths, ILogger<NetHopController> logger)
+        StateStore stateStore, HistoryStore history, DataPaths paths, ILogger<NetHopController> logger)
     {
         _backend = backend;
         _applier = applier;
@@ -213,8 +213,18 @@ public sealed class NetHopController : INetHopService
         return Task.CompletedTask;
     }
 
-    /// <summary>Called by <see cref="NetworkMonitor"/> with the events derived from a network change.</summary>
-    internal async Task OnNetworkEventsAsync(IReadOnlyList<NetworkEvent> events, NetworkSnapshot snapshot, CancellationToken cancellationToken)
+    /// <summary>
+    /// The network changed and no rules run: the app hosts NetHop without the service. Clients are only told, so that
+    /// they show the new state.
+    /// </summary>
+    public void OnNetworkChanged()
+    {
+        _snapshot = null;
+        Raise(StatusChangeKind.NetworkChanged);
+    }
+
+    /// <summary>Called by the service's network monitor with the events derived from a network change: runs the rules.</summary>
+    public async Task OnNetworkEventsAsync(IReadOnlyList<NetworkEvent> events, NetworkSnapshot snapshot, CancellationToken cancellationToken)
     {
         _snapshot = snapshot;
         if (events.Any(e => e.Type == TriggerType.NetworkChanged))

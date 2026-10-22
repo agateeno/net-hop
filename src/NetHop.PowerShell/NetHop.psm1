@@ -28,7 +28,7 @@ function Invoke-NetHopCli {
         0 { }
         1 { if (-not $AllowFailure) { throw "NetHop: $stderr$stdout" } }
         2 { throw "NetHop usage error: $stderr" }
-        3 { throw 'The NetHop service is not running.' }
+        3 { throw 'The NetHop service is not running. Turn it on in NetHop > Settings > NetHop service.' }
         4 { throw 'NetHop requires an administrator account.' }
         default { throw "nethop.exe exited with code ${code}: $stderr" }
     }

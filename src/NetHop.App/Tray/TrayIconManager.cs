@@ -57,6 +57,7 @@ public sealed class TrayIconManager : IDisposable
             ConnectionState.Connected => $"NetHop - {_connection.Status?.ActiveProfileName ?? Loc.Get("Dashboard_NoActiveProfile")}",
             ConnectionState.ServiceNotRunning => $"NetHop - {Loc.Get("Settings_ServiceStopped")}",
             ConnectionState.AccessDenied => $"NetHop - {Loc.Get("Main_AccessDeniedTitle")}",
+            ConnectionState.NeedsElevation => $"NetHop - {Loc.Get("Main_NeedsElevationTitle")}",
             _ => $"NetHop - {Loc.Get("Common_Connecting")}",
         };
     }

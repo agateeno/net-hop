@@ -1,6 +1,7 @@
 using System.IO.Pipes;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using NetHop.Host;
 using NetHop.Ipc;
 
 namespace NetHop.Service;
