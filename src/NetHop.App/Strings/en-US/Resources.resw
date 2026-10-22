@@ -1022,4 +1022,46 @@ It holds the copies of your profiles and any file you saved there. They will be 
   <data name="Hosts_Unchanged" xml:space="preserve">
     <value>Leave as is</value>
   </data>
+  <data name="ProfileForm_Sharing" xml:space="preserve">
+    <value>Internet sharing</value>
+  </data>
+  <data name="ProfileForm_SharingChoose" xml:space="preserve">
+    <value>Choose an adapter</value>
+  </data>
+  <data name="ProfileForm_SharingFrom" xml:space="preserve">
+    <value>Connection to share</value>
+  </data>
+  <data name="ProfileForm_SharingFromDefault" xml:space="preserve">
+    <value>The connection Windows uses for the internet</value>
+  </data>
+  <data name="ProfileForm_SharingFromHelp" xml:space="preserve">
+    <value>The adapter that has the internet connection, for example CloudflareWARP.</value>
+  </data>
+  <data name="ProfileForm_SharingFromHotspotHelp" xml:space="preserve">
+    <value>For example CloudflareWARP. Leave it empty to share the connection Windows uses for the internet.</value>
+  </data>
+  <data name="ProfileForm_SharingHelp" xml:space="preserve">
+    <value>Share one connection's internet, for example a VPN like Cloudflare WARP, through the mobile hotspot or with another adapter. The hotspot's name and password are set in Windows Settings › Network &amp; internet › Mobile hotspot.</value>
+  </data>
+  <data name="ProfileForm_SharingMode" xml:space="preserve">
+    <value>Share an internet connection</value>
+  </data>
+  <data name="ProfileForm_SharingTo" xml:space="preserve">
+    <value>Share with</value>
+  </data>
+  <data name="ProfileForm_SharingToHelp" xml:space="preserve">
+    <value>The adapter of the devices that get the connection, for example an Ethernet port. Windows gives it the address 192.168.137.1.</value>
+  </data>
+  <data name="Sharing_Adapter" xml:space="preserve">
+    <value>With another adapter</value>
+  </data>
+  <data name="Sharing_Disabled" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Sharing_Hotspot" xml:space="preserve">
+    <value>Mobile hotspot</value>
+  </data>
+  <data name="Sharing_Unchanged" xml:space="preserve">
+    <value>Leave as is</value>
+  </data>
 </root>

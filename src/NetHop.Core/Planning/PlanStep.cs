@@ -74,6 +74,34 @@ public sealed record SetMetricStep(AdapterInfo Adapter, AddressFamily Family, in
         : Text.Format("Step_MetricAuto", FamilyName(Family), Adapter.Name);
 }
 
+/// <summary>
+/// Turns the mobile hotspot on, sharing <paramref name="Source"/> (null: the connection Windows uses for the internet).
+/// When the hotspot is already on with another source, it switches to this one.
+/// </summary>
+public sealed record ShareThroughHotspotStep(AdapterInfo? Source) : PlanStep
+{
+    public override string Describe() => Source is null
+        ? Text.Get("Step_HotspotOn")
+        : Text.Format("Step_HotspotShare", Source.Name);
+}
+
+public sealed record StopHotspotStep : PlanStep
+{
+    public override string Describe() => Text.Get("Step_HotspotOff");
+}
+
+/// <summary>Internet Connection Sharing from <paramref name="Source"/> to <paramref name="Target"/>; any other sharing stops.</summary>
+public sealed record ShareWithAdapterStep(AdapterInfo Source, AdapterInfo Target) : PlanStep
+{
+    public override string Describe() => Text.Format("Step_ShareAdapter", Source.Name, Target.Name);
+}
+
+/// <summary>Turns Internet Connection Sharing off on every adapter.</summary>
+public sealed record StopSharingStep : PlanStep
+{
+    public override string Describe() => Text.Get("Step_SharingOff");
+}
+
 /// <summary>Rewrites NetHop's block of the hosts file with <paramref name="Mappings"/>; none removes the block.</summary>
 public sealed record SetHostsStep(IReadOnlyList<HostsMapping> Mappings) : PlanStep
 {
@@ -101,6 +129,10 @@ public sealed record ApplyPlan(IReadOnlyList<PlanStep> Steps, IReadOnlyList<Issu
     /// <summary>Adapters touched by at least one step.</summary>
     public IReadOnlyList<AdapterInfo> AffectedAdapters =>
         Steps.OfType<AdapterStep>().Select(s => s.Adapter).DistinctBy(a => a.Id).ToList();
+
+    /// <summary>The plan changes the mobile hotspot or Internet Connection Sharing.</summary>
+    public bool ChangesSharing =>
+        Steps.Any(s => s is ShareThroughHotspotStep or StopHotspotStep or ShareWithAdapterStep or StopSharingStep);
 
     /// <summary>The plan rewrites NetHop's block of the hosts file.</summary>
     public bool ChangesHosts => Steps.Any(s => s is SetHostsStep);

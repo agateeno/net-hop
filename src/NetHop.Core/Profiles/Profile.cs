@@ -32,6 +32,9 @@ public sealed class Profile
 
     public List<AdapterConfig> Adapters { get; set; } = [];
 
+    /// <summary>Internet connection sharing and the mobile hotspot. Null leaves them as they are.</summary>
+    public SharingConfig? Sharing { get; set; }
+
     /// <summary>Entries of the Windows hosts file. Null leaves the file as it is.</summary>
     public HostsConfig? Hosts { get; set; }
 }
@@ -98,6 +101,35 @@ public sealed class AdapterMatch
 
     public override string ToString() =>
         Name ?? Mac ?? Guid ?? "(empty match)";
+}
+
+/// <summary>
+/// Shares one connection's internet: through the Windows mobile hotspot, or with another adapter (Internet Connection
+/// Sharing). Machine-wide, so it belongs to the profile rather than to an adapter: Windows shares one connection at a time.
+/// </summary>
+public sealed class SharingConfig
+{
+    public SharingMode Mode { get; set; } = SharingMode.Unchanged;
+
+    /// <summary>The connection whose internet is shared, e.g. a VPN adapter. Optional for the hotspot: Windows' choice.</summary>
+    public AdapterMatch? From { get; set; }
+
+    /// <summary>The adapter that receives the connection; <see cref="SharingMode.Adapter"/> only.</summary>
+    public AdapterMatch? To { get; set; }
+}
+
+public enum SharingMode
+{
+    Unchanged,
+
+    /// <summary>Mobile hotspot off and no Internet Connection Sharing.</summary>
+    Disabled,
+
+    /// <summary>The Windows mobile hotspot on, sharing <see cref="SharingConfig.From"/>.</summary>
+    Hotspot,
+
+    /// <summary>Internet Connection Sharing from <see cref="SharingConfig.From"/> to <see cref="SharingConfig.To"/>.</summary>
+    Adapter,
 }
 
 public enum DesiredAdapterState

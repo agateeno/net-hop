@@ -30,18 +30,58 @@ public static partial class ProfileValidator
         if (Profile.IsImageIcon(profile.Icon) && !IsValidImageIcon(profile.Icon!))
             issues.Add(Issue.Error("icon", Text.Format("Profile_IconFormat", Profile.MaxImageIconBytes / 1024)));
 
-        // A profile may only change the hosts file.
-        if (profile.Adapters.Count == 0 && profile.Hosts is null or { Mode: HostsMode.Unchanged })
+        // A profile may only switch sharing (e.g. "share the VPN through the hotspot") or change the hosts file.
+        if (profile.Adapters.Count == 0
+            && profile.Sharing is null or { Mode: SharingMode.Unchanged }
+            && profile.Hosts is null or { Mode: HostsMode.Unchanged })
             issues.Add(Issue.Error("adapters", Text.Get("Profile_NoAdapters")));
 
         for (var i = 0; i < profile.Adapters.Count; i++)
             ValidateAdapter(profile.Adapters[i], $"adapters[{i}]", issues);
 
+        if (profile.Sharing is { } sharing)
+            ValidateSharing(sharing, issues);
         if (profile.Hosts is { } hosts)
             ValidateHosts(hosts, issues);
 
         ValidateNoDuplicateMatches(profile, issues);
         return issues;
+    }
+
+    private static void ValidateMatch(AdapterMatch match, string path, List<Issue> issues)
+    {
+        if (match.IsEmpty)
+            issues.Add(Issue.Error(path, Text.Get("Profile_MatchEmpty")));
+        if (match.Guid is not null && !Guid.TryParse(match.Guid, out _))
+            issues.Add(Issue.Error($"{path}.guid", Text.Format("Profile_GuidInvalid", match.Guid)));
+        if (match.Mac is not null && !MacAddress.TryNormalize(match.Mac, out _))
+            issues.Add(Issue.Error($"{path}.mac", Text.Format("Profile_MacInvalid", match.Mac)));
+    }
+
+    private static void ValidateSharing(SharingConfig sharing, List<Issue> issues)
+    {
+        if (sharing.From is not null)
+            ValidateMatch(sharing.From, "sharing.from", issues);
+        if (sharing.To is not null)
+            ValidateMatch(sharing.To, "sharing.to", issues);
+
+        switch (sharing.Mode)
+        {
+            case SharingMode.Unchanged or SharingMode.Disabled when sharing.From is not null || sharing.To is not null:
+                issues.Add(Issue.Error("sharing", Text.Get("Profile_SharingAdaptersOnlyWhenOn")));
+                break;
+            case SharingMode.Hotspot when sharing.To is not null:
+                issues.Add(Issue.Error("sharing.to", Text.Get("Profile_SharingHotspotNoTarget")));
+                break;
+            case SharingMode.Adapter:
+                if (sharing.From is null)
+                    issues.Add(Issue.Error("sharing.from", Text.Get("Profile_SharingNeedsFrom")));
+                if (sharing.To is null)
+                    issues.Add(Issue.Error("sharing.to", Text.Get("Profile_SharingNeedsTo")));
+                if (sharing.From is { IsEmpty: false } from && sharing.To is { IsEmpty: false } to && MatchKey(from) == MatchKey(to))
+                    issues.Add(Issue.Error("sharing.to", Text.Get("Profile_SharingSameAdapter")));
+                break;
+        }
     }
 
     private static void ValidateHosts(HostsConfig hosts, List<Issue> issues)
@@ -104,13 +144,7 @@ public static partial class ProfileValidator
 
     private static void ValidateAdapter(AdapterConfig adapter, string path, List<Issue> issues)
     {
-        var match = adapter.Match;
-        if (match.IsEmpty)
-            issues.Add(Issue.Error($"{path}.match", Text.Get("Profile_MatchEmpty")));
-        if (match.Guid is not null && !Guid.TryParse(match.Guid, out _))
-            issues.Add(Issue.Error($"{path}.match.guid", Text.Format("Profile_GuidInvalid", match.Guid)));
-        if (match.Mac is not null && !MacAddress.TryNormalize(match.Mac, out _))
-            issues.Add(Issue.Error($"{path}.match.mac", Text.Format("Profile_MacInvalid", match.Mac)));
+        ValidateMatch(adapter.Match, $"{path}.match", issues);
 
         var nothingToDo = adapter.State == DesiredAdapterState.Unchanged && adapter.Ipv4 is null && adapter.Ipv6 is null;
         if (nothingToDo)
@@ -213,10 +247,7 @@ public static partial class ProfileValidator
         var seen = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         for (var i = 0; i < profile.Adapters.Count; i++)
         {
-            var match = profile.Adapters[i].Match;
-            string? key = Guid.TryParse(match.Guid, out var g) ? "guid:" + g
-                : MacAddress.TryNormalize(match.Mac, out var m) ? "mac:" + m
-                : string.IsNullOrWhiteSpace(match.Name) ? null : "name:" + match.Name.Trim();
+            var key = MatchKey(profile.Adapters[i].Match);
             if (key is null)
                 continue;
             if (seen.TryGetValue(key, out var first))
@@ -225,6 +256,12 @@ public static partial class ProfileValidator
                 seen[key] = i;
         }
     }
+
+    /// <summary>The most precise identity a match gives, as in adapter resolution; null when it has none.</summary>
+    private static string? MatchKey(AdapterMatch match) =>
+        Guid.TryParse(match.Guid, out var g) ? "guid:" + g
+        : MacAddress.TryNormalize(match.Mac, out var m) ? "mac:" + m
+        : string.IsNullOrWhiteSpace(match.Name) ? null : "name:" + match.Name.Trim().ToUpperInvariant();
 
     private static readonly byte[] PngSignature = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
 

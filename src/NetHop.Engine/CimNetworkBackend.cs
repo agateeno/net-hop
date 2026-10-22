@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Runtime.Versioning;
 using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Options;
 using NetHop.Core.Networking;
@@ -14,7 +13,6 @@ namespace NetHop.Engine;
 /// Network backend built on the same CIM classes as the NetAdapter/NetTCPIP PowerShell modules
 /// (<c>root\StandardCimv2</c>). Must run elevated: NetHop runs it inside the Windows service.
 /// </summary>
-[SupportedOSPlatform("windows")]
 public sealed class CimNetworkBackend : INetworkBackend, IDisposable
 {
     private const string Namespace = @"root\StandardCimv2";
@@ -78,7 +76,13 @@ public sealed class CimNetworkBackend : INetworkBackend, IDisposable
             });
         }
 
-        return new NetworkSnapshot { Adapters = result, Hosts = HostsFileEditor.Read(), TakenAt = DateTimeOffset.Now };
+        return new NetworkSnapshot
+        {
+            Adapters = result,
+            Sharing = ConnectionSharing.Read(),
+            Hosts = HostsFileEditor.Read(),
+            TakenAt = DateTimeOffset.Now,
+        };
     }
 
     private static FamilySnapshot? Family(AdapterInfo info, uint family, List<CimInstance> ipInterfaces,
@@ -165,6 +169,18 @@ public sealed class CimNetworkBackend : INetworkBackend, IDisposable
                     if (s.Metric is { } metric)
                         instance.CimInstanceProperties["InterfaceMetric"].Value = (uint)metric;
                 });
+                break;
+            case ShareThroughHotspotStep s:
+                ConnectionSharing.ShareThroughHotspot(s.Source?.Id, cancellationToken);
+                break;
+            case StopHotspotStep:
+                ConnectionSharing.StopHotspot(cancellationToken);
+                break;
+            case ShareWithAdapterStep s:
+                ConnectionSharing.ShareWith(s.Source.Id, s.Target.Id);
+                break;
+            case StopSharingStep:
+                ConnectionSharing.StopSharing();
                 break;
             case SetHostsStep s:
                 HostsFileEditor.Write(s.Mappings);

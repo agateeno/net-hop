@@ -1022,4 +1022,46 @@ Er enthält die Kopien Ihrer Profile und alle Dateien, die Sie dort gespeichert 
   <data name="Hosts_Unchanged" xml:space="preserve">
     <value>Unverändert lassen</value>
   </data>
+  <data name="ProfileForm_Sharing" xml:space="preserve">
+    <value>Gemeinsame Nutzung der Internetverbindung</value>
+  </data>
+  <data name="ProfileForm_SharingChoose" xml:space="preserve">
+    <value>Adapter auswählen</value>
+  </data>
+  <data name="ProfileForm_SharingFrom" xml:space="preserve">
+    <value>Freizugebende Verbindung</value>
+  </data>
+  <data name="ProfileForm_SharingFromDefault" xml:space="preserve">
+    <value>Die Verbindung, die Windows für das Internet verwendet</value>
+  </data>
+  <data name="ProfileForm_SharingFromHelp" xml:space="preserve">
+    <value>Der Adapter mit der Internetverbindung, zum Beispiel CloudflareWARP.</value>
+  </data>
+  <data name="ProfileForm_SharingFromHotspotHelp" xml:space="preserve">
+    <value>Zum Beispiel CloudflareWARP. Lassen Sie das Feld leer, um die Verbindung freizugeben, die Windows für das Internet verwendet.</value>
+  </data>
+  <data name="ProfileForm_SharingHelp" xml:space="preserve">
+    <value>Geben Sie die Internetverbindung einer Verbindung frei, zum Beispiel eines VPN wie Cloudflare WARP, über den mobilen Hotspot oder für einen anderen Adapter. Name und Kennwort des Hotspots legen Sie in den Windows-Einstellungen unter Netzwerk und Internet › Mobiler Hotspot fest.</value>
+  </data>
+  <data name="ProfileForm_SharingMode" xml:space="preserve">
+    <value>Internetverbindung freigeben</value>
+  </data>
+  <data name="ProfileForm_SharingTo" xml:space="preserve">
+    <value>Freigeben für</value>
+  </data>
+  <data name="ProfileForm_SharingToHelp" xml:space="preserve">
+    <value>Der Adapter der Geräte, die die Verbindung erhalten, zum Beispiel ein Ethernet-Anschluss. Windows weist ihm die Adresse 192.168.137.1 zu.</value>
+  </data>
+  <data name="Sharing_Adapter" xml:space="preserve">
+    <value>Für einen anderen Adapter</value>
+  </data>
+  <data name="Sharing_Disabled" xml:space="preserve">
+    <value>Aus</value>
+  </data>
+  <data name="Sharing_Hotspot" xml:space="preserve">
+    <value>Mobiler Hotspot</value>
+  </data>
+  <data name="Sharing_Unchanged" xml:space="preserve">
+    <value>Unverändert lassen</value>
+  </data>
 </root>

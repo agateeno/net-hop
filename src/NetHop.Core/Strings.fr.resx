@@ -235,4 +235,34 @@
   <data name="Profile_HostsTooMany" xml:space="preserve">
     <value>Au plus {0} noms d'hôte par profil.</value>
   </data>
+  <data name="Step_HotspotOn" xml:space="preserve">
+    <value>Activer le point d'accès sans fil mobile</value>
+  </data>
+  <data name="Step_HotspotShare" xml:space="preserve">
+    <value>Activer le point d'accès sans fil mobile et partager la connexion Internet de « {0} »</value>
+  </data>
+  <data name="Step_HotspotOff" xml:space="preserve">
+    <value>Désactiver le point d'accès sans fil mobile</value>
+  </data>
+  <data name="Step_ShareAdapter" xml:space="preserve">
+    <value>Partager la connexion Internet de « {0} » avec « {1} »</value>
+  </data>
+  <data name="Step_SharingOff" xml:space="preserve">
+    <value>Arrêter le partage de connexion Internet</value>
+  </data>
+  <data name="Profile_SharingAdaptersOnlyWhenOn" xml:space="preserve">
+    <value>« from » et « to » ne s'utilisent qu'avec le mode hotspot ou adapter.</value>
+  </data>
+  <data name="Profile_SharingHotspotNoTarget" xml:space="preserve">
+    <value>Le point d'accès sans fil mobile partage la connexion avec les appareils qui s'y connectent : supprimez « to ».</value>
+  </data>
+  <data name="Profile_SharingNeedsFrom" xml:space="preserve">
+    <value>Indiquez la carte dont la connexion Internet est partagée (« from »).</value>
+  </data>
+  <data name="Profile_SharingNeedsTo" xml:space="preserve">
+    <value>Indiquez la carte qui reçoit la connexion (« to »).</value>
+  </data>
+  <data name="Profile_SharingSameAdapter" xml:space="preserve">
+    <value>Une carte ne peut pas partager sa connexion avec elle-même.</value>
+  </data>
 </root>

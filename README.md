@@ -44,6 +44,7 @@ Or download the MSI for your PC (`x64`, or `arm64` for Windows on Arm) from [Rel
 ## Features
 
 - **Profiles** enable/disable adapters and set IPv4 **and** IPv6: DHCP or static, with multiple addresses, gateways and DNS servers, and the interface metric (which adapter Windows prefers).
+- **Internet sharing**: a profile can turn on the Windows mobile hotspot, or share a connection with another adapter, from the connection you choose: for example, share Cloudflare WARP through the hotspot.
 - **Hosts file**: a profile can map host names to addresses in the Windows hosts file, in a section of its own that leaves the rest of the file untouched. Domains of Microsoft, Google, Apple and other major services are protected and cannot be redirected.
 - **Minimal changes**: NetHop compares the profile with the live configuration and only changes what differs. A failed step rolls back the adapters it touched.
 - **Plain files**: profiles are YAML documents with the `.nethop` extension. Double-click one to import it.

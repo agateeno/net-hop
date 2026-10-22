@@ -1022,4 +1022,46 @@ Il contient les copies de vos profils et tous les fichiers que vous y avez enreg
   <data name="Hosts_Unchanged" xml:space="preserve">
     <value>Ne pas modifier</value>
   </data>
+  <data name="ProfileForm_Sharing" xml:space="preserve">
+    <value>Partage de connexion Internet</value>
+  </data>
+  <data name="ProfileForm_SharingChoose" xml:space="preserve">
+    <value>Choisissez une carte</value>
+  </data>
+  <data name="ProfileForm_SharingFrom" xml:space="preserve">
+    <value>Connexion à partager</value>
+  </data>
+  <data name="ProfileForm_SharingFromDefault" xml:space="preserve">
+    <value>La connexion que Windows utilise pour Internet</value>
+  </data>
+  <data name="ProfileForm_SharingFromHelp" xml:space="preserve">
+    <value>La carte qui dispose de la connexion Internet, par exemple CloudflareWARP.</value>
+  </data>
+  <data name="ProfileForm_SharingFromHotspotHelp" xml:space="preserve">
+    <value>Par exemple CloudflareWARP. Laissez vide pour partager la connexion que Windows utilise pour Internet.</value>
+  </data>
+  <data name="ProfileForm_SharingHelp" xml:space="preserve">
+    <value>Partagez la connexion Internet d'une connexion, par exemple un VPN comme Cloudflare WARP, via le point d'accès sans fil mobile ou avec une autre carte. Le nom et le mot de passe du point d'accès se définissent dans Paramètres Windows › Réseau et Internet › Point d'accès sans fil mobile.</value>
+  </data>
+  <data name="ProfileForm_SharingMode" xml:space="preserve">
+    <value>Partager une connexion Internet</value>
+  </data>
+  <data name="ProfileForm_SharingTo" xml:space="preserve">
+    <value>Partager avec</value>
+  </data>
+  <data name="ProfileForm_SharingToHelp" xml:space="preserve">
+    <value>La carte des appareils qui reçoivent la connexion, par exemple un port Ethernet. Windows lui attribue l'adresse 192.168.137.1.</value>
+  </data>
+  <data name="Sharing_Adapter" xml:space="preserve">
+    <value>Avec une autre carte</value>
+  </data>
+  <data name="Sharing_Disabled" xml:space="preserve">
+    <value>Désactivé</value>
+  </data>
+  <data name="Sharing_Hotspot" xml:space="preserve">
+    <value>Point d'accès sans fil mobile</value>
+  </data>
+  <data name="Sharing_Unchanged" xml:space="preserve">
+    <value>Ne pas modifier</value>
+  </data>
 </root>

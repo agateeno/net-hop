@@ -12,14 +12,16 @@ namespace NetHop.Core.Planning;
 public static class ProfilePlanner
 {
     /// <remarks>
-    /// Order: enable adapters (and wait for them), then IP configuration, then the hosts file, then disable adapters.
-    /// This way the PC is never left without the adapters the profile wants up.
+    /// Order: enable adapters (and wait for them), then IP configuration, then sharing, then the hosts file, then
+    /// disable adapters. This way the PC is never left without the adapters the profile wants up, and sharing starts
+    /// once the connections it uses are configured.
     /// </remarks>
     public static ApplyPlan Plan(Profile profile, NetworkSnapshot snapshot)
     {
         var issues = new List<Issue>();
         var enables = new List<PlanStep>();
         var ipSteps = new List<PlanStep>();
+        var sharingSteps = new List<PlanStep>();
         var hostsSteps = new List<PlanStep>();
         var disables = new List<PlanStep>();
         var adapters = snapshot.Adapters.Select(a => a.Info).ToList();
@@ -78,10 +80,62 @@ public static class ProfilePlanner
                 PlanFamily(adapter, config.Ipv6, AddressFamily.InterNetworkV6, ipStateKnown ? current.Ipv6 : null, ipSteps);
         }
 
+        if (profile.Sharing is { } sharing)
+            missing += PlanSharing(sharing, snapshot, adapters, sharingSteps, issues);
+
         if (profile.Hosts is { Mode: not HostsMode.Unchanged } hosts)
             PlanHosts(hosts, snapshot.Hosts, hostsSteps);
 
-        return new ApplyPlan([.. enables, .. ipSteps, .. hostsSteps, .. disables], issues, missing);
+        return new ApplyPlan([.. enables, .. ipSteps, .. sharingSteps, .. hostsSteps, .. disables], issues, missing);
+    }
+
+    /// <returns>The number of adapters it could not find (the plan then skips sharing).</returns>
+    private static int PlanSharing(SharingConfig desired, NetworkSnapshot snapshot, List<AdapterInfo> adapters, List<PlanStep> steps, List<Issue> issues)
+    {
+        var missing = 0;
+        AdapterInfo? Resolve(AdapterMatch? match, string path)
+        {
+            if (match is null)
+                return null;
+            var result = AdapterMatcher.Resolve(match, adapters);
+            if (result.Found)
+                return result.Adapter;
+            issues.Add(Issue.Warning(path, Text.Format("Plan_Skipped", result.Problem)));
+            missing++;
+            return null;
+        }
+
+        var from = Resolve(desired.From, "sharing.from");
+        var to = desired.Mode == SharingMode.Adapter ? Resolve(desired.To, "sharing.to") : null;
+        if (missing > 0)
+            return missing;
+
+        // Unknown current state: emit every step, which the engine runs as no-ops where nothing changes.
+        var current = snapshot.Sharing;
+        var hotspotOn = current?.HotspotOn ?? true;
+        switch (desired.Mode)
+        {
+            case SharingMode.Disabled:
+                if (hotspotOn)
+                    steps.Add(new StopHotspotStep());
+                if (current is null || current.SharedFrom is not null || current.SharedTo is not null)
+                    steps.Add(new StopSharingStep());
+                break;
+
+            case SharingMode.Hotspot:
+                if (current is null || !current.HotspotOn || (from is not null && current.SharedFrom != from.Id))
+                    steps.Add(new ShareThroughHotspotStep(from));
+                break;
+
+            case SharingMode.Adapter when from is not null && to is not null:
+                // The hotspot holds the one sharing pair Windows allows.
+                if (hotspotOn)
+                    steps.Add(new StopHotspotStep());
+                if (current is null || current.HotspotOn || current.SharedFrom != from.Id || current.SharedTo != to.Id)
+                    steps.Add(new ShareWithAdapterStep(from, to));
+                break;
+        }
+        return 0;
     }
 
     /// <param name="current">Null when the hosts file could not be read: the block is rewritten.</param>

@@ -71,6 +71,8 @@ internal sealed class ProfileForm
             if (adapter.Ipv6 is { Mode: IpMode.Unchanged, Dns: null or { Mode: DnsMode.Unchanged }, Metric: null })
                 adapter.Ipv6 = null;
         }
+        if (profile.Sharing is { Mode: SharingMode.Unchanged, From: null, To: null })
+            profile.Sharing = null;
         if (profile.Hosts is { Mode: HostsMode.Unchanged, Entries.Count: 0 })
             profile.Hosts = null;
     }
@@ -99,6 +101,7 @@ internal sealed class ProfileForm
         if (_profile.Adapters.Count == 0)
             _root.Children.Add(new TextBlock { Text = Loc.Get("ProfileForm_NoAdapters"), Foreground = (Microsoft.UI.Xaml.Media.Brush)Application.Current.Resources["TextFillColorSecondaryBrush"] });
 
+        AddSharing();
         AddHosts();
     }
 
@@ -177,6 +180,47 @@ internal sealed class ProfileForm
         content.Children.Add(errors);
         return Card(Loc.Format("ProfileForm_HostsEntry", index + 1), content, wrapBelow: 700);
     }
+
+    private void AddSharing()
+    {
+        _root.Children.Add(new TextBlock
+        {
+            Text = Loc.Get("ProfileForm_Sharing"),
+            Style = (Style)Application.Current.Resources["BodyStrongTextBlockStyle"],
+            Margin = new Thickness(1, 24, 0, 6),
+        });
+
+        var sharing = _profile.Sharing ?? new SharingConfig();
+        _root.Children.Add(Card(Loc.Get("ProfileForm_SharingMode"), EnumCombo(sharing.Mode, "Sharing_", mode =>
+        {
+            sharing.Mode = mode;
+            if (mode != SharingMode.Adapter)
+                sharing.To = null;
+            if (mode is SharingMode.Unchanged or SharingMode.Disabled)
+                sharing.From = null;
+            _profile.Sharing = mode == SharingMode.Unchanged ? null : sharing;
+            Rebuild();
+        }), Loc.Get("ProfileForm_SharingHelp"), wrapBelow: 600));
+
+        if (sharing.Mode is not (SharingMode.Hotspot or SharingMode.Adapter))
+            return;
+
+        // Virtual adapters first: what people share is usually a VPN, such as CloudflareWARP.
+        var names = _adapters.OrderBy(a => a.IsVirtual ? 0 : 1).ThenBy(a => a.Name).Select(a => a.Name).ToList();
+        var hotspot = sharing.Mode == SharingMode.Hotspot;
+        _root.Children.Add(Card(Loc.Get("ProfileForm_SharingFrom"),
+            EditableCombo(sharing.From?.ToString(), names, Loc.Get(hotspot ? "ProfileForm_SharingFromDefault" : "ProfileForm_SharingChoose"),
+                text => Edit(() => sharing.From = AdapterByName(text))),
+            Loc.Get(hotspot ? "ProfileForm_SharingFromHotspotHelp" : "ProfileForm_SharingFromHelp")));
+
+        if (!hotspot)
+            _root.Children.Add(Card(Loc.Get("ProfileForm_SharingTo"),
+                EditableCombo(sharing.To?.ToString(), names, Loc.Get("ProfileForm_SharingChoose"), text => Edit(() => sharing.To = AdapterByName(text))),
+                Loc.Get("ProfileForm_SharingToHelp")));
+    }
+
+    private static AdapterMatch? AdapterByName(string text) =>
+        string.IsNullOrWhiteSpace(text) ? null : new AdapterMatch { Name = text.Trim() };
 
     /// <summary>
     /// One stack per column, filled in turn (1st, 3rd... left; 2nd, 4th... right): expanding a card pushes down only

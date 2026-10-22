@@ -235,4 +235,34 @@
   <data name="Profile_HostsTooMany" xml:space="preserve">
     <value>No máximo {0} nomes de host por perfil.</value>
   </data>
+  <data name="Step_HotspotOn" xml:space="preserve">
+    <value>Ativar o hotspot móvel</value>
+  </data>
+  <data name="Step_HotspotShare" xml:space="preserve">
+    <value>Ativar o hotspot móvel e compartilhar a conexão com a Internet de "{0}"</value>
+  </data>
+  <data name="Step_HotspotOff" xml:space="preserve">
+    <value>Desativar o hotspot móvel</value>
+  </data>
+  <data name="Step_ShareAdapter" xml:space="preserve">
+    <value>Compartilhar a conexão com a Internet de "{0}" com "{1}"</value>
+  </data>
+  <data name="Step_SharingOff" xml:space="preserve">
+    <value>Parar de compartilhar a conexão com a Internet</value>
+  </data>
+  <data name="Profile_SharingAdaptersOnlyWhenOn" xml:space="preserve">
+    <value>"from" e "to" são usados somente com o modo hotspot ou adapter.</value>
+  </data>
+  <data name="Profile_SharingHotspotNoTarget" xml:space="preserve">
+    <value>O hotspot móvel compartilha a conexão com os dispositivos que se conectam a ele: remova "to".</value>
+  </data>
+  <data name="Profile_SharingNeedsFrom" xml:space="preserve">
+    <value>Indique o adaptador cuja conexão com a Internet é compartilhada ("from").</value>
+  </data>
+  <data name="Profile_SharingNeedsTo" xml:space="preserve">
+    <value>Indique o adaptador que recebe a conexão ("to").</value>
+  </data>
+  <data name="Profile_SharingSameAdapter" xml:space="preserve">
+    <value>Um adaptador não pode compartilhar a conexão consigo mesmo.</value>
+  </data>
 </root>

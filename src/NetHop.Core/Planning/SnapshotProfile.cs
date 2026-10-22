@@ -28,6 +28,25 @@ public static class SnapshotProfile
         return profile;
     }
 
+    /// <summary>
+    /// The sharing state as a profile section, so a failed apply can restore it. Null when it is unknown or names
+    /// an adapter that is gone.
+    /// </summary>
+    public static SharingConfig? CreateSharing(NetworkSnapshot snapshot)
+    {
+        if (snapshot.Sharing is not { } sharing)
+            return null;
+
+        AdapterMatch? Match(Guid? id) =>
+            id is { } value && snapshot.Find(value) is { } adapter ? AdapterMatcher.CreateMatch(adapter.Info) : null;
+
+        if (sharing.HotspotOn)
+            return new SharingConfig { Mode = SharingMode.Hotspot, From = Match(sharing.SharedFrom) };
+        if (Match(sharing.SharedFrom) is { } from && Match(sharing.SharedTo) is { } to)
+            return new SharingConfig { Mode = SharingMode.Adapter, From = from, To = to };
+        return sharing.SharedFrom is null && sharing.SharedTo is null ? new SharingConfig { Mode = SharingMode.Disabled } : null;
+    }
+
     /// <summary>NetHop's block of the hosts file as a profile section, so a failed apply can restore it. Null when unknown.</summary>
     public static HostsConfig? CreateHosts(NetworkSnapshot snapshot)
     {
