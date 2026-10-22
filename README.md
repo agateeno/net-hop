@@ -136,6 +136,7 @@ Requirements: .NET 10 SDK. The WinUI app builds only on Windows (Visual Studio 2
 ```powershell
 dotnet build NetHop.slnx
 dotnet test tests/NetHop.Core.Tests
+.\scripts\Build-Msi.ps1     # the MSI, on Windows (see docs/installer.md)
 ```
 
 The app icon is drawn in SVG under [assets/icon](assets/icon): `NetHop.svg` (large sizes), `NetHop-small.svg` (20–32 px) and `NetHop-16.svg` (16 px). While NetHop is in preview, the "PRE" badge (`PreBadge*.svg`) is drawn over it (`PREVIEW` in `build_icons.py`). After editing one, run `python assets/icon/build_icons.py` (needs [resvg](https://github.com/linebender/resvg)) to regenerate the `.ico` and `.png` files.

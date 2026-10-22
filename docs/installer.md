@@ -29,7 +29,14 @@ Upgrades: every build has a higher version, and `MajorUpgrade` replaces the prev
 
 ## Building
 
-The MSI is built on Windows by CI (artifact **NetHop-msi**). To build it locally:
+The MSI is built on Windows by CI (artifact **NetHop-msi**). To build it locally, with the .NET 10 SDK:
+
+```powershell
+.\scripts\Build-Msi.ps1                                   # this PC's architecture, the patch after the latest release
+.\scripts\Build-Msi.ps1 -Version 0.6.0 -Architecture all  # both MSIs, a given version
+```
+
+It publishes the binaries into `out\<arch>\NetHop\bin` as CI does, adds the Windows 11 context menu package when Visual Studio's C++ tools are installed (`-SkipContextMenu` to leave it out), and writes `out\msi\NetHop-<version>-<arch>.msi`, unsigned. `-Release` builds it as a release for the update check. The same steps by hand:
 
 ```powershell
 dotnet publish src\NetHop.Service -c Release -r win-x64 --self-contained -o out\bin

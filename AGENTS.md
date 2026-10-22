@@ -24,7 +24,7 @@ A network profile switcher for Windows 11 (in the spirit of NetSetMan), with a P
 | `tests/NetHop.Core.Tests` | xUnit tests for Core (and the Core string tables) | net10.0 |
 | `docs/` | `architecture.md`, `profile-format.md`, `integrations.md`, `installer.md` | |
 | `samples/` | Example profiles and rules, used by the CI smoke test | |
-| `scripts/` | Install/uninstall without the MSI, Power Automate packing, context menu package, winget manifests | |
+| `scripts/` | Local MSI build (`Build-Msi.ps1`), install/uninstall without the MSI, Power Automate packing, context menu package, winget manifests | |
 
 ## Build and test
 
