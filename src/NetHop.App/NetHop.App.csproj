@@ -15,7 +15,7 @@
     <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' and '$(Platform)' == 'ARM64'">win-arm64</RuntimeIdentifier>
     <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x64</RuntimeIdentifier>
     <UseWinUI>true</UseWinUI>
-    <!-- Unpackaged for now: the installer (and later an MSIX/sparse package) registers the service. -->
+    <!-- Unpackaged: the app runs from the install folder, and registers the service from there when it is turned on. -->
     <WindowsPackageType>None</WindowsPackageType>
     <!-- Required even unpackaged: it generates the app's .pri (compiled XAML and strings). Without it the app crashes at start. -->
     <EnableMsixTooling>true</EnableMsixTooling>
@@ -56,9 +56,12 @@
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" />
     <PackageReference Include="H.NotifyIcon.WinUI" />
+    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NetHop.Ipc\NetHop.Ipc.csproj" />
+    <!-- The engine itself, for NetHop without the service (Services/LocalService.cs). -->
+    <ProjectReference Include="..\NetHop.Host\NetHop.Host.csproj" />
   </ItemGroup>
 </Project>

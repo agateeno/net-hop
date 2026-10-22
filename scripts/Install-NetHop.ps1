@@ -4,23 +4,29 @@
     Quick development install of NetHop from a CI build folder, without the MSI.
 
 .DESCRIPTION
-    Copies the build to %ProgramFiles%\NetHop, registers and starts the NetHop Windows service,
-    and adds the folder to the machine PATH. Run it from the extracted NetHop-win-x64 artifact.
-    For a normal install use the MSI from the same artifact.
+    Copies the build to %ProgramFiles%\NetHop and adds the folder to the machine PATH. Run it from the
+    extracted NetHop-win-x64 artifact. For a normal install use the MSI from the same artifact.
+    Like the MSI, it leaves the NetHop service off (the app then changes the network itself), unless the
+    service is already registered or -Service is given.
+
+.PARAMETER Service
+    Also register and start the NetHop Windows service, as turning it on in the app's Settings does.
 
 .EXAMPLE
-    .\Install-NetHop.ps1
+    .\Install-NetHop.ps1 -Service
 #>
 [CmdletBinding()]
 param(
     [string]$Source = $PSScriptRoot,
-    [string]$Destination = (Join-Path $env:ProgramFiles 'NetHop')
+    [string]$Destination = (Join-Path $env:ProgramFiles 'NetHop'),
+    [switch]$Service
 )
 
 $ErrorActionPreference = 'Stop'
 $serviceName = 'NetHop'
+$hadService = [bool](Get-Service $serviceName -ErrorAction SilentlyContinue)
 
-if (Get-Service $serviceName -ErrorAction SilentlyContinue) {
+if ($hadService) {
     Write-Host 'Stopping existing service...'
     Stop-Service $serviceName -Force
     # Wait for the process to release its files.
@@ -48,7 +54,7 @@ Set-Acl -Path $Destination -AclObject $acl
 Copy-Item (Join-Path $Source 'bin\*') $Destination -Recurse -Force
 
 $serviceExe = Join-Path $Destination 'NetHop.Service.exe'
-if (-not (Get-Service $serviceName -ErrorAction SilentlyContinue)) {
+if ($Service -and -not $hadService) {
     Write-Host 'Registering the NetHop service...'
     New-Service -Name $serviceName -BinaryPathName "`"$serviceExe`"" -DisplayName 'NetHop' `
         -Description 'Applies NetHop network profiles and runs NetHop automations.' -StartupType Automatic | Out-Null
@@ -56,8 +62,13 @@ if (-not (Get-Service $serviceName -ErrorAction SilentlyContinue)) {
     sc.exe failure $serviceName reset= 86400 actions= restart/5000/restart/5000/restart/30000 | Out-Null
 }
 
-Start-Service $serviceName
-Write-Host 'Service started.'
+if ($Service -or $hadService) {
+    Start-Service $serviceName
+    Write-Host 'Service started.'
+}
+else {
+    Write-Host 'The NetHop service is off: turn it on in NetHop > Settings for automations and the CLI.'
+}
 
 $cliPath = $Destination
 $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')

@@ -100,8 +100,10 @@ public sealed partial class MainWindow : Window
             ConnectionState.AccessDenied => (InfoBarSeverity.Error, Loc.Get("Main_AccessDeniedTitle"), Loc.Get("Main_AccessDeniedMessage")),
             _ => (InfoBarSeverity.Informational, Loc.Get("Common_ConnectingService"), ""),
         };
-        ConnectionInfo.IsOpen = _connection.State != ConnectionState.Connected;
+        ConnectionInfo.IsOpen = _connection.State is not (ConnectionState.Connected or ConnectionState.NeedsElevation);
         ReadOnlyInfo.IsOpen = _connection.IsConnected && _connection.IsReadOnly;
+        (ElevationInfo.Title, ElevationInfo.Message) = (Loc.Get("Main_NeedsElevationTitle"), Loc.Get("Main_NeedsElevationMessage"));
+        ElevationInfo.IsOpen = _connection.State == ConnectionState.NeedsElevation;
     }
 
     private void OnRestartAsAdminClick(object sender, RoutedEventArgs e) => App.Current?.RestartAsAdministrator();

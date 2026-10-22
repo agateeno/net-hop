@@ -7,12 +7,12 @@ using NetHop.Core.Rules;
 using NetHop.Core.Serialization;
 using NetHop.Ipc;
 
-namespace NetHop.Service;
+namespace NetHop.Host;
 
 /// <summary>Everything NetHop stores lives under %ProgramData%\NetHop, writable only by Administrators and SYSTEM.</summary>
-public sealed class ServicePaths
+public sealed class DataPaths
 {
-    public ServicePaths(string programData)
+    public DataPaths(string programData)
     {
         Root = Path.Combine(programData, "NetHop");
         Profiles = Path.Combine(Root, "profiles");
@@ -117,7 +117,7 @@ public sealed class ServicePaths
 }
 
 /// <summary>The <c>.nethop</c> files in the profiles folder, indexed by profile id, in the order the user gave them.</summary>
-public sealed class ProfileStore(ServicePaths paths, ILogger<ProfileStore> logger)
+public sealed class ProfileStore(DataPaths paths, ILogger<ProfileStore> logger)
 {
     private readonly Lock _lock = new();
     private Dictionary<Guid, (Profile Profile, string Path)>? _cache;
@@ -234,7 +234,7 @@ public sealed class ProfileStore(ServicePaths paths, ILogger<ProfileStore> logge
     }
 }
 
-public sealed class RuleStore(ServicePaths paths, ILogger<RuleStore> logger)
+public sealed class RuleStore(DataPaths paths, ILogger<RuleStore> logger)
 {
     public RuleSet Load()
     {
@@ -262,7 +262,7 @@ public sealed class RuleStore(ServicePaths paths, ILogger<RuleStore> logger)
 }
 
 /// <summary>Small piece of state that must survive a restart: which profile was applied last.</summary>
-public sealed class StateStore(ServicePaths paths)
+public sealed class StateStore(DataPaths paths)
 {
     public sealed record State(Guid? LastAppliedProfileId, DateTimeOffset? LastAppliedAt);
 
@@ -284,7 +284,7 @@ public sealed class StateStore(ServicePaths paths)
 }
 
 /// <summary>The last <see cref="HistoryEntry.MaxEntries"/> profile changes, newest first.</summary>
-public sealed class HistoryStore(ServicePaths paths, ILogger<HistoryStore> logger)
+public sealed class HistoryStore(DataPaths paths, ILogger<HistoryStore> logger)
 {
     private readonly Lock _lock = new();
     private List<HistoryEntry>? _entries;

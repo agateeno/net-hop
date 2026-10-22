@@ -488,7 +488,7 @@
     <value>Reiniciar como administrador</value>
   </data>
   <data name="Main_ServiceStoppedMessage" xml:space="preserve">
-    <value>No se pueden aplicar perfiles. Inicia el servicio desde un terminal de administrador: sc start NetHop</value>
+    <value>No se pueden aplicar perfiles. Inicia el servicio desde un terminal de administrador (sc start NetHop) o desactívalo en Configuración para usar NetHop sin él.</value>
   </data>
   <data name="Main_ServiceStoppedTitle" xml:space="preserve">
     <value>El servicio NetHop no se está ejecutando</value>
@@ -1063,5 +1063,65 @@ Contiene las copias de tus perfiles y cualquier archivo que hayas guardado allí
   </data>
   <data name="Sharing_Unchanged" xml:space="preserve">
     <value>Dejar como está</value>
+  </data>
+  <data name="Service_MissingExe" xml:space="preserve">
+    <value>Falta el programa del servicio: {0}</value>
+  </data>
+  <data name="Service_UnsafeFolder" xml:space="preserve">
+    <value>NetHop no puede activar su servicio desde {0}: las cuentas que no son de administrador pueden cambiar archivos ahí, y el servicio se ejecuta como SYSTEM. Instala NetHop con su instalador, en Archivos de programa.</value>
+  </data>
+  <data name="Service_Timeout" xml:space="preserve">
+    <value>El servicio NetHop no respondió a tiempo.</value>
+  </data>
+  <data name="Service_EnableFailed" xml:space="preserve">
+    <value>No se pudo activar el servicio NetHop</value>
+  </data>
+  <data name="Service_DisableFailed" xml:space="preserve">
+    <value>No se pudo desactivar el servicio NetHop</value>
+  </data>
+  <data name="Settings_StartupTaskDenied" xml:space="preserve">
+    <value>Sin el servicio NetHop, para iniciar con Windows NetHop debe ejecutarse como administrador.</value>
+  </data>
+  <data name="Settings_StartupFailed" xml:space="preserve">
+    <value>No se pudo cambiar la opción Iniciar con Windows</value>
+  </data>
+  <data name="Main_NeedsElevationTitle" xml:space="preserve">
+    <value>Se necesitan derechos de administrador</value>
+  </data>
+  <data name="Main_NeedsElevationMessage" xml:space="preserve">
+    <value>Sin el servicio NetHop, NetHop cambia la red por sí mismo y debe ejecutarse como administrador.</value>
+  </data>
+  <data name="Automations_NoService.Title" xml:space="preserve">
+    <value>Las automatizaciones necesitan el servicio NetHop</value>
+  </data>
+  <data name="Automations_NoService.Message" xml:space="preserve">
+    <value>NetHop se está ejecutando sin su servicio: puedes editar y guardar reglas, pero no se ejecutan. Activa el servicio en Configuración para que se ejecuten.</value>
+  </data>
+  <data name="Automations_NoServiceSettings.Content" xml:space="preserve">
+    <value>Abrir Configuración</value>
+  </data>
+  <data name="Dashboard_RulesNeedService" xml:space="preserve">
+    <value>No se ejecutan: las automatizaciones necesitan el servicio NetHop. Actívalo en Configuración.</value>
+  </data>
+  <data name="Settings_ServiceOff" xml:space="preserve">
+    <value>Desactivado: NetHop cambia la red por sí mismo, como administrador</value>
+  </data>
+  <data name="Settings_ServiceNeededFor" xml:space="preserve">
+    <value>Necesario para las automatizaciones, la línea de comandos, PowerShell, Power Automate y el complemento de Logi.</value>
+  </data>
+  <data name="Settings_ServiceOffTitle" xml:space="preserve">
+    <value>¿Desactivar el servicio NetHop?</value>
+  </data>
+  <data name="Settings_ServiceOffQuestion" xml:space="preserve">
+    <value>Las automatizaciones dejan de ejecutarse, y la línea de comandos, PowerShell, Power Automate y el complemento de Logi dejan de funcionar. NetHop cambiará la red por sí mismo y pedirá derechos de administrador al iniciarse. Los perfiles, las reglas y el historial se conservan.</value>
+  </data>
+  <data name="Settings_ServiceOffConfirm" xml:space="preserve">
+    <value>Desactivar</value>
+  </data>
+  <data name="Integrations_NoService.Title" xml:space="preserve">
+    <value>Estas integraciones necesitan el servicio NetHop</value>
+  </data>
+  <data name="Integrations_NoService.Message" xml:space="preserve">
+    <value>La línea de comandos, PowerShell, Power Automate y el complemento de Logi se conectan al servicio NetHop, que está desactivado. Los archivos de perfil y los vínculos nethop:// funcionan sin él.</value>
   </data>
 </root>

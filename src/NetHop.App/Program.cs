@@ -15,19 +15,27 @@ public static class Program
     /// <summary>Passed with the process id by "Restart as administrator": wait for that instance to exit first.</summary>
     public const string RestartedFromArgument = "--restarted-from";
 
+    /// <summary>Settings › NetHop service, from an app that is not elevated: the elevated instance turns it on or off.</summary>
+    public const string EnableServiceArgument = "--enable-service";
+    public const string DisableServiceArgument = "--disable-service";
+
     [STAThread]
     private static int Main(string[] args)
     {
         WinRT.ComWrappersSupport.InitializeComWrappers();
         AppDomain.CurrentDomain.UnhandledException += (_, e) => Services.CrashLog.Write(".NET", e.ExceptionObject);
 
-        // Uninstall helper started by the MSI: no window, no single-instance redirect.
+        // Helpers started by the MSI: no window, no single-instance redirect.
         if (args.Contains("--uninstall"))
         {
             Services.AppLanguage.Apply();
             Services.UninstallCleanup.Run(quiet: args.Contains("--quiet"));
             return 0;
         }
+        if (args.Contains("--uninstall-machine"))
+            return Services.UninstallCleanup.RunForMachine();
+        if (args.Contains("--install-service"))
+            return RunHelper(Services.ServiceSetup.Install); // after an upgrade, when the service was on
 
         WaitForPreviousInstance(args);
         var activation = AppInstance.GetCurrent().GetActivatedEventArgs();
@@ -40,6 +48,11 @@ public static class Program
             return 0;
         }
 
+        // Without the service NetHop changes the network itself, which takes administrator rights: one UAC prompt now.
+        // Cancelled, NetHop runs without them and offers to restart as administrator.
+        if (!Services.ServiceSetup.IsElevated && !Services.ServiceSetup.IsInstalled && RestartElevated(args))
+            return 0;
+
         mainInstance.Activated += (_, e) => App.Current?.HandleActivation(e, isLaunch: false);
         Services.AppLanguage.Apply();
 
@@ -51,6 +64,46 @@ public static class Program
             _ = new App(activation);
         });
         return 0;
+    }
+
+    /// <summary>Starts this executable again, elevated, with the same arguments. False when the UAC prompt is cancelled.</summary>
+    public static bool RestartElevated(IEnumerable<string> args)
+    {
+        var list = args.ToList();
+        var previous = list.IndexOf(RestartedFromArgument);
+        if (previous >= 0)
+            list.RemoveRange(previous, Math.Min(2, list.Count - previous));
+        list.Add(RestartedFromArgument);
+        list.Add(Environment.ProcessId.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        var arguments = list.Select(a => a.Contains(' ') || a.Length == 0 ? $"\"{a}\"" : a);
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(Environment.ProcessPath!)
+            {
+                UseShellExecute = true,
+                Verb = "runas",
+                Arguments = string.Join(" ", arguments),
+            });
+            return true;
+        }
+        catch (System.ComponentModel.Win32Exception)
+        {
+            return false;
+        }
+    }
+
+    private static int RunHelper(Action action)
+    {
+        try
+        {
+            action();
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            Services.CrashLog.Write("Helper", ex);
+            return 1;
+        }
     }
 
     private static void WaitForPreviousInstance(string[] args)

@@ -58,9 +58,13 @@ public sealed partial class DashboardPage : Page
         };
         ProfileGrid.IsItemClickEnabled = _connection.CanEdit;
 
+        // Without the service no automations run: nothing to pause.
+        AutomationsSwitch.Visibility = _connection.IsLocal ? Visibility.Collapsed : Visibility.Visible;
         AutomationsSwitch.IsEnabled = _connection.CanEdit;
         AutomationsSwitch.IsOn = status?.AutomationsPausedUntil is null;
-        AutomationsCard.Description = status?.AutomationsPausedUntil is { } until ? Loc.Format("Common_PausedUntil", until.LocalDateTime) : Loc.Get("Dashboard_RulesRun");
+        AutomationsCard.Description = _connection.IsLocal
+            ? Loc.Get("Dashboard_RulesNeedService")
+            : status?.AutomationsPausedUntil is { } until ? Loc.Format("Common_PausedUntil", until.LocalDateTime) : Loc.Get("Dashboard_RulesRun");
 
         SsidWarning.IsOpen = status?.SsidUnavailable == true;
         _updating = false;

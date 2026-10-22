@@ -36,6 +36,10 @@
 
                 <toolkit:SettingsCard x:Uid="Settings_Service" x:Name="ServiceCard" Header="NetHop service" Description="-">
                     <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE912;" /></toolkit:SettingsCard.HeaderIcon>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <ProgressRing x:Name="ServiceProgress" Width="20" Height="20" IsActive="False" />
+                        <ToggleSwitch x:Name="ServiceSwitch" Toggled="OnServiceToggled" />
+                    </StackPanel>
                 </toolkit:SettingsCard>
 
                 <TextBlock x:Uid="Settings_Updates" Text="Updates" Style="{StaticResource SectionHeaderStyle}" />
@@ -69,7 +73,7 @@
                     <toolkit:SettingsCard.HeaderIcon>
                         <ImageIcon Source="ms-appx:///Assets/NetHop.png" />
                     </toolkit:SettingsCard.HeaderIcon>
-                    <HyperlinkButton Content="GitHub" NavigateUri="https://github.com/agateeno/net-hop" />
+                    <HyperlinkButton Content="GitHub" Click="OnGitHubClick" />
                 </toolkit:SettingsCard>
             </StackPanel>
         </Grid>

@@ -95,6 +95,7 @@ public sealed partial class TrayFlyoutWindow : Window
         {
             ConnectionState.ServiceNotRunning => Loc.Get("Main_ServiceStoppedTitle"),
             ConnectionState.AccessDenied => Loc.Get("Main_AccessDeniedTitle"),
+            ConnectionState.NeedsElevation => Loc.Get("Main_NeedsElevationTitle"),
             ConnectionState.Connecting => Loc.Get("Common_ConnectingService"),
             _ when _connection.Status?.ActiveProfileDrifted == true => Loc.Get("Dashboard_Drifted"),
             _ => null,
@@ -104,6 +105,8 @@ public sealed partial class TrayFlyoutWindow : Window
 
         PauseToggle.IsChecked = _connection.Status?.AutomationsPausedUntil is not null;
         PauseToggle.IsEnabled = ProfileList.IsEnabled = _connection.CanEdit;
+        // Without the service no automations run: nothing to pause.
+        PauseToggle.Visibility = _connection.IsLocal ? Visibility.Collapsed : Visibility.Visible;
     }
 
     private async void OnProfileClick(object sender, ItemClickEventArgs e)

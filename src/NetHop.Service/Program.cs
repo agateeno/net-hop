@@ -1,5 +1,6 @@
 using NetHop.Core.Planning;
 using NetHop.Engine;
+using NetHop.Host;
 using NetHop.Ipc;
 using NetHop.Service;
 
@@ -7,7 +8,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddWindowsService(options => options.ServiceName = NetHopPipe.ServiceName);
 
-builder.Services.AddSingleton(new ServicePaths(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)));
+builder.Services.AddSingleton(new DataPaths(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)));
 builder.Services.AddSingleton<CimNetworkBackend>();
 builder.Services.AddSingleton<INetworkBackend>(sp => sp.GetRequiredService<CimNetworkBackend>());
 builder.Services.AddSingleton<ProfileApplier>();

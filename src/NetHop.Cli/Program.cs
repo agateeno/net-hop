@@ -26,7 +26,8 @@ catch (UsageException ex)
 }
 catch (TimeoutException)
 {
-    Console.Error.WriteLine("The NetHop service is not running. Start it with: sc start NetHop");
+    // Off by default since 0.6: the app works without it, the command line does not.
+    Console.Error.WriteLine("The NetHop service is not running. The command line needs it: turn it on in NetHop > Settings > NetHop service.");
     return ServiceUnavailable;
 }
 catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or StreamJsonRpc.ConnectionLostException)

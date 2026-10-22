@@ -47,4 +47,26 @@ public static partial class UninstallCleanup
         ProfileFolder.Delete();
         Registry.CurrentUser.DeleteSubKeyTree(@"Software\NetHop", throwOnMissingSubKey: false);
     }
+
+    /// <summary>
+    /// Run by the MSI as SYSTEM (<c>NetHop.App.exe --uninstall-machine</c>), not on upgrades: removes the service, which
+    /// the app registers when it is turned on in Settings, and every user's startup task.
+    /// </summary>
+    public static int RunForMachine()
+    {
+        var result = 0;
+        foreach (var step in new Action[] { ServiceSetup.Remove, ShellIntegration.RemoveAllStartupTasks })
+        {
+            try
+            {
+                step();
+            }
+            catch (Exception ex)
+            {
+                CrashLog.Write("Uninstall", ex);
+                result = 1;
+            }
+        }
+        return result;
+    }
 }

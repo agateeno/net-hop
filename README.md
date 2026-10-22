@@ -6,7 +6,7 @@
 
 **Hop between network configurations in one click.** NetHop is an open-source network profile switcher for Windows 11, in the spirit of NetSetMan, with a PowerToys-style Fluent UI.
 
-> Status: preview (v0.3). Builds are not code-signed yet: see [Releases](https://github.com/agateeno/net-hop/releases).
+> Status: preview (v0.6). Builds are not code-signed yet: see [Releases](https://github.com/agateeno/net-hop/releases).
 
 ## Install
 
@@ -18,7 +18,9 @@ winget install agateeno.NetHop
 
 Update it later with `winget upgrade agateeno.NetHop`. NetHop is being added to winget: until `winget search agateeno.NetHop` finds it, use the installer below.
 
-Or download the MSI for your PC (`x64`, or `arm64` for Windows on Arm) from [Releases](https://github.com/agateeno/net-hop/releases/latest) and run it. Windows asks for administrator rights, because NetHop installs a service. Builds are not signed yet, so SmartScreen may warn: choose **More info › Run anyway**.
+Or download the MSI for your PC (`x64`, or `arm64` for Windows on Arm) from [Releases](https://github.com/agateeno/net-hop/releases/latest) and run it. Windows asks for administrator rights, because NetHop installs for every user in Program Files. Builds are not signed yet, so SmartScreen may warn: choose **More info › Run anyway**.
+
+NetHop works without a background service: it asks for administrator rights when it starts, since changing network settings needs them. **Automations**, the command line, PowerShell, Power Automate and the Logi plugin need the **NetHop service**: turn it on in **Settings › NetHop service**. NetHop then no longer asks for administrator rights.
 
 ## Screenshots
 
@@ -54,10 +56,11 @@ Or download the MSI for your PC (`x64`, or `arm64` for Windows on Arm) from [Rel
 - **Profile editor** with a form view and a YAML view: start from scratch, from the current configuration, or by duplicating a profile. Drag profiles in the dashboard or the profile list to put them in your order; the tray follows it.
 - **History**: the last 10 profile changes, with who made them (you or which rule), what changed, and any error.
 - **Tray flyout**: left-click the notification-area icon to see the active profile and switch with one click.
-- **Built-in automations**: rules such as "when I join the Wi-Fi `CORP-WiFi` on a weekday, apply *Office*", with no extra software. Loop protection, cooldowns and a pause switch are included.
-- **Power Automate**: a *NetHop* group of custom actions in Power Automate Desktop, a PowerShell module, and a CLI with JSON output. NetHop rules can also start flows.
-- **Logitech**: a Logi Actions plugin for the MX Creative Console and the Actions Ring, with keys that show the active profile.
-- **Installer**: per-machine MSIs for x64 and ARM64 with the service, `PATH`, file types, an "Apply with NetHop" context menu entry and a Start menu entry. Releases also produce winget manifests.
+- **Service optional**: NetHop runs on its own, as administrator. Turn on the NetHop service in Settings for automations and the integrations below; NetHop then works without administrator rights.
+- **Built-in automations** (with the service): rules such as "when I join the Wi-Fi `CORP-WiFi` on a weekday, apply *Office*", with no extra software. Loop protection, cooldowns and a pause switch are included.
+- **Power Automate** (with the service): a *NetHop* group of custom actions in Power Automate Desktop, a PowerShell module, and a CLI with JSON output. NetHop rules can also start flows.
+- **Logitech** (with the service): a Logi Actions plugin for the MX Creative Console and the Actions Ring, with keys that show the active profile.
+- **Installer**: per-machine MSIs for x64 and ARM64 with the optional service (off until turned on in Settings), `PATH`, file types, an "Apply with NetHop" context menu entry and a Start menu entry. Releases also produce winget manifests.
 - **Update check**: Settings shows when a newer release is out (stable releases, and optionally pre-releases), and a notification says so once per version. NetHop only asks GitHub for the list of releases: nothing is sent about your PC, and nothing is downloaded or installed for you. It can be turned off in Settings.
 - **Six languages**: English, Deutsch, Español, Français, Italiano and Português (Brasil). The app follows the Windows display language, or the one picked in Settings.
 - **Rename adapters** without breaking profiles: profiles find adapters by GUID, then MAC, then name.
@@ -65,23 +68,25 @@ Or download the MSI for your PC (`x64`, or `arm64` for Windows on Arm) from [Rel
 ## Architecture
 
 ```
-┌───────────────────────────┐   named pipe + JSON-RPC   ┌─────────────────────────────┐
-│ NetHop.App (WinUI 3)      │ ◄───────────────────────► │ NetHop.Service (SYSTEM)     │
-│ settings · tray · flyout  │                           │ profile store · rule engine │
-├───────────────────────────┤                           │ network monitor             │
-│ nethop.exe (CLI)          │ ◄───────────────────────► │ NetHop.Engine (CIM, Win32)  │
-│ Logi plugin · PA actions  │                           └─────────────────────────────┘
-└───────────────────────────┘
+With the service (optional)                                Without it (default)
+┌───────────────────────────┐   named pipe + JSON-RPC   ┌─────────────────────────────┐   ┌───────────────────────────┐
+│ NetHop.App (WinUI 3)      │ ◄───────────────────────► │ NetHop.Service (SYSTEM)     │   │ NetHop.App, elevated      │
+│ settings · tray · flyout  │                           │ NetHop.Host: profile store, │   │ NetHop.Host in the app    │
+├───────────────────────────┤                           │ rule engine                 │   │ (no rules, no CLI)        │
+│ nethop.exe (CLI)          │ ◄───────────────────────► │ network monitor             │   │ NetHop.Engine (CIM, Win32)│
+│ Logi plugin · PA actions  │                           │ NetHop.Engine (CIM, Win32)  │   └───────────────────────────┘
+└───────────────────────────┘                           └─────────────────────────────┘
 ```
 
-Changing IP settings needs administrator rights, so all changes are made by a Windows service and the UI never asks for elevation. Only **administrator accounts** can make changes; other accounts can open NetHop read-only, with a button to restart it as administrator. See [docs/architecture.md](docs/architecture.md).
+Changing IP settings needs administrator rights. Without the service, the app runs as administrator (one UAC prompt when it starts) and changes the network itself; automations do not run and the other clients cannot connect. With the service turned on, all changes are made by the service and the UI never asks for elevation; only **administrator accounts** can make changes, and other accounts can open NetHop read-only, with a button to restart it as administrator. See [docs/architecture.md](docs/architecture.md).
 
 | Project | Target | Role |
 |---|---|---|
 | `NetHop.Core` | net10.0 | Profile/rule models, YAML, validation, planner, rule engine. Pure logic, fully unit-tested |
 | `NetHop.Ipc` | net10.0 | The service contract (`INetHopService`) and the pipe client |
 | `NetHop.Engine` | net10.0, Windows | Reads and changes the network through CIM (`root\StandardCimv2`), iphlpapi and wlanapi |
-| `NetHop.Service` | net10.0, Windows | Windows service hosting everything above |
+| `NetHop.Host` | net10.0, Windows | The engine behind `INetHopService`: profile, rule and history stores, applying profiles. Hosted by the service, or by the app without it |
+| `NetHop.Service` | net10.0, Windows | Optional Windows service: pipe server, network monitor and rules |
 | `NetHop.Cli` | net10.0 | `nethop.exe` |
 | `NetHop.App` | net10.0-windows10.0.22621 | WinUI 3 app (Windows App SDK 2.5) |
 | `NetHop.PowerAutomate` | net472 | Power Automate Desktop custom actions (`Modules.NetHop.dll`) |
@@ -144,7 +149,7 @@ The app icon is drawn in SVG under [assets/icon](assets/icon): `NetHop.svg` (lar
 Every push builds on GitHub Actions and produces **NetHop-msi** (x64 and ARM64 installers), **NetHop-win-x64** / **NetHop-win-arm64** (the same binaries as folders) and the Power Automate module (unsigned unless signing is configured, see [docs/installer.md](docs/installer.md#code-signing)). Install the MSI, or, for a quick test without it, extract the folder and run from an elevated PowerShell:
 
 ```powershell
-.\Install-NetHop.ps1      # copies to Program Files, registers and starts the service
+.\Install-NetHop.ps1      # copies to Program Files (add -Service to register and start the service)
 .\Uninstall-NetHop.ps1    # removes it (add -RemoveData to delete profiles and rules)
 ```
 
@@ -164,6 +169,7 @@ Every push builds on GitHub Actions and produces **NetHop-msi** (x64 and ARM64 i
 - [x] Localization: English, German, Spanish, French, Italian, Portuguese (Brazil)
 - [x] Modern Windows 11 context menu entry (sparse package; shown on every machine once releases are signed)
 - [x] Update check against GitHub releases (download and install once releases are signed)
+- [x] Use NetHop without the service (the app runs elevated); the service is optional, for automations and integrations
 - [ ] Verify everything on real hardware (spikes in docs/architecture.md)
 
 ## Privacy

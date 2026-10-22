@@ -15,7 +15,7 @@ internal static partial class HostsFileEditor
 
     public static string FilePath => Path.Combine(DatabaseFolder(), "hosts");
 
-    // In the service's data folder, which only administrators and SYSTEM can open (see ServicePaths).
+    // In NetHop's data folder, which only administrators and SYSTEM can open (see DataPaths).
     private static string BackupPath =>
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "NetHop", "hosts.backup");
 

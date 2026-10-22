@@ -488,7 +488,7 @@
     <value>Restart as administrator</value>
   </data>
   <data name="Main_ServiceStoppedMessage" xml:space="preserve">
-    <value>Profiles cannot be applied. Start the service from an administrator terminal: sc start NetHop</value>
+    <value>Profiles cannot be applied. Start the service from an administrator terminal (sc start NetHop), or turn it off in Settings to use NetHop without it.</value>
   </data>
   <data name="Main_ServiceStoppedTitle" xml:space="preserve">
     <value>The NetHop service is not running</value>
@@ -1063,5 +1063,65 @@ It holds the copies of your profiles and any file you saved there. They will be 
   </data>
   <data name="Sharing_Unchanged" xml:space="preserve">
     <value>Leave as is</value>
+  </data>
+  <data name="Service_MissingExe" xml:space="preserve">
+    <value>The service program is missing: {0}</value>
+  </data>
+  <data name="Service_UnsafeFolder" xml:space="preserve">
+    <value>NetHop cannot turn on its service from {0}: accounts that are not administrators can change files there, and the service runs as SYSTEM. Install NetHop with its installer, in Program Files.</value>
+  </data>
+  <data name="Service_Timeout" xml:space="preserve">
+    <value>The NetHop service did not respond in time.</value>
+  </data>
+  <data name="Service_EnableFailed" xml:space="preserve">
+    <value>Could not turn on the NetHop service</value>
+  </data>
+  <data name="Service_DisableFailed" xml:space="preserve">
+    <value>Could not turn off the NetHop service</value>
+  </data>
+  <data name="Settings_StartupTaskDenied" xml:space="preserve">
+    <value>Without the NetHop service, starting with Windows needs NetHop to run as administrator.</value>
+  </data>
+  <data name="Settings_StartupFailed" xml:space="preserve">
+    <value>Could not change the start with Windows setting</value>
+  </data>
+  <data name="Main_NeedsElevationTitle" xml:space="preserve">
+    <value>Administrator rights needed</value>
+  </data>
+  <data name="Main_NeedsElevationMessage" xml:space="preserve">
+    <value>Without the NetHop service, NetHop changes the network itself and needs to run as administrator.</value>
+  </data>
+  <data name="Automations_NoService.Title" xml:space="preserve">
+    <value>Automations need the NetHop service</value>
+  </data>
+  <data name="Automations_NoService.Message" xml:space="preserve">
+    <value>NetHop is running without its service: you can edit and save rules, but they do not run. Turn on the service in Settings to run them.</value>
+  </data>
+  <data name="Automations_NoServiceSettings.Content" xml:space="preserve">
+    <value>Open Settings</value>
+  </data>
+  <data name="Dashboard_RulesNeedService" xml:space="preserve">
+    <value>Not running: automations need the NetHop service. Turn it on in Settings.</value>
+  </data>
+  <data name="Settings_ServiceOff" xml:space="preserve">
+    <value>Off: NetHop changes the network itself, as administrator</value>
+  </data>
+  <data name="Settings_ServiceNeededFor" xml:space="preserve">
+    <value>Needed for automations, the command line, PowerShell, Power Automate and the Logi plugin.</value>
+  </data>
+  <data name="Settings_ServiceOffTitle" xml:space="preserve">
+    <value>Turn off the NetHop service?</value>
+  </data>
+  <data name="Settings_ServiceOffQuestion" xml:space="preserve">
+    <value>Automations stop running, and the command line, PowerShell, Power Automate and the Logi plugin stop working. NetHop then changes the network itself and asks for administrator rights when it starts. Profiles, rules and history are kept.</value>
+  </data>
+  <data name="Settings_ServiceOffConfirm" xml:space="preserve">
+    <value>Turn off</value>
+  </data>
+  <data name="Integrations_NoService.Title" xml:space="preserve">
+    <value>These integrations need the NetHop service</value>
+  </data>
+  <data name="Integrations_NoService.Message" xml:space="preserve">
+    <value>The command line, PowerShell, Power Automate and the Logi plugin connect to the NetHop service, which is off. Profile files and nethop:// links work without it.</value>
   </data>
 </root>

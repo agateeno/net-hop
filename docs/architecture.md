@@ -4,13 +4,25 @@
 
 | Process | Account | Responsibility |
 |---|---|---|
-| `NetHop.Service.exe` | LocalSystem | Owns profiles and rules, reads and changes the network, watches for changes, runs rules |
-| `NetHop.exe` (WinUI) | signed-in user | Settings window, tray icon and flyout, toasts, runs user-session rule actions |
-| `nethop.exe` (CLI) | caller | Scripting and Power Automate |
-| Logi Actions plugin | signed-in user, inside Logi Plugin Service | MX Creative Console / Actions Ring buttons |
-| Power Automate Desktop actions | signed-in user, inside PAD | Call `nethop.exe --json` |
+| `NetHop.Service.exe` (optional, off by default) | LocalSystem | Owns profiles and rules, reads and changes the network, watches for changes, runs rules |
+| `NetHop.App.exe` (WinUI) | signed-in user; elevated without the service | Settings window, tray icon and flyout, toasts, runs user-session rule actions. Without the service it also owns profiles and changes the network itself, but runs no rules |
+| `nethop.exe` (CLI) | caller | Scripting and Power Automate (service only) |
+| Logi Actions plugin | signed-in user, inside Logi Plugin Service | MX Creative Console / Actions Ring buttons (service only) |
+| Power Automate Desktop actions | signed-in user, inside PAD | Call `nethop.exe --json` (service only) |
 
-All clients talk to the service through the `NetHop.Service.v1` named pipe using JSON-RPC ([StreamJsonRpc](https://github.com/microsoft/vs-streamjsonrpc), System.Text.Json formatter). The contract is `NetHop.Ipc.INetHopService`. It includes two events, `StatusChanged` and `UserActionRequested`, that the service pushes to every connected client.
+The engine is `NetHop.Host.NetHopController`, the implementation of `NetHop.Ipc.INetHopService`, with the profile, rule, state and history stores. With the service, it runs there, and all clients talk to it through the `NetHop.Service.v1` named pipe using JSON-RPC ([StreamJsonRpc](https://github.com/microsoft/vs-streamjsonrpc), System.Text.Json formatter). The contract includes two events, `StatusChanged` and `UserActionRequested`, that the service pushes to every connected client. Without the service, the app runs the same controller itself (see below).
+
+## Without the service
+
+Since 0.6 NetHop installs with the service **off**: the MSI copies `NetHop.Service.exe` but does not register it. Settings › NetHop service turns it on and off.
+
+- **One or the other.** The app uses the service whenever it is registered (and reports it as stopped if it does not answer); otherwise it runs the controller in process (`LocalService`, behind the same `INetHopService`, so pages, tray and editors work the same). The two never run at the same time, and both use `%ProgramData%\NetHop`: turning the service on or off keeps profiles, rules and history.
+- **Elevation.** Without the service the app needs administrator rights: `Program.Main` restarts it through UAC once at start. If the prompt is cancelled it runs without them, shows nothing but a *Restart as administrator* bar, and changes nothing.
+- **No automations.** Nothing watches the network for rules: the app only refreshes what it shows when the network changes (`NetHopController.OnNetworkChanged`). Rules can still be edited and saved; the Automations page, the dashboard and the tray say they do not run. The CLI, PowerShell, Power Automate and the Logi plugin need the pipe, so they need the service.
+- **Turning the service on or off** (`ServiceSetup`) registers it with `sc.exe` (LocalSystem, automatic start, restart on failure) and starts it, or stops and deletes it. It needs an elevated process: an app that is not elevated restarts through UAC with `--enable-service` or `--disable-service`. The connection then moves to the service or to the app within seconds.
+- **Start with Windows** is a Run entry with the service. Without it, it is a scheduled task (`NetHop Startup <user SID>`: at the user's sign-in, highest privileges), since a Run entry cannot start an elevated app without a UAC prompt.
+- **MSI.** When the service was registered before an upgrade (the previous version stops it, and up to 0.5 removed it), `NetHop.App.exe --install-service` registers and starts it again as SYSTEM. Uninstalling runs `--uninstall-machine`, which removes the service and every user's startup task.
+- **Logging.** The app writes the same entries as the service to the Application event log, under the source `NetHop`.
 
 ## Security model
 
@@ -19,8 +31,9 @@ All clients talk to the service through the `NetHop.Service.v1` named pipe using
 - **Connections are capped** at 32 at a time, since any interactive user may connect.
 - **Pipe squatting.** Pipe names are global: while the service is stopped or restarting, any local user could create `NetHop.Service.v1` and pose as NetHop, sending fake data and rule actions that an administrator's app would run. The server creates the first instance with `FirstPipeInstance` and stops if the name is taken; other instances need `FILE_CREATE_PIPE_INSTANCE`, which the pipe ACL does not grant. Every client also checks, right after connecting, that the pipe server's process (`GetNamedPipeServerProcessId`) is the running `NetHop` service as the Service Control Manager reports it (`PipeServerCheck`); otherwise it refuses with `UntrustedPipeServerException`. Only administrators can register or replace a service.
 - **No code runs as SYSTEM on a rule's behalf.** `runCommand`, `openUrl`, `runPowerAutomateFlow` and `notify` are forwarded to the users' apps through `UserActionRequested`, and run with their rights. `openUrl` only accepts `http`/`https` and flows only `ms-powerautomate:`, checked when rules are saved and again by the app: the shell would run whatever a `file://` URL points to.
-- **Storage.** `%ProgramData%\NetHop` gets an explicit, protected ACL (SYSTEM and Administrators only) with Administrators as owner. Standard users may create folders in `%ProgramData%`, so at every start the service takes over an existing folder: a link is removed, a folder not owned by SYSTEM or Administrators is moved aside (`NetHop.untrusted-<time>`), and inside a trusted folder links are deleted and every entry gets the folder's owner and inherited permissions.
-- **Install folder.** The MSI installs into Program Files and offers no folder choice. `Install-NetHop.ps1` gives any other destination the same permissions (only administrators may change it), because the service runs as SYSTEM from there.
+- **Storage.** `%ProgramData%\NetHop` gets an explicit, protected ACL (SYSTEM and Administrators only) with Administrators as owner. Standard users may create folders in `%ProgramData%`, so at every start the service (or the app, without it) takes over an existing folder (`DataPaths`): a link is removed, a folder not owned by SYSTEM or Administrators is moved aside (`NetHop.untrusted-<time>`), and inside a trusted folder links are deleted and every entry gets the folder's owner and inherited permissions.
+- **Install folder.** The MSI installs into Program Files and offers no folder choice. `Install-NetHop.ps1` gives any other destination the same permissions (only administrators may change it), because the service runs as SYSTEM from there. For the same reason the app turns the service on only when the folder and `NetHop.Service.exe` are owned by, and writable only by, SYSTEM, Administrators or TrustedInstaller: a copy of NetHop in a user's folder can run without the service, never register it.
+- **Without the service** the app runs elevated, as the signed-in administrator. There is no pipe, so no other process can use it; profiles and rules go through the same validation, and no rule actions run. Windows keeps processes that are not elevated from sending it input (UIPI), which also blocks dragging files onto it from Explorer. Web pages it opens (release notes, GitHub) are opened through Explorer, so that the browser does not run elevated.
 - Profiles saved through the service are validated first. The service only accepts typed operations, never shell commands; YAML is read into fixed types (no polymorphic deserialization) and JSON-RPC uses System.Text.Json without type names.
 - **Update check.** Only the app contacts GitHub, never the service. It reads the list of releases over HTTPS and, when one is newer, opens its page in the browser: the page address is built from the tag, not taken from the response, and nothing is downloaded or run.
 - **Hosts file.** Hosts entries can redirect a site, like a DNS server can, so they get the same protections (only administrators change profiles, unknown files are reviewed first) and more:
@@ -55,7 +68,7 @@ Everything except step 1 and the execution of individual steps is pure code in `
 
 ## Automations
 
-`NetworkMonitor` listens to `NetworkChange` notifications. It debounces them (3 s), takes a new snapshot and derives events with `NetworkEventDetector`: Wi-Fi connected/disconnected with SSID, adapter connected/disconnected, network changed. It also raises `startup` and a `schedule` tick every minute. `RuleEngine` evaluates the rules in priority order and applies these guards:
+Automations need the service: `NetworkMonitor` runs there. It listens to `NetworkChange` notifications. It debounces them (3 s), takes a new snapshot and derives events with `NetworkEventDetector`: Wi-Fi connected/disconnected with SSID, adapter connected/disconnected, network changed. It also raises `startup` and a `schedule` tick every minute. `RuleEngine` evaluates the rules in priority order and applies these guards:
 
 - events within 10 s of a profile change made by NetHop are ignored (no loops);
 - per-rule cooldown;
@@ -94,7 +107,8 @@ To add a language: copy `Strings/en-US/Resources.resw` and `Strings.resx` to the
 | `SetInterfaceDnsSettings` for DNS | Clean "back to DHCP" (empty list) and IPv6 support without registry tweaks |
 | Core and Ipc target net8.0 and net10.0 | Logi Plugin Service loads plugins on .NET 8, and the plugin reuses the same pipe client |
 | PAD actions call the CLI instead of the pipe | PAD loads .NET Framework 4.7.2 modules, and every DLL shipped with them must be signed: calling `nethop.exe` keeps the module to a single DLL |
-| Plain `net10.0` for Engine/Service/CLI | The `-windows` TFM makes StreamJsonRpc's VS.Threading dependency pull in WPF. The assemblies are marked `[SupportedOSPlatform("windows")]` instead |
+| `net10.0-windows10.0.22621.0` for Engine/Host/Service, with `DisableTransitiveFrameworkReferences` | The WinRT tethering API needs the Windows SDK projections. The `-windows` TFM makes StreamJsonRpc's VS.Threading dependency pull in WPF, which the setting keeps out |
+| The service is optional, and off by default | Many people only switch profiles by hand: a SYSTEM service that runs all the time is more than they need, and some machines do not allow one. The engine is one library, so the app and the service run the same code |
 | Windows App SDK 2.5 | Every API NetHop uses exists unchanged in 2.x (checked against the 2.x metadata). CommunityToolkit and H.NotifyIcon restore fine on it. 2.x brings `SystemBackdropElement`, `ApplicationData.GetForUnpackaged()` and the new storage pickers, and it is the line that gets new features |
 | Unpackaged app + `ActivationRegistrationManager` | Registers `.nethop` and `nethop://` per user without MSIX; an installer can switch to a sparse package for the Windows 11 context menu |
 | Windows 11 context menu from a sparse package, registered by the app | Only packaged `IExplorerCommand` handlers reach the first level of the menu. The package carries no app code (its content is the install folder), so the app stays unpackaged; packages are per user, so the app registers it at startup instead of the per-machine MSI |
