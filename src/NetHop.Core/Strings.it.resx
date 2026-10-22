@@ -202,4 +202,37 @@
   <data name="Issue_Warning" xml:space="preserve">
     <value>avviso</value>
   </data>
+  <data name="Step_HostsSet" xml:space="preserve">
+    <value>Scrivi {0} nomi host nel file hosts: {1}</value>
+  </data>
+  <data name="Step_HostsClear" xml:space="preserve">
+    <value>Rimuovi le voci di NetHop dal file hosts</value>
+  </data>
+  <data name="Profile_HostsEntriesOnlySet" xml:space="preserve">
+    <value>'entries' si usa solo con la modalità set.</value>
+  </data>
+  <data name="Profile_HostsSetNeedsEntries" xml:space="preserve">
+    <value>Aggiungi almeno una voce, oppure usa la modalità clear per rimuovere le voci di NetHop.</value>
+  </data>
+  <data name="Profile_HostsIpInvalid" xml:space="preserve">
+    <value>'{0}' non è un indirizzo IPv4 o IPv6 (per esempio 192.168.1.20 o fd00::20).</value>
+  </data>
+  <data name="Profile_HostsNoNames" xml:space="preserve">
+    <value>Aggiungi almeno un nome host.</value>
+  </data>
+  <data name="Profile_HostsNameInvalid" xml:space="preserve">
+    <value>'{0}' non è un nome host valido: usa solo lettere, numeri, trattini e punti.</value>
+  </data>
+  <data name="Profile_HostsNameProtected" xml:space="preserve">
+    <value>'{0}' appartiene a {1}, un dominio protetto: NetHop non lo scrive nel file hosts.</value>
+  </data>
+  <data name="Profile_HostsNameConflict" xml:space="preserve">
+    <value>'{0}' punta già a {1}.</value>
+  </data>
+  <data name="Profile_HostsDuplicate" xml:space="preserve">
+    <value>'{0}' compare due volte.</value>
+  </data>
+  <data name="Profile_HostsTooMany" xml:space="preserve">
+    <value>Al massimo {0} nomi host per profilo.</value>
+  </data>
 </root>

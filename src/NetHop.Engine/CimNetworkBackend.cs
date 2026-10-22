@@ -78,7 +78,7 @@ public sealed class CimNetworkBackend : INetworkBackend, IDisposable
             });
         }
 
-        return new NetworkSnapshot { Adapters = result, TakenAt = DateTimeOffset.Now };
+        return new NetworkSnapshot { Adapters = result, Hosts = HostsFileEditor.Read(), TakenAt = DateTimeOffset.Now };
     }
 
     private static FamilySnapshot? Family(AdapterInfo info, uint family, List<CimInstance> ipInterfaces,
@@ -123,14 +123,14 @@ public sealed class CimNetworkBackend : INetworkBackend, IDisposable
     {
         switch (step)
         {
-            case EnableAdapterStep:
-                InvokeOnAdapter(step.Adapter.Id, "Enable");
+            case EnableAdapterStep s:
+                InvokeOnAdapter(s.Adapter.Id, "Enable");
                 break;
-            case DisableAdapterStep:
-                InvokeOnAdapter(step.Adapter.Id, "Disable");
+            case DisableAdapterStep s:
+                InvokeOnAdapter(s.Adapter.Id, "Disable");
                 break;
-            case WaitForAdapterStep:
-                WaitForAdapter(step.Adapter.Id, cancellationToken);
+            case WaitForAdapterStep s:
+                WaitForAdapter(s.Adapter.Id, cancellationToken);
                 break;
             case SetDhcpStep s:
                 SetDhcp(s.Adapter.Id, s.Family, s.Enabled);
@@ -165,6 +165,9 @@ public sealed class CimNetworkBackend : INetworkBackend, IDisposable
                     if (s.Metric is { } metric)
                         instance.CimInstanceProperties["InterfaceMetric"].Value = (uint)metric;
                 });
+                break;
+            case SetHostsStep s:
+                HostsFileEditor.Write(s.Mappings);
                 break;
             default:
                 throw new NotSupportedException($"Unknown step {step.GetType().Name}.");

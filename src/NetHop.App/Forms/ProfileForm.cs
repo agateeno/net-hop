@@ -3,6 +3,7 @@ using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NetHop.App.Services;
+using NetHop.Core;
 using NetHop.Core.Networking;
 using NetHop.Core.Profiles;
 using static NetHop.App.Forms.FormControls;
@@ -70,6 +71,8 @@ internal sealed class ProfileForm
             if (adapter.Ipv6 is { Mode: IpMode.Unchanged, Dns: null or { Mode: DnsMode.Unchanged }, Metric: null })
                 adapter.Ipv6 = null;
         }
+        if (profile.Hosts is { Mode: HostsMode.Unchanged, Entries.Count: 0 })
+            profile.Hosts = null;
     }
 
     private void Render()
@@ -95,6 +98,84 @@ internal sealed class ProfileForm
 
         if (_profile.Adapters.Count == 0)
             _root.Children.Add(new TextBlock { Text = Loc.Get("ProfileForm_NoAdapters"), Foreground = (Microsoft.UI.Xaml.Media.Brush)Application.Current.Resources["TextFillColorSecondaryBrush"] });
+
+        AddHosts();
+    }
+
+    private void AddHosts()
+    {
+        _root.Children.Add(new TextBlock
+        {
+            Text = Loc.Get("ProfileForm_Hosts"),
+            Style = (Style)Application.Current.Resources["BodyStrongTextBlockStyle"],
+            Margin = new Thickness(1, 24, 0, 6),
+        });
+
+        var hosts = _profile.Hosts ?? new HostsConfig();
+        _root.Children.Add(Card(Loc.Get("ProfileForm_HostsMode"), EnumCombo(hosts.Mode, "Hosts_", mode =>
+        {
+            hosts.Mode = mode;
+            if (mode != HostsMode.Set)
+                hosts.Entries.Clear();
+            else if (hosts.Entries.Count == 0)
+                hosts.Entries.Add(new HostsEntry());
+            _profile.Hosts = mode == HostsMode.Unchanged ? null : hosts;
+            Rebuild();
+        }), Loc.Get("ProfileForm_HostsHelp"), wrapBelow: 600));
+
+        if (hosts.Mode != HostsMode.Set)
+            return;
+
+        for (var i = 0; i < hosts.Entries.Count; i++)
+            _root.Children.Add(HostsEntryCard(hosts, i));
+
+        var add = new Button { Content = Loc.Get("ProfileForm_HostsAdd"), Margin = new Thickness(0, 4, 0, 0) };
+        add.Click += (_, _) =>
+        {
+            hosts.Entries.Add(new HostsEntry());
+            Rebuild();
+        };
+        _root.Children.Add(add);
+    }
+
+    /// <summary>One entry: address, names and, right below them, what is wrong with it (protected domain, bad name...).</summary>
+    private SettingsCard HostsEntryCard(HostsConfig hosts, int index)
+    {
+        var entry = hosts.Entries[index];
+        var errors = new TextBlock
+        {
+            Foreground = (Microsoft.UI.Xaml.Media.Brush)Application.Current.Resources["SystemFillColorCriticalBrush"],
+            TextWrapping = TextWrapping.Wrap,
+        };
+        void ShowErrors()
+        {
+            // A new, empty row is not an error yet.
+            IReadOnlyList<Issue> problems = string.IsNullOrEmpty(entry.Ip) && entry.Names.Count == 0 ? [] : ProfileValidator.ValidateHostsEntry(entry);
+            errors.Text = string.Join(Environment.NewLine, problems.Select(p => p.Message));
+            errors.Visibility = problems.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        var ip = TextBox(entry.Ip, Loc.Get("ProfileForm_HostsIp"), text => Edit(() =>
+        {
+            entry.Ip = text.Trim();
+            ShowErrors();
+        }), width: 180);
+        var names = TextBox(string.Join(" ", entry.Names), Loc.Get("ProfileForm_HostsNames"), text => Edit(() =>
+        {
+            entry.Names = text.Split([' ', ',', ';', '\t'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
+            ShowErrors();
+        }), width: 320);
+        var remove = DeleteButton(() =>
+        {
+            hosts.Entries.RemoveAt(index);
+            Rebuild();
+        });
+        ShowErrors();
+
+        var content = new StackPanel { Spacing = 4 };
+        content.Children.Add(WrapRow(ip, names, remove));
+        content.Children.Add(errors);
+        return Card(Loc.Format("ProfileForm_HostsEntry", index + 1), content, wrapBelow: 700);
     }
 
     /// <summary>

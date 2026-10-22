@@ -1,0 +1,92 @@
+# Domains NetHop never writes to the hosts file: a profile that maps one of them, or any of its subdomains, is
+# rejected. They are what Windows and its apps need to stay updated and secure, sign-in and certificate services,
+# and the biggest online services, whose redirection Microsoft Defender reports as a threat (HostsFileHijack).
+#
+# One domain per line, lowercase; "#" starts a comment. A domain covers its subdomains too, but not other domains:
+# "google.com" covers "mail.google.com", not "googleadservices.com". Changes go through a pull request.
+
+# Microsoft and Windows: updates, security, sign-in, connectivity check
+microsoft.com
+microsoftonline.com
+windows.com
+windows.net
+windowsupdate.com
+msftconnecttest.com
+msftncsi.com
+live.com
+live.net
+msn.com
+bing.com
+office.com
+office.net
+office365.com
+outlook.com
+sharepoint.com
+onedrive.com
+skype.com
+xbox.com
+xboxlive.com
+msedge.net
+azure.com
+azureedge.net
+visualstudio.com
+
+# Google
+google.com
+googleapis.com
+gstatic.com
+gmail.com
+youtube.com
+googlevideo.com
+ytimg.com
+android.com
+pki.goog
+
+# Apple
+apple.com
+icloud.com
+icloud-content.com
+mzstatic.com
+cdn-apple.com
+apple-cloudkit.com
+
+# Certificates and revocation checks
+digicert.com
+letsencrypt.org
+lencr.org
+sectigo.com
+comodoca.com
+usertrust.com
+globalsign.com
+globalsign.net
+entrust.net
+identrust.com
+godaddy.com
+amazontrust.com
+
+# Time servers
+ntp.org
+nist.gov
+
+# Amazon
+amazon.com
+amazonaws.com
+cloudfront.net
+
+# Meta
+facebook.com
+fbcdn.net
+instagram.com
+whatsapp.com
+whatsapp.net
+messenger.com
+meta.com
+
+# Developer and infrastructure services
+github.com
+githubusercontent.com
+cloudflare.com
+cloudflare-dns.com
+mozilla.org
+mozilla.net
+firefox.com

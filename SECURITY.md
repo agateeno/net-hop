@@ -43,6 +43,7 @@ The security model, its trust boundaries and the protections in place are descri
 - privilege escalation through the NetHop service (the `NetHop.Service.v1` pipe, the JSON-RPC API, the read-only mode for standard users);
 - tampering with `%ProgramData%\NetHop`, the install folder or the service binaries;
 - code execution through profiles, rules, `.nethop` files, `nethop://` links or the Windows 11 context menu handler;
+- writing to the hosts file outside NetHop's block, or redirecting a protected domain;
 - a client being tricked into talking to something other than the genuine NetHop service;
 - the installer (MSI) and the uninstall steps.
 

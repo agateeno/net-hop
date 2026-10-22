@@ -23,9 +23,18 @@ All clients talk to the service through the `NetHop.Service.v1` named pipe using
 - **Install folder.** The MSI installs into Program Files and offers no folder choice. `Install-NetHop.ps1` gives any other destination the same permissions (only administrators may change it), because the service runs as SYSTEM from there.
 - Profiles saved through the service are validated first. The service only accepts typed operations, never shell commands; YAML is read into fixed types (no polymorphic deserialization) and JSON-RPC uses System.Text.Json without type names.
 - **Update check.** Only the app contacts GitHub, never the service. It reads the list of releases over HTTPS and, when one is newer, opens its page in the browser: the page address is built from the tag, not taken from the response, and nothing is downloaded or run.
+- **Hosts file.** Hosts entries can redirect a site, like a DNS server can, so they get the same protections (only administrators change profiles, unknown files are reviewed first) and more:
+  - NetHop writes only between its own markers and keeps every other byte of the file;
+  - addresses and host names are validated strictly (letters, digits, hyphens, dots), so an entry can never add a line of its own;
+  - names under the protected domains of `protected-domains.txt` (Microsoft, Google, Apple, certificate authorities, time servers and other major services) are rejected, in the editor and again by the service;
+  - the file is replaced atomically with `ReplaceFile`, keeping its owner, permissions and attributes; a link or a read-only file is refused;
+  - a copy of the original file is kept in `%ProgramData%\NetHop\hosts.backup`;
+  - every change shows in the history, the notification and the Application event log.
 - **Untrusted profile files.** *Apply with NetHop* applies a file directly only if it is one of the saved profiles, and then it applies the saved version. Any other file (a downloaded profile could point DNS at an attacker's server) opens in the editor to be reviewed and saved first.
 
 Known limits, by design:
+
+- Microsoft Defender may report a hosts file that redirects well-known domains as a threat (`SettingsModifier:Win32/HostsFileHijack`). The protected domain list keeps the usual triggers out; Defender's own list is not public, so an entry can still be reported (see `docs/profile-format.md`).
 
 - Administrator accounts have full access without elevation, so any program running as an administrator (non-elevated) can change the network and the rules, including rules that run commands. Rule actions go to every administrator session that runs NetHop, so a rule saved by one administrator runs in the others' sessions too. Administrators can already control the machine, but this skips the UAC prompt.
 - `nethop://apply/<profile>` applies an existing profile by name. A web page can open such a link; browsers ask before opening it, and it can only switch between the user's own profiles.
@@ -34,10 +43,10 @@ Known limits, by design:
 
 ## Applying a profile
 
-1. **Snapshot**: `CimNetworkBackend.GetSnapshot()` reads adapters (`MSFT_NetAdapter`), IP interfaces (`MSFT_NetIPInterface`), addresses (`MSFT_NetIPAddress`), default routes (`MSFT_NetRoute`), static DNS (`GetInterfaceDnsSettings`) and the Wi-Fi SSID (`WlanQueryInterface`).
+1. **Snapshot**: `CimNetworkBackend.GetSnapshot()` reads adapters (`MSFT_NetAdapter`), IP interfaces (`MSFT_NetIPInterface`), addresses (`MSFT_NetIPAddress`), default routes (`MSFT_NetRoute`), static DNS (`GetInterfaceDnsSettings`), the Wi-Fi SSID (`WlanQueryInterface`) and NetHop's block of the hosts file.
 2. **Plan**: `ProfilePlanner` diffs the profile against the snapshot and emits only the steps needed. Order: enable adapters and wait for them, then IP configuration, then disable adapters. When gateways are removed or added, the planner orders them around their addresses: Windows rejects a gateway whose subnet is not on the interface yet.
 3. **Execute**: `ProfileApplier` runs the steps one by one. Steps are idempotent: adding an existing address or deleting a missing one is not an error.
-4. **Rollback**: if a step fails, the pre-apply snapshot is turned into a profile (`SnapshotProfile`) limited to the adapters the plan touched, and it is applied best-effort.
+4. **Rollback**: if a step fails, the pre-apply snapshot is turned into a profile (`SnapshotProfile`) limited to the adapters the plan touched, plus NetHop's hosts block when the plan changed it, and it is applied best-effort.
 5. **Active profile**: a profile is active when planning it against the current snapshot yields no steps. The last applied profile wins over other matching ones. When it no longer matches, the UI reports *drift*.
 
 Everything except step 1 and the execution of individual steps is pure code in `NetHop.Core` and is unit-tested on any OS.

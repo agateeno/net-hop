@@ -28,6 +28,23 @@ public static class SnapshotProfile
         return profile;
     }
 
+    /// <summary>NetHop's block of the hosts file as a profile section, so a failed apply can restore it. Null when unknown.</summary>
+    public static HostsConfig? CreateHosts(NetworkSnapshot snapshot)
+    {
+        if (snapshot.Hosts is not { } hosts)
+            return null;
+        if (hosts.Mappings.Count == 0)
+            return new HostsConfig { Mode = HostsMode.Clear };
+        return new HostsConfig
+        {
+            Mode = HostsMode.Set,
+            Entries = hosts.Mappings
+                .GroupBy(m => m.Address)
+                .Select(g => new HostsEntry { Ip = g.Key.ToString(), Names = g.Select(m => m.Name).ToList() })
+                .ToList(),
+        };
+    }
+
     private static IpConfig? FromFamily(FamilySnapshot? family)
     {
         if (family is null)

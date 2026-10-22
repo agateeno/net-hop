@@ -9,7 +9,8 @@ name: Office                   # required, unique, max 64 characters
 description: Docking station   # optional
 icon: ""                 # optional: a Segoe Fluent Icons glyph, or a custom image as "data:image/png;base64,..." (PNG, max 48 KB; the app scales it to 64×64)
 color: "#0078D4"               # optional accent color, any #RRGGBB
-adapters: [...]                # at least one entry
+adapters: [...]                # at least one entry, unless the profile only sets hosts
+hosts: { ... }                 # optional: entries of the Windows hosts file
 ```
 
 ## Adapter entries
@@ -49,12 +50,58 @@ ipv4:
 - IPv6 gateways may be link-local (`fe80::1`).
 - Switching to `static` removes manual addresses and gateways that are not listed; switching to `dhcp` removes all of them.
 
+## Hosts file (`hosts`)
+
+Maps host names to addresses in the Windows hosts file. It is machine-wide, so it sits at the profile level, not in an adapter entry. When `hosts` is omitted, the file is not touched.
+
+```yaml
+hosts:
+  mode: set                    # set | clear | unchanged (default)
+  entries:                     # set only
+    - ip: 192.168.10.20        # IPv4 or IPv6, without prefix length
+      names: [intranet.corp.local, wiki.corp.local]
+    - ip: 0.0.0.0              # also to block a site
+      names: [ads.example.com]
+```
+
+| `mode` | What it does |
+|---|---|
+| `set` | NetHop's section of the hosts file holds exactly these entries: switching to another profile with `set` replaces them. |
+| `clear` | Removes NetHop's section. |
+
+NetHop writes only its own section, one name per line, and keeps the rest of the file (your lines, Docker's, Hyper-V's…) exactly as it is:
+
+```
+# BEGIN NetHop (managed by NetHop, do not edit this block)
+192.168.10.20 intranet.corp.local
+192.168.10.20 wiki.corp.local
+# END NetHop
+```
+
+- The change takes effect at once: NetHop flushes the DNS cache after writing.
+- A profile is active only when NetHop's section holds its entries (in any order).
+- A copy of the file as it was before NetHop first changed it is kept in `%ProgramData%\NetHop\hosts.backup`.
+- If the hosts file is read-only, NetHop does not change it and reports an error: remove the read-only attribute to let it.
+- Profiles captured from the current configuration do not include the hosts file.
+
+### Protected domains
+
+Names under the domains listed in [`protected-domains.txt`](../src/NetHop.Core/Profiles/protected-domains.txt) are rejected, with all their subdomains: Microsoft and Windows, Google, Apple, certificate authorities, time servers, Amazon, Meta, GitHub, Cloudflare, Mozilla. Redirecting them would cut the PC off from updates, sign-in or certificate checks, and Microsoft Defender reports it as a threat. A domain covers its subdomains, not other domains: `google.com` covers `mail.google.com`, while `googleadservices.com` or `doubleclick.net` can still be blocked. Country domains such as `google.it` are not in the list.
+
+### If Microsoft Defender reports the hosts file
+
+Defender watches the hosts file for redirected well-known domains (`SettingsModifier:Win32/HostsFileHijack`). The protected domains keep the usual triggers out, but Defender's list is not public. If it reports the file anyway:
+
+1. Open **Windows Security › Virus & threat protection › Protection history** and check which entry it found.
+2. If it is one of yours and you want to keep it, choose **Actions › Allow on device**. Otherwise let Defender clean it, and remove the entry from the profile.
+3. To report a false positive, submit it at <https://www.microsoft.com/wdsi/filesubmission>.
+
 ## Validation
 
 | Severity | Examples |
 |---|---|
-| Error | missing name, address without prefix, wrong address family, static mode without addresses, addresses in DHCP mode, duplicate addresses, two entries for the same adapter, a metric that is not `automatic` or 1-9999 |
-| Warning | gateway outside every configured subnet, network/broadcast address, IP settings on a disabled adapter, an entry that changes nothing |
+| Error | missing name, address without prefix, wrong address family, static mode without addresses, addresses in DHCP mode, duplicate addresses, two entries for the same adapter, a metric that is not `automatic` or 1-9999; hosts: an address that is not plain IPv4/IPv6, an invalid host name, an entry without names, a name under a protected domain, a name with two addresses of the same family, `set` without entries or `entries` without `set`, more than 500 names |
+| Warning | gateway outside every configured subnet, network/broadcast address, IP settings on a disabled adapter, an entry that changes nothing, a host name listed twice |
 
 Profiles with errors cannot be saved or applied. Check a file with `nethop validate file.nethop`.
 

@@ -49,6 +49,18 @@
   <data name="Adapters_Gateway" xml:space="preserve">
     <value>{0}-Gateway</value>
   </data>
+  <data name="Adapters_Hosts" xml:space="preserve">
+    <value>Hosts-Datei</value>
+  </data>
+  <data name="Adapters_HostsCount" xml:space="preserve">
+    <value>{0} von NetHop geschriebene Hostnamen</value>
+  </data>
+  <data name="Adapters_HostsNone" xml:space="preserve">
+    <value>Keine von NetHop geschriebenen Einträge</value>
+  </data>
+  <data name="Adapters_HostsUnknown" xml:space="preserve">
+    <value>Die Hosts-Datei konnte nicht gelesen werden</value>
+  </data>
   <data name="Adapters_Id" xml:space="preserve">
     <value>Adapter-ID</value>
   </data>
@@ -559,6 +571,27 @@
   <data name="ProfileForm_Gateways" xml:space="preserve">
     <value>{0}-Gateways</value>
   </data>
+  <data name="ProfileForm_Hosts" xml:space="preserve">
+    <value>Hosts-Datei</value>
+  </data>
+  <data name="ProfileForm_HostsAdd" xml:space="preserve">
+    <value>Eintrag hinzufügen</value>
+  </data>
+  <data name="ProfileForm_HostsEntry" xml:space="preserve">
+    <value>Eintrag {0}</value>
+  </data>
+  <data name="ProfileForm_HostsHelp" xml:space="preserve">
+    <value>Hostnamen, die auf eine Adresse verweisen, in einem eigenen NetHop-Abschnitt der Windows-Hosts-Datei: Der Rest der Datei bleibt unverändert. Domänen von Microsoft, Google, Apple und anderen großen Diensten sind geschützt und können nicht hinzugefügt werden.</value>
+  </data>
+  <data name="ProfileForm_HostsIp" xml:space="preserve">
+    <value>IP-Adresse</value>
+  </data>
+  <data name="ProfileForm_HostsMode" xml:space="preserve">
+    <value>Einträge der Hosts-Datei</value>
+  </data>
+  <data name="ProfileForm_HostsNames" xml:space="preserve">
+    <value>Hostnamen, durch Leerzeichen getrennt</value>
+  </data>
   <data name="ProfileForm_MatchHelp" xml:space="preserve">
     <value>Wird verwendet, wenn ID und MAC-Adresse des Adapters nicht gefunden werden, z. B. auf einem anderen PC.</value>
   </data>
@@ -979,5 +1012,14 @@ Er enthält die Kopien Ihrer Profile und alle Dateien, die Sie dort gespeichert 
   </data>
   <data name="Uninstall_Title" xml:space="preserve">
     <value>NetHop deinstallieren</value>
+  </data>
+  <data name="Hosts_Clear" xml:space="preserve">
+    <value>Einträge von NetHop entfernen</value>
+  </data>
+  <data name="Hosts_Set" xml:space="preserve">
+    <value>Diese Einträge festlegen</value>
+  </data>
+  <data name="Hosts_Unchanged" xml:space="preserve">
+    <value>Unverändert lassen</value>
   </data>
 </root>

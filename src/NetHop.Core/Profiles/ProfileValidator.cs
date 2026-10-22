@@ -30,13 +30,75 @@ public static partial class ProfileValidator
         if (Profile.IsImageIcon(profile.Icon) && !IsValidImageIcon(profile.Icon!))
             issues.Add(Issue.Error("icon", Text.Format("Profile_IconFormat", Profile.MaxImageIconBytes / 1024)));
 
-        if (profile.Adapters.Count == 0)
+        // A profile may only change the hosts file.
+        if (profile.Adapters.Count == 0 && profile.Hosts is null or { Mode: HostsMode.Unchanged })
             issues.Add(Issue.Error("adapters", Text.Get("Profile_NoAdapters")));
 
         for (var i = 0; i < profile.Adapters.Count; i++)
             ValidateAdapter(profile.Adapters[i], $"adapters[{i}]", issues);
 
+        if (profile.Hosts is { } hosts)
+            ValidateHosts(hosts, issues);
+
         ValidateNoDuplicateMatches(profile, issues);
+        return issues;
+    }
+
+    private static void ValidateHosts(HostsConfig hosts, List<Issue> issues)
+    {
+        if (hosts.Mode != HostsMode.Set)
+        {
+            if (hosts.Entries.Count > 0)
+                issues.Add(Issue.Error("hosts.entries", Text.Get("Profile_HostsEntriesOnlySet")));
+            return;
+        }
+        if (hosts.Entries.Count == 0)
+            issues.Add(Issue.Error("hosts.entries", Text.Get("Profile_HostsSetNeedsEntries")));
+
+        // A name may have one IPv4 and one IPv6 address (dual stack), not two of the same family.
+        var seen = new Dictionary<(string Name, AddressFamily Family), IPAddress>();
+        for (var i = 0; i < hosts.Entries.Count; i++)
+        {
+            var entry = hosts.Entries[i];
+            var path = $"hosts.entries[{i}]";
+            issues.AddRange(ValidateHostsEntry(entry, path));
+            if (!HostsFile.TryParseAddress(entry.Ip, out var address))
+                continue;
+            for (var j = 0; j < entry.Names.Count; j++)
+            {
+                var name = entry.Names[j];
+                if (!HostsFile.IsValidHostName(name))
+                    continue;
+                var key = (name.ToLowerInvariant(), address.AddressFamily);
+                if (!seen.TryGetValue(key, out var other))
+                    seen[key] = address;
+                else if (other.Equals(address))
+                    issues.Add(Issue.Warning($"{path}.names[{j}]", Text.Format("Profile_HostsDuplicate", name)));
+                else
+                    issues.Add(Issue.Error($"{path}.names[{j}]", Text.Format("Profile_HostsNameConflict", name, other)));
+            }
+        }
+
+        if (seen.Count > HostsConfig.MaxNames)
+            issues.Add(Issue.Error("hosts.entries", Text.Format("Profile_HostsTooMany", HostsConfig.MaxNames)));
+    }
+
+    /// <summary>The problems of one hosts entry on its own, for the editor to show next to it.</summary>
+    public static IReadOnlyList<Issue> ValidateHostsEntry(HostsEntry entry, string path = "entry")
+    {
+        var issues = new List<Issue>();
+        if (!HostsFile.TryParseAddress(entry.Ip, out _))
+            issues.Add(Issue.Error($"{path}.ip", Text.Format("Profile_HostsIpInvalid", entry.Ip)));
+        if (entry.Names.Count == 0)
+            issues.Add(Issue.Error($"{path}.names", Text.Get("Profile_HostsNoNames")));
+        for (var j = 0; j < entry.Names.Count; j++)
+        {
+            var name = entry.Names[j];
+            if (!HostsFile.IsValidHostName(name))
+                issues.Add(Issue.Error($"{path}.names[{j}]", Text.Format("Profile_HostsNameInvalid", name)));
+            else if (ProtectedDomains.Find(name) is { } domain)
+                issues.Add(Issue.Error($"{path}.names[{j}]", Text.Format("Profile_HostsNameProtected", name, domain)));
+        }
         return issues;
     }
 

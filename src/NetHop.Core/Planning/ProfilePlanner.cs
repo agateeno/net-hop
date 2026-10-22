@@ -12,7 +12,7 @@ namespace NetHop.Core.Planning;
 public static class ProfilePlanner
 {
     /// <remarks>
-    /// Order: enable adapters (and wait for them), then IP configuration, then disable adapters.
+    /// Order: enable adapters (and wait for them), then IP configuration, then the hosts file, then disable adapters.
     /// This way the PC is never left without the adapters the profile wants up.
     /// </remarks>
     public static ApplyPlan Plan(Profile profile, NetworkSnapshot snapshot)
@@ -20,6 +20,7 @@ public static class ProfilePlanner
         var issues = new List<Issue>();
         var enables = new List<PlanStep>();
         var ipSteps = new List<PlanStep>();
+        var hostsSteps = new List<PlanStep>();
         var disables = new List<PlanStep>();
         var adapters = snapshot.Adapters.Select(a => a.Info).ToList();
         var resolved = new HashSet<Guid>();
@@ -77,7 +78,19 @@ public static class ProfilePlanner
                 PlanFamily(adapter, config.Ipv6, AddressFamily.InterNetworkV6, ipStateKnown ? current.Ipv6 : null, ipSteps);
         }
 
-        return new ApplyPlan([.. enables, .. ipSteps, .. disables], issues, missing);
+        if (profile.Hosts is { Mode: not HostsMode.Unchanged } hosts)
+            PlanHosts(hosts, snapshot.Hosts, hostsSteps);
+
+        return new ApplyPlan([.. enables, .. ipSteps, .. hostsSteps, .. disables], issues, missing);
+    }
+
+    /// <param name="current">Null when the hosts file could not be read: the block is rewritten.</param>
+    private static void PlanHosts(HostsConfig desired, HostsSnapshot? current, List<PlanStep> steps)
+    {
+        IReadOnlyList<HostsMapping> wanted = desired.Mode == HostsMode.Set ? HostsFile.ToMappings(desired.Entries) : [];
+        // The order of the lines does not change name resolution: compare them as sets.
+        if (current is null || !current.Mappings.ToHashSet().SetEquals(wanted))
+            steps.Add(new SetHostsStep(wanted));
     }
 
     /// <param name="current">Null when the current state is unknown: every step is emitted (the engine treats them as idempotent).</param>
