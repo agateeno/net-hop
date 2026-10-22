@@ -97,12 +97,21 @@ public sealed record SharingSnapshot
     public Guid? SharedTo { get; init; }
 }
 
+/// <summary>The hosts file as NetHop sees it: the mappings in its own block.</summary>
+public sealed record HostsSnapshot
+{
+    public IReadOnlyList<HostsMapping> Mappings { get; init; } = [];
+}
+
 public sealed record NetworkSnapshot
 {
     public IReadOnlyList<AdapterSnapshot> Adapters { get; init; } = [];
 
     /// <summary>Null when it could not be read: plans then emit every sharing step.</summary>
     public SharingSnapshot? Sharing { get; init; }
+
+    /// <summary>Null when the hosts file could not be read: plans then rewrite NetHop's block.</summary>
+    public HostsSnapshot? Hosts { get; init; }
 
     public DateTimeOffset TakenAt { get; init; } = DateTimeOffset.Now;
 

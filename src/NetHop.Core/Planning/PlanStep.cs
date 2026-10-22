@@ -102,6 +102,23 @@ public sealed record StopSharingStep : PlanStep
     public override string Describe() => Text.Get("Step_SharingOff");
 }
 
+/// <summary>Rewrites NetHop's block of the hosts file with <paramref name="Mappings"/>; none removes the block.</summary>
+public sealed record SetHostsStep(IReadOnlyList<HostsMapping> Mappings) : PlanStep
+{
+    public override string Describe() => Mappings.Count == 0
+        ? Text.Get("Step_HostsClear")
+        : Text.Format("Step_HostsSet", Mappings.Count, string.Join(", ", Mappings.Take(ListedNames).Select(m => $"{m.Name} → {m.Address}"))
+            + (Mappings.Count > ListedNames ? ", …" : ""));
+
+    // Enough to recognize the change in the history and notifications without flooding them.
+    private const int ListedNames = 10;
+
+    // Records compare lists by reference; plans and tests compare the mappings.
+    public bool Equals(SetHostsStep? other) => other is not null && Mappings.SequenceEqual(other.Mappings);
+
+    public override int GetHashCode() => Mappings.Count;
+}
+
 public sealed record ApplyPlan(IReadOnlyList<PlanStep> Steps, IReadOnlyList<Issue> Issues, int MissingAdapters = 0)
 {
     /// <summary>The network already matches the profile.</summary>
@@ -116,4 +133,7 @@ public sealed record ApplyPlan(IReadOnlyList<PlanStep> Steps, IReadOnlyList<Issu
     /// <summary>The plan changes the mobile hotspot or Internet Connection Sharing.</summary>
     public bool ChangesSharing =>
         Steps.Any(s => s is ShareThroughHotspotStep or StopHotspotStep or ShareWithAdapterStep or StopSharingStep);
+
+    /// <summary>The plan rewrites NetHop's block of the hosts file.</summary>
+    public bool ChangesHosts => Steps.Any(s => s is SetHostsStep);
 }

@@ -34,6 +34,43 @@ public sealed class Profile
 
     /// <summary>Internet connection sharing and the mobile hotspot. Null leaves them as they are.</summary>
     public SharingConfig? Sharing { get; set; }
+
+    /// <summary>Entries of the Windows hosts file. Null leaves the file as it is.</summary>
+    public HostsConfig? Hosts { get; set; }
+}
+
+/// <summary>
+/// Host names NetHop writes to the hosts file, inside its own block: the rest of the file is never touched.
+/// Machine-wide, so it belongs to the profile rather than to an adapter.
+/// </summary>
+public sealed class HostsConfig
+{
+    public HostsMode Mode { get; set; } = HostsMode.Unchanged;
+
+    /// <summary><see cref="HostsMode.Set"/> only.</summary>
+    public List<HostsEntry> Entries { get; set; } = [];
+
+    /// <summary>Most host names one profile may write: a huge hosts file slows every name lookup down.</summary>
+    public const int MaxNames = 500;
+}
+
+public sealed class HostsEntry
+{
+    /// <summary>An IPv4 or IPv6 address, without prefix length.</summary>
+    public string Ip { get; set; } = "";
+
+    public List<string> Names { get; set; } = [];
+}
+
+public enum HostsMode
+{
+    Unchanged,
+
+    /// <summary>NetHop's block of the hosts file holds exactly <see cref="HostsConfig.Entries"/>.</summary>
+    Set,
+
+    /// <summary>NetHop's block is removed.</summary>
+    Clear,
 }
 
 public sealed class AdapterConfig

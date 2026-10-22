@@ -49,6 +49,18 @@
   <data name="Adapters_Gateway" xml:space="preserve">
     <value>Passerelle {0}</value>
   </data>
+  <data name="Adapters_Hosts" xml:space="preserve">
+    <value>Fichier hosts</value>
+  </data>
+  <data name="Adapters_HostsCount" xml:space="preserve">
+    <value>{0} noms d'hôte écrits par NetHop</value>
+  </data>
+  <data name="Adapters_HostsNone" xml:space="preserve">
+    <value>Aucune entrée écrite par NetHop</value>
+  </data>
+  <data name="Adapters_HostsUnknown" xml:space="preserve">
+    <value>Impossible de lire le fichier hosts</value>
+  </data>
   <data name="Adapters_Id" xml:space="preserve">
     <value>ID de la carte</value>
   </data>
@@ -559,6 +571,27 @@
   <data name="ProfileForm_Gateways" xml:space="preserve">
     <value>Passerelles {0}</value>
   </data>
+  <data name="ProfileForm_Hosts" xml:space="preserve">
+    <value>Fichier hosts</value>
+  </data>
+  <data name="ProfileForm_HostsAdd" xml:space="preserve">
+    <value>Ajouter une entrée</value>
+  </data>
+  <data name="ProfileForm_HostsEntry" xml:space="preserve">
+    <value>Entrée {0}</value>
+  </data>
+  <data name="ProfileForm_HostsHelp" xml:space="preserve">
+    <value>Noms d'hôte qui pointent vers une adresse, écrits dans une section NetHop du fichier hosts de Windows : le reste du fichier ne change pas. Les domaines de Microsoft, Google, Apple et d'autres grands services sont protégés et ne peuvent pas être ajoutés.</value>
+  </data>
+  <data name="ProfileForm_HostsIp" xml:space="preserve">
+    <value>Adresse IP</value>
+  </data>
+  <data name="ProfileForm_HostsMode" xml:space="preserve">
+    <value>Entrées du fichier hosts</value>
+  </data>
+  <data name="ProfileForm_HostsNames" xml:space="preserve">
+    <value>Noms d'hôte, séparés par des espaces</value>
+  </data>
   <data name="ProfileForm_MatchHelp" xml:space="preserve">
     <value>Utilisé quand l'ID et l'adresse MAC de la carte sont introuvables, par ex. sur un autre PC.</value>
   </data>
@@ -582,36 +615,6 @@
   </data>
   <data name="ProfileForm_Optional" xml:space="preserve">
     <value>Facultatif</value>
-  </data>
-  <data name="ProfileForm_Sharing" xml:space="preserve">
-    <value>Partage de connexion Internet</value>
-  </data>
-  <data name="ProfileForm_SharingChoose" xml:space="preserve">
-    <value>Choisissez une carte</value>
-  </data>
-  <data name="ProfileForm_SharingFrom" xml:space="preserve">
-    <value>Connexion à partager</value>
-  </data>
-  <data name="ProfileForm_SharingFromDefault" xml:space="preserve">
-    <value>La connexion que Windows utilise pour Internet</value>
-  </data>
-  <data name="ProfileForm_SharingFromHelp" xml:space="preserve">
-    <value>La carte qui dispose de la connexion Internet, par exemple CloudflareWARP.</value>
-  </data>
-  <data name="ProfileForm_SharingFromHotspotHelp" xml:space="preserve">
-    <value>Par exemple CloudflareWARP. Laissez vide pour partager la connexion que Windows utilise pour Internet.</value>
-  </data>
-  <data name="ProfileForm_SharingHelp" xml:space="preserve">
-    <value>Partagez la connexion Internet d'une connexion, par exemple un VPN comme Cloudflare WARP, via le point d'accès sans fil mobile ou avec une autre carte. Le nom et le mot de passe du point d'accès se définissent dans Paramètres Windows › Réseau et Internet › Point d'accès sans fil mobile.</value>
-  </data>
-  <data name="ProfileForm_SharingMode" xml:space="preserve">
-    <value>Partager une connexion Internet</value>
-  </data>
-  <data name="ProfileForm_SharingTo" xml:space="preserve">
-    <value>Partager avec</value>
-  </data>
-  <data name="ProfileForm_SharingToHelp" xml:space="preserve">
-    <value>La carte des appareils qui reçoivent la connexion, par exemple un port Ethernet. Windows lui attribue l'adresse 192.168.137.1.</value>
   </data>
   <data name="Profiles_Apply.Text" xml:space="preserve">
     <value>Appliquer</value>
@@ -1009,6 +1012,45 @@ Il contient les copies de vos profils et tous les fichiers que vous y avez enreg
   </data>
   <data name="Uninstall_Title" xml:space="preserve">
     <value>Désinstaller NetHop</value>
+  </data>
+  <data name="Hosts_Clear" xml:space="preserve">
+    <value>Supprimer les entrées de NetHop</value>
+  </data>
+  <data name="Hosts_Set" xml:space="preserve">
+    <value>Définir ces entrées</value>
+  </data>
+  <data name="Hosts_Unchanged" xml:space="preserve">
+    <value>Ne pas modifier</value>
+  </data>
+  <data name="ProfileForm_Sharing" xml:space="preserve">
+    <value>Partage de connexion Internet</value>
+  </data>
+  <data name="ProfileForm_SharingChoose" xml:space="preserve">
+    <value>Choisissez une carte</value>
+  </data>
+  <data name="ProfileForm_SharingFrom" xml:space="preserve">
+    <value>Connexion à partager</value>
+  </data>
+  <data name="ProfileForm_SharingFromDefault" xml:space="preserve">
+    <value>La connexion que Windows utilise pour Internet</value>
+  </data>
+  <data name="ProfileForm_SharingFromHelp" xml:space="preserve">
+    <value>La carte qui dispose de la connexion Internet, par exemple CloudflareWARP.</value>
+  </data>
+  <data name="ProfileForm_SharingFromHotspotHelp" xml:space="preserve">
+    <value>Par exemple CloudflareWARP. Laissez vide pour partager la connexion que Windows utilise pour Internet.</value>
+  </data>
+  <data name="ProfileForm_SharingHelp" xml:space="preserve">
+    <value>Partagez la connexion Internet d'une connexion, par exemple un VPN comme Cloudflare WARP, via le point d'accès sans fil mobile ou avec une autre carte. Le nom et le mot de passe du point d'accès se définissent dans Paramètres Windows › Réseau et Internet › Point d'accès sans fil mobile.</value>
+  </data>
+  <data name="ProfileForm_SharingMode" xml:space="preserve">
+    <value>Partager une connexion Internet</value>
+  </data>
+  <data name="ProfileForm_SharingTo" xml:space="preserve">
+    <value>Partager avec</value>
+  </data>
+  <data name="ProfileForm_SharingToHelp" xml:space="preserve">
+    <value>La carte des appareils qui reçoivent la connexion, par exemple un port Ethernet. Windows lui attribue l'adresse 192.168.137.1.</value>
   </data>
   <data name="Sharing_Adapter" xml:space="preserve">
     <value>Avec une autre carte</value>

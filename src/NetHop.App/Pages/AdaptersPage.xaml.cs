@@ -72,6 +72,28 @@ public sealed partial class AdaptersPage : Page
 
         foreach (var adapter in adapters)
             AdapterList.Children.Add(CreateExpander(adapter));
+
+        AdapterList.Children.Add(HostsExpander(_network.Hosts));
+    }
+
+    /// <summary>What NetHop's profiles wrote to the hosts file; the rest of the file is not NetHop's to show.</summary>
+    private static SettingsExpander HostsExpander(HostsSnapshot? hosts)
+    {
+        var expander = new SettingsExpander
+        {
+            Header = Loc.Get("Adapters_Hosts"),
+            Description = hosts is null ? Loc.Get("Adapters_HostsUnknown")
+                : hosts.Mappings.Count == 0 ? Loc.Get("Adapters_HostsNone")
+                : Loc.Format("Adapters_HostsCount", hosts.Mappings.Count),
+            HeaderIcon = new FontIcon { Glyph = "\uE8A5" },
+            Margin = new Thickness(0, 16, 0, 0),
+        };
+        if (hosts is not null)
+        {
+            foreach (var address in hosts.Mappings.GroupBy(m => m.Address))
+                AddRow(expander, address.Key.ToString(), string.Join(Environment.NewLine, address.Select(m => m.Name)));
+        }
+        return expander;
     }
 
     private SettingsExpander CreateExpander(AdapterSnapshot adapter)

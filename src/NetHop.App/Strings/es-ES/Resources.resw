@@ -49,6 +49,18 @@
   <data name="Adapters_Gateway" xml:space="preserve">
     <value>Puerta de enlace {0}</value>
   </data>
+  <data name="Adapters_Hosts" xml:space="preserve">
+    <value>Archivo hosts</value>
+  </data>
+  <data name="Adapters_HostsCount" xml:space="preserve">
+    <value>{0} nombres de host escritos por NetHop</value>
+  </data>
+  <data name="Adapters_HostsNone" xml:space="preserve">
+    <value>No hay entradas escritas por NetHop</value>
+  </data>
+  <data name="Adapters_HostsUnknown" xml:space="preserve">
+    <value>No se pudo leer el archivo hosts</value>
+  </data>
   <data name="Adapters_Id" xml:space="preserve">
     <value>Id. del adaptador</value>
   </data>
@@ -559,6 +571,27 @@
   <data name="ProfileForm_Gateways" xml:space="preserve">
     <value>Puertas de enlace {0}</value>
   </data>
+  <data name="ProfileForm_Hosts" xml:space="preserve">
+    <value>Archivo hosts</value>
+  </data>
+  <data name="ProfileForm_HostsAdd" xml:space="preserve">
+    <value>Añadir entrada</value>
+  </data>
+  <data name="ProfileForm_HostsEntry" xml:space="preserve">
+    <value>Entrada {0}</value>
+  </data>
+  <data name="ProfileForm_HostsHelp" xml:space="preserve">
+    <value>Nombres de host que apuntan a una dirección, escritos en una sección de NetHop del archivo hosts de Windows: el resto del archivo no cambia. Los dominios de Microsoft, Google, Apple y otros grandes servicios están protegidos y no se pueden añadir.</value>
+  </data>
+  <data name="ProfileForm_HostsIp" xml:space="preserve">
+    <value>Dirección IP</value>
+  </data>
+  <data name="ProfileForm_HostsMode" xml:space="preserve">
+    <value>Entradas del archivo hosts</value>
+  </data>
+  <data name="ProfileForm_HostsNames" xml:space="preserve">
+    <value>Nombres de host, separados por espacios</value>
+  </data>
   <data name="ProfileForm_MatchHelp" xml:space="preserve">
     <value>Se usa cuando no se encuentran el id. y la dirección MAC del adaptador, p. ej. en otro equipo.</value>
   </data>
@@ -582,36 +615,6 @@
   </data>
   <data name="ProfileForm_Optional" xml:space="preserve">
     <value>Opcional</value>
-  </data>
-  <data name="ProfileForm_Sharing" xml:space="preserve">
-    <value>Compartir conexión a Internet</value>
-  </data>
-  <data name="ProfileForm_SharingChoose" xml:space="preserve">
-    <value>Elige un adaptador</value>
-  </data>
-  <data name="ProfileForm_SharingFrom" xml:space="preserve">
-    <value>Conexión que se comparte</value>
-  </data>
-  <data name="ProfileForm_SharingFromDefault" xml:space="preserve">
-    <value>La conexión que Windows usa para Internet</value>
-  </data>
-  <data name="ProfileForm_SharingFromHelp" xml:space="preserve">
-    <value>El adaptador que tiene la conexión a Internet, por ejemplo CloudflareWARP.</value>
-  </data>
-  <data name="ProfileForm_SharingFromHotspotHelp" xml:space="preserve">
-    <value>Por ejemplo, CloudflareWARP. Déjalo vacío para compartir la conexión que Windows usa para Internet.</value>
-  </data>
-  <data name="ProfileForm_SharingHelp" xml:space="preserve">
-    <value>Comparte la conexión a Internet de una conexión, por ejemplo una VPN como Cloudflare WARP, mediante la zona con cobertura inalámbrica móvil o con otro adaptador. El nombre y la contraseña de la zona se configuran en Configuración de Windows › Red e Internet › Zona con cobertura inalámbrica móvil.</value>
-  </data>
-  <data name="ProfileForm_SharingMode" xml:space="preserve">
-    <value>Compartir una conexión a Internet</value>
-  </data>
-  <data name="ProfileForm_SharingTo" xml:space="preserve">
-    <value>Compartir con</value>
-  </data>
-  <data name="ProfileForm_SharingToHelp" xml:space="preserve">
-    <value>El adaptador de los dispositivos que reciben la conexión, por ejemplo un puerto Ethernet. Windows le asigna la dirección 192.168.137.1.</value>
   </data>
   <data name="Profiles_Apply.Text" xml:space="preserve">
     <value>Aplicar</value>
@@ -1009,6 +1012,45 @@ Contiene las copias de tus perfiles y cualquier archivo que hayas guardado allí
   </data>
   <data name="Uninstall_Title" xml:space="preserve">
     <value>Desinstalar NetHop</value>
+  </data>
+  <data name="Hosts_Clear" xml:space="preserve">
+    <value>Quitar las entradas de NetHop</value>
+  </data>
+  <data name="Hosts_Set" xml:space="preserve">
+    <value>Establecer estas entradas</value>
+  </data>
+  <data name="Hosts_Unchanged" xml:space="preserve">
+    <value>Dejar como está</value>
+  </data>
+  <data name="ProfileForm_Sharing" xml:space="preserve">
+    <value>Compartir conexión a Internet</value>
+  </data>
+  <data name="ProfileForm_SharingChoose" xml:space="preserve">
+    <value>Elige un adaptador</value>
+  </data>
+  <data name="ProfileForm_SharingFrom" xml:space="preserve">
+    <value>Conexión que se comparte</value>
+  </data>
+  <data name="ProfileForm_SharingFromDefault" xml:space="preserve">
+    <value>La conexión que Windows usa para Internet</value>
+  </data>
+  <data name="ProfileForm_SharingFromHelp" xml:space="preserve">
+    <value>El adaptador que tiene la conexión a Internet, por ejemplo CloudflareWARP.</value>
+  </data>
+  <data name="ProfileForm_SharingFromHotspotHelp" xml:space="preserve">
+    <value>Por ejemplo, CloudflareWARP. Déjalo vacío para compartir la conexión que Windows usa para Internet.</value>
+  </data>
+  <data name="ProfileForm_SharingHelp" xml:space="preserve">
+    <value>Comparte la conexión a Internet de una conexión, por ejemplo una VPN como Cloudflare WARP, mediante la zona con cobertura inalámbrica móvil o con otro adaptador. El nombre y la contraseña de la zona se configuran en Configuración de Windows › Red e Internet › Zona con cobertura inalámbrica móvil.</value>
+  </data>
+  <data name="ProfileForm_SharingMode" xml:space="preserve">
+    <value>Compartir una conexión a Internet</value>
+  </data>
+  <data name="ProfileForm_SharingTo" xml:space="preserve">
+    <value>Compartir con</value>
+  </data>
+  <data name="ProfileForm_SharingToHelp" xml:space="preserve">
+    <value>El adaptador de los dispositivos que reciben la conexión, por ejemplo un puerto Ethernet. Windows le asigna la dirección 192.168.137.1.</value>
   </data>
   <data name="Sharing_Adapter" xml:space="preserve">
     <value>Con otro adaptador</value>

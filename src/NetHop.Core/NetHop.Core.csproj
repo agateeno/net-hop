@@ -11,4 +11,7 @@
   <ItemGroup>
     <InternalsVisibleTo Include="NetHop.Core.Tests" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Profiles\protected-domains.txt" LogicalName="NetHop.Core.protected-domains.txt" />
+  </ItemGroup>
 </Project>

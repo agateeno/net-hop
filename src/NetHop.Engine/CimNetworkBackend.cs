@@ -76,7 +76,13 @@ public sealed class CimNetworkBackend : INetworkBackend, IDisposable
             });
         }
 
-        return new NetworkSnapshot { Adapters = result, Sharing = ConnectionSharing.Read(), TakenAt = DateTimeOffset.Now };
+        return new NetworkSnapshot
+        {
+            Adapters = result,
+            Sharing = ConnectionSharing.Read(),
+            Hosts = HostsFileEditor.Read(),
+            TakenAt = DateTimeOffset.Now,
+        };
     }
 
     private static FamilySnapshot? Family(AdapterInfo info, uint family, List<CimInstance> ipInterfaces,
@@ -175,6 +181,9 @@ public sealed class CimNetworkBackend : INetworkBackend, IDisposable
                 break;
             case StopSharingStep:
                 ConnectionSharing.StopSharing();
+                break;
+            case SetHostsStep s:
+                HostsFileEditor.Write(s.Mappings);
                 break;
             default:
                 throw new NotSupportedException($"Unknown step {step.GetType().Name}.");

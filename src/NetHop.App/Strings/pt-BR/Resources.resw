@@ -49,6 +49,18 @@
   <data name="Adapters_Gateway" xml:space="preserve">
     <value>Gateway {0}</value>
   </data>
+  <data name="Adapters_Hosts" xml:space="preserve">
+    <value>Arquivo hosts</value>
+  </data>
+  <data name="Adapters_HostsCount" xml:space="preserve">
+    <value>{0} nomes de host gravados pelo NetHop</value>
+  </data>
+  <data name="Adapters_HostsNone" xml:space="preserve">
+    <value>Nenhuma entrada gravada pelo NetHop</value>
+  </data>
+  <data name="Adapters_HostsUnknown" xml:space="preserve">
+    <value>Não foi possível ler o arquivo hosts</value>
+  </data>
   <data name="Adapters_Id" xml:space="preserve">
     <value>ID do adaptador</value>
   </data>
@@ -559,6 +571,27 @@
   <data name="ProfileForm_Gateways" xml:space="preserve">
     <value>Gateways {0}</value>
   </data>
+  <data name="ProfileForm_Hosts" xml:space="preserve">
+    <value>Arquivo hosts</value>
+  </data>
+  <data name="ProfileForm_HostsAdd" xml:space="preserve">
+    <value>Adicionar entrada</value>
+  </data>
+  <data name="ProfileForm_HostsEntry" xml:space="preserve">
+    <value>Entrada {0}</value>
+  </data>
+  <data name="ProfileForm_HostsHelp" xml:space="preserve">
+    <value>Nomes de host que apontam para um endereço, gravados em uma seção do NetHop no arquivo hosts do Windows: o restante do arquivo não muda. Os domínios da Microsoft, do Google, da Apple e de outros grandes serviços são protegidos e não podem ser adicionados.</value>
+  </data>
+  <data name="ProfileForm_HostsIp" xml:space="preserve">
+    <value>Endereço IP</value>
+  </data>
+  <data name="ProfileForm_HostsMode" xml:space="preserve">
+    <value>Entradas do arquivo hosts</value>
+  </data>
+  <data name="ProfileForm_HostsNames" xml:space="preserve">
+    <value>Nomes de host, separados por espaços</value>
+  </data>
   <data name="ProfileForm_MatchHelp" xml:space="preserve">
     <value>Usado quando o ID e o endereço MAC do adaptador não são encontrados, por exemplo em outro PC.</value>
   </data>
@@ -582,36 +615,6 @@
   </data>
   <data name="ProfileForm_Optional" xml:space="preserve">
     <value>Opcional</value>
-  </data>
-  <data name="ProfileForm_Sharing" xml:space="preserve">
-    <value>Compartilhamento de Internet</value>
-  </data>
-  <data name="ProfileForm_SharingChoose" xml:space="preserve">
-    <value>Escolha um adaptador</value>
-  </data>
-  <data name="ProfileForm_SharingFrom" xml:space="preserve">
-    <value>Conexão a compartilhar</value>
-  </data>
-  <data name="ProfileForm_SharingFromDefault" xml:space="preserve">
-    <value>A conexão que o Windows usa para a Internet</value>
-  </data>
-  <data name="ProfileForm_SharingFromHelp" xml:space="preserve">
-    <value>O adaptador que tem a conexão com a Internet, por exemplo CloudflareWARP.</value>
-  </data>
-  <data name="ProfileForm_SharingFromHotspotHelp" xml:space="preserve">
-    <value>Por exemplo, CloudflareWARP. Deixe em branco para compartilhar a conexão que o Windows usa para a Internet.</value>
-  </data>
-  <data name="ProfileForm_SharingHelp" xml:space="preserve">
-    <value>Compartilhe a conexão com a Internet de uma conexão, por exemplo uma VPN como o Cloudflare WARP, pelo hotspot móvel ou com outro adaptador. O nome e a senha do hotspot são definidos em Configurações do Windows › Rede e Internet › Hotspot móvel.</value>
-  </data>
-  <data name="ProfileForm_SharingMode" xml:space="preserve">
-    <value>Compartilhar uma conexão com a Internet</value>
-  </data>
-  <data name="ProfileForm_SharingTo" xml:space="preserve">
-    <value>Compartilhar com</value>
-  </data>
-  <data name="ProfileForm_SharingToHelp" xml:space="preserve">
-    <value>O adaptador dos dispositivos que recebem a conexão, por exemplo uma porta Ethernet. O Windows atribui a ele o endereço 192.168.137.1.</value>
   </data>
   <data name="Profiles_Apply.Text" xml:space="preserve">
     <value>Aplicar</value>
@@ -1009,6 +1012,45 @@ Ela contém as cópias dos seus perfis e todos os arquivos que você salvou lá.
   </data>
   <data name="Uninstall_Title" xml:space="preserve">
     <value>Desinstalar o NetHop</value>
+  </data>
+  <data name="Hosts_Clear" xml:space="preserve">
+    <value>Remover as entradas do NetHop</value>
+  </data>
+  <data name="Hosts_Set" xml:space="preserve">
+    <value>Definir estas entradas</value>
+  </data>
+  <data name="Hosts_Unchanged" xml:space="preserve">
+    <value>Deixar como está</value>
+  </data>
+  <data name="ProfileForm_Sharing" xml:space="preserve">
+    <value>Compartilhamento de Internet</value>
+  </data>
+  <data name="ProfileForm_SharingChoose" xml:space="preserve">
+    <value>Escolha um adaptador</value>
+  </data>
+  <data name="ProfileForm_SharingFrom" xml:space="preserve">
+    <value>Conexão a compartilhar</value>
+  </data>
+  <data name="ProfileForm_SharingFromDefault" xml:space="preserve">
+    <value>A conexão que o Windows usa para a Internet</value>
+  </data>
+  <data name="ProfileForm_SharingFromHelp" xml:space="preserve">
+    <value>O adaptador que tem a conexão com a Internet, por exemplo CloudflareWARP.</value>
+  </data>
+  <data name="ProfileForm_SharingFromHotspotHelp" xml:space="preserve">
+    <value>Por exemplo, CloudflareWARP. Deixe em branco para compartilhar a conexão que o Windows usa para a Internet.</value>
+  </data>
+  <data name="ProfileForm_SharingHelp" xml:space="preserve">
+    <value>Compartilhe a conexão com a Internet de uma conexão, por exemplo uma VPN como o Cloudflare WARP, pelo hotspot móvel ou com outro adaptador. O nome e a senha do hotspot são definidos em Configurações do Windows › Rede e Internet › Hotspot móvel.</value>
+  </data>
+  <data name="ProfileForm_SharingMode" xml:space="preserve">
+    <value>Compartilhar uma conexão com a Internet</value>
+  </data>
+  <data name="ProfileForm_SharingTo" xml:space="preserve">
+    <value>Compartilhar com</value>
+  </data>
+  <data name="ProfileForm_SharingToHelp" xml:space="preserve">
+    <value>O adaptador dos dispositivos que recebem a conexão, por exemplo uma porta Ethernet. O Windows atribui a ele o endereço 192.168.137.1.</value>
   </data>
   <data name="Sharing_Adapter" xml:space="preserve">
     <value>Com outro adaptador</value>
