@@ -583,6 +583,36 @@
   <data name="ProfileForm_Optional" xml:space="preserve">
     <value>Opcional</value>
   </data>
+  <data name="ProfileForm_Sharing" xml:space="preserve">
+    <value>Compartir conexión a Internet</value>
+  </data>
+  <data name="ProfileForm_SharingChoose" xml:space="preserve">
+    <value>Elige un adaptador</value>
+  </data>
+  <data name="ProfileForm_SharingFrom" xml:space="preserve">
+    <value>Conexión que se comparte</value>
+  </data>
+  <data name="ProfileForm_SharingFromDefault" xml:space="preserve">
+    <value>La conexión que Windows usa para Internet</value>
+  </data>
+  <data name="ProfileForm_SharingFromHelp" xml:space="preserve">
+    <value>El adaptador que tiene la conexión a Internet, por ejemplo CloudflareWARP.</value>
+  </data>
+  <data name="ProfileForm_SharingFromHotspotHelp" xml:space="preserve">
+    <value>Por ejemplo, CloudflareWARP. Déjalo vacío para compartir la conexión que Windows usa para Internet.</value>
+  </data>
+  <data name="ProfileForm_SharingHelp" xml:space="preserve">
+    <value>Comparte la conexión a Internet de una conexión, por ejemplo una VPN como Cloudflare WARP, mediante la zona con cobertura inalámbrica móvil o con otro adaptador. El nombre y la contraseña de la zona se configuran en Configuración de Windows › Red e Internet › Zona con cobertura inalámbrica móvil.</value>
+  </data>
+  <data name="ProfileForm_SharingMode" xml:space="preserve">
+    <value>Compartir una conexión a Internet</value>
+  </data>
+  <data name="ProfileForm_SharingTo" xml:space="preserve">
+    <value>Compartir con</value>
+  </data>
+  <data name="ProfileForm_SharingToHelp" xml:space="preserve">
+    <value>El adaptador de los dispositivos que reciben la conexión, por ejemplo un puerto Ethernet. Windows le asigna la dirección 192.168.137.1.</value>
+  </data>
   <data name="Profiles_Apply.Text" xml:space="preserve">
     <value>Aplicar</value>
   </data>
@@ -979,5 +1009,17 @@ Contiene las copias de tus perfiles y cualquier archivo que hayas guardado allí
   </data>
   <data name="Uninstall_Title" xml:space="preserve">
     <value>Desinstalar NetHop</value>
+  </data>
+  <data name="Sharing_Adapter" xml:space="preserve">
+    <value>Con otro adaptador</value>
+  </data>
+  <data name="Sharing_Disabled" xml:space="preserve">
+    <value>Desactivado</value>
+  </data>
+  <data name="Sharing_Hotspot" xml:space="preserve">
+    <value>Zona con cobertura inalámbrica móvil</value>
+  </data>
+  <data name="Sharing_Unchanged" xml:space="preserve">
+    <value>Dejar como está</value>
   </data>
 </root>

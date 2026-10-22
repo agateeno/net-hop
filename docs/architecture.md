@@ -34,10 +34,12 @@ Known limits, by design:
 
 ## Applying a profile
 
-1. **Snapshot**: `CimNetworkBackend.GetSnapshot()` reads adapters (`MSFT_NetAdapter`), IP interfaces (`MSFT_NetIPInterface`), addresses (`MSFT_NetIPAddress`), default routes (`MSFT_NetRoute`), static DNS (`GetInterfaceDnsSettings`) and the Wi-Fi SSID (`WlanQueryInterface`).
+1. **Snapshot**: `CimNetworkBackend.GetSnapshot()` reads adapters (`MSFT_NetAdapter`), IP interfaces (`MSFT_NetIPInterface`), addresses (`MSFT_NetIPAddress`), default routes (`MSFT_NetRoute`), static DNS (`GetInterfaceDnsSettings`), the Wi-Fi SSID (`WlanQueryInterface`), Internet Connection Sharing (the `HNetCfg.HNetShare` COM API behind an adapter's Sharing tab) and whether the mobile hotspot is on (WinRT `NetworkOperatorTetheringManager`).
 2. **Plan**: `ProfilePlanner` diffs the profile against the snapshot and emits only the steps needed. Order: enable adapters and wait for them, then IP configuration, then disable adapters. When gateways are removed or added, the planner orders them around their addresses: Windows rejects a gateway whose subnet is not on the interface yet.
 3. **Execute**: `ProfileApplier` runs the steps one by one. Steps are idempotent: adding an existing address or deleting a missing one is not an error.
-4. **Rollback**: if a step fails, the pre-apply snapshot is turned into a profile (`SnapshotProfile`) limited to the adapters the plan touched, and it is applied best-effort.
+4. **Rollback**: if a step fails, the pre-apply snapshot is turned into a profile (`SnapshotProfile`) limited to the adapters the plan touched, plus the sharing state when the plan changed it, and it is applied best-effort.
+
+**Sharing** is machine-wide: Windows shares one connection at a time, and the mobile hotspot uses that same pair (its source as the "public" connection, its own hidden virtual Wi-Fi adapter as the "private" one). To share a connection that Windows does not tether directly, such as most VPN adapters, the engine starts the hotspot from the internet connection, then points Internet Connection Sharing at the requested adapter, as is done by hand in the adapter's Sharing tab. The service targets the Windows SDK (`net10.0-windows10.0.22621.0`, like the app, since they share one publish folder) for the WinRT tethering API.
 5. **Active profile**: a profile is active when planning it against the current snapshot yields no steps. The last applied profile wins over other matching ones. When it no longer matches, the UI reports *drift*.
 
 Everything except step 1 and the execution of individual steps is pure code in `NetHop.Core` and is unit-tested on any OS.

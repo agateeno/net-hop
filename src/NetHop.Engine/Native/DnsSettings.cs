@@ -2,7 +2,6 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 namespace NetHop.Engine.Native;
 
@@ -10,7 +9,6 @@ namespace NetHop.Engine.Native;
 /// Per-interface DNS configuration through <c>Get/SetInterfaceDnsSettings</c> (iphlpapi, Windows 10 2004+).
 /// Unlike netsh this is locale-independent, and an empty server list cleanly returns DNS to DHCP.
 /// </summary>
-[SupportedOSPlatform("windows")]
 internal static partial class DnsSettings
 {
     private const uint Version1 = 1;

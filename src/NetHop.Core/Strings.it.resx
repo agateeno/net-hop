@@ -202,4 +202,34 @@
   <data name="Issue_Warning" xml:space="preserve">
     <value>avviso</value>
   </data>
+  <data name="Step_HotspotOn" xml:space="preserve">
+    <value>Attiva l'hotspot mobile</value>
+  </data>
+  <data name="Step_HotspotShare" xml:space="preserve">
+    <value>Attiva l'hotspot mobile e condividi la connessione Internet di '{0}'</value>
+  </data>
+  <data name="Step_HotspotOff" xml:space="preserve">
+    <value>Disattiva l'hotspot mobile</value>
+  </data>
+  <data name="Step_ShareAdapter" xml:space="preserve">
+    <value>Condividi la connessione Internet di '{0}' con '{1}'</value>
+  </data>
+  <data name="Step_SharingOff" xml:space="preserve">
+    <value>Interrompi la condivisione della connessione Internet</value>
+  </data>
+  <data name="Profile_SharingAdaptersOnlyWhenOn" xml:space="preserve">
+    <value>'from' e 'to' si usano solo con la modalità hotspot o adapter.</value>
+  </data>
+  <data name="Profile_SharingHotspotNoTarget" xml:space="preserve">
+    <value>L'hotspot mobile condivide la connessione con i dispositivi che vi si collegano: rimuovi 'to'.</value>
+  </data>
+  <data name="Profile_SharingNeedsFrom" xml:space="preserve">
+    <value>Indica la scheda di cui condividere la connessione Internet ('from').</value>
+  </data>
+  <data name="Profile_SharingNeedsTo" xml:space="preserve">
+    <value>Indica la scheda che riceve la connessione ('to').</value>
+  </data>
+  <data name="Profile_SharingSameAdapter" xml:space="preserve">
+    <value>Una scheda non può condividere la connessione con se stessa.</value>
+  </data>
 </root>

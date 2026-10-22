@@ -202,4 +202,34 @@
   <data name="Issue_Warning" xml:space="preserve">
     <value>Warnung</value>
   </data>
+  <data name="Step_HotspotOn" xml:space="preserve">
+    <value>Mobilen Hotspot einschalten</value>
+  </data>
+  <data name="Step_HotspotShare" xml:space="preserve">
+    <value>Mobilen Hotspot einschalten und die Internetverbindung von „{0}“ freigeben</value>
+  </data>
+  <data name="Step_HotspotOff" xml:space="preserve">
+    <value>Mobilen Hotspot ausschalten</value>
+  </data>
+  <data name="Step_ShareAdapter" xml:space="preserve">
+    <value>Internetverbindung von „{0}“ für „{1}“ freigeben</value>
+  </data>
+  <data name="Step_SharingOff" xml:space="preserve">
+    <value>Gemeinsame Nutzung der Internetverbindung beenden</value>
+  </data>
+  <data name="Profile_SharingAdaptersOnlyWhenOn" xml:space="preserve">
+    <value>„from“ und „to“ werden nur mit dem Modus hotspot oder adapter verwendet.</value>
+  </data>
+  <data name="Profile_SharingHotspotNoTarget" xml:space="preserve">
+    <value>Der mobile Hotspot gibt die Verbindung für die Geräte frei, die sich mit ihm verbinden: Entfernen Sie „to“.</value>
+  </data>
+  <data name="Profile_SharingNeedsFrom" xml:space="preserve">
+    <value>Geben Sie den Adapter an, dessen Internetverbindung freigegeben wird („from“).</value>
+  </data>
+  <data name="Profile_SharingNeedsTo" xml:space="preserve">
+    <value>Geben Sie den Adapter an, der die Verbindung erhält („to“).</value>
+  </data>
+  <data name="Profile_SharingSameAdapter" xml:space="preserve">
+    <value>Ein Adapter kann seine Verbindung nicht für sich selbst freigeben.</value>
+  </data>
 </root>
