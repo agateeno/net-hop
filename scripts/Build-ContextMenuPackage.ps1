@@ -46,8 +46,13 @@ if (-not $Publisher) { $Publisher = 'CN=NetHop, OID.2.25.31172936891398431765440
 
 # 1-2. The handler DLL, with the Visual Studio C++ tools.
 $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
-$msbuild = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild -find 'MSBuild\**\Bin\MSBuild.exe' | Select-Object -First 1
-if (-not $msbuild) { throw 'MSBuild (Visual Studio with the C++ tools) was not found.' }
+# Ask for the MSVC compiler itself: Visual Studio without it still has MSBuild and the C++ targets, and then fails
+# with "MSB8003: The PlatformToolset property is not defined".
+$compiler = if ($Architecture -eq 'arm64') { 'Microsoft.VisualStudio.Component.VC.Tools.ARM64' } else { 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64' }
+$msbuild = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild $compiler -find 'MSBuild\**\Bin\MSBuild.exe' | Select-Object -First 1
+if (-not $msbuild) {
+    throw "Visual Studio with the MSVC C++ build tools for $Architecture was not found (Visual Studio Installer: Desktop development with C++)."
+}
 & $msbuild (Join-Path $source 'NetHop.ShellExtension.vcxproj') -p:Configuration=Release -p:Platform=$platform -nologo -verbosity:minimal
 if ($LASTEXITCODE -ne 0) { throw "The context menu handler failed to build for $Architecture." }
 Copy-Item (Join-Path $source "bin\$platform\NetHop.ShellExtension.dll") $BinDirectory
